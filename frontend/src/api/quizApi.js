@@ -21,3 +21,17 @@ export const createQuiz = async (quizData) => {
     throw error;
   }
 };
+
+
+
+export const getShareQuestions = async (quizId, page, limit = 1) => {
+  try {
+    const response = await axios.get(`http://localhost:3000/api/v1/quiz/shareQuestion/${quizId}?page=${page}&limit=1`);
+    console.log(response.data);
+    return response.data;
+   
+  } catch (error) {
+    console.error('Error fetching questions:', error);
+    throw error;
+  }
+};
