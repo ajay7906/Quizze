@@ -1,0 +1,114 @@
+/* src/components/QuestionCard.module.css */
+.card {
+    background: #041325;
+
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+    align-items: center;
+
+}
+
+.cardContent {
+    box-shadow: 0px 0px 30px 0px #00000026;
+    background: #FFFFFF;
+    width: 80vw;
+    height: 80vh;
+    padding: 30px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    margin-top: -10px;
+}
+
+.questionNumber {
+    font-family: Poppins;
+    font-size: 35px;
+    font-weight: 700;
+    line-height: 60px;
+    color: #474444;
+
+
+}
+
+.timer {
+    font-family: Poppins;
+    font-size: 35px;
+    font-weight: 700;
+    line-height: 60px;
+    text-align: left;
+    color: #D60000;
+
+}
+
+.questionText {
+    
+    margin-bottom: 20px;
+    text-align: left;
+    font-family: Poppins;
+    font-size: 35px;
+    font-weight: 700;
+
+    text-align: left;
+
+
+    border-radius: 5px;
+}
+
+.options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem 8rem;
+    margin-bottom: 40px;
+}
+
+.option {
+    background: #F0F0F0;
+
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: Poppins;
+    font-size: 35px;
+    font-weight: 600;
+
+    text-align: center;
+
+}
+
+.option:hover {
+    background-color: #e1e1e1;
+}
+
+.option.selected {
+    border: 2px solid blue;
+}
+
+.nextButton {
+    background: #60B84B;
+    width: 320px;
+    height: 56px;
+    color: white;
+    
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+   
+    font-family: Poppins;
+    font-size: 30px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    
+
+}

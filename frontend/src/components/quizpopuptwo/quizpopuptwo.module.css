@@ -1,0 +1,196 @@
+/* .popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border: 1px solid #ccc;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+  }
+  
+  .popupContent {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .questionBlock {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .addOptionButton, .createQuizButton {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+  }
+  
+  .addOptionButton:hover, .createQuizButton:hover {
+    background-color: #0056b3;
+  }
+   */
+
+
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+
+}
+
+.form {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 845px;
+  height: 50rem;
+  /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 24px;
+}
+
+.closeButton,
+.addButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+}
+
+.maxQuestions {
+  font-size: 12px;
+  color: gray;
+}
+
+.input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.optionType {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
+}
+
+.optionType label {
+  display: flex;
+  align-items: center;
+}
+
+.optionType input {
+  margin-right: 5px;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.removeButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: red;
+  margin-left: 10px;
+}
+
+.addOptionButton {
+  background-color: #e7e7e7;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-top: 10px;
+  display: block;
+  width: 100%;
+}
+
+.timer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.cancelButton,
+.createButton {
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.cancelButton {
+  background-color: #ccc;
+}
+
+.createButton {
+  background-color: #4CAF50;
+  color: white;
+}
+
+
+.slideButtonContainer {
+  display: flex;
+  
+  position: relative;
+  justify-content: space-between;
+  align-items: center;
+ 
+}
+.slideButtonWrapper{
+ 
+ 
+ 
+ 
+
+}
+.addSlideButton{
+  width: 24px;
+  height: 24px;
+  color: #969696;
+  font-size: 35px;
+  border: none;
+  display: flex;
+  align-items: center;
+  background: none;
+  justify-content: center;
+
+}
+.slideButtonList{
+  display: flex;
+  justify-content: center;
+  
+  justify-content: space-between;
+  
+}
+
+.slideButton{
+  width: 58px;
+  height: 58px;
+}

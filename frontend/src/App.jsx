@@ -28,6 +28,8 @@ import Home from './pages/home/Home';
 import 'react-toastify/dist/ReactToastify.css';
 import Sidebar from './components/sidebar/Sidebar';
 import AnalysisPage from './components/analytic/AnalysisPage';
+import ShareQuiz from './pages/sharequiz/ShareQuiz';
+import Layout from './components/layout/Layout';
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -40,22 +42,40 @@ const App = () => {
     }
   }, []);
   console.log(isLoggedIn);
+  const sampleQuestion = {
+    questionNumber: 1,
+    totalQuestions: 4,
+    questionText: 'Your question text comes here, its a sample text.',
+    options: ['Option 1', 'Option 2', 'Option 3', 'Option 4'],
+    timer: 10,
+  };
   return (
     <Router>
       <ToastContainer />
       <div className="appcontainer">
-        <Sidebar />
+{/*        
+        <Sidebar /> */}
         <Routes>
           <Route exact path="/">
-            <Route exact path="/" element={isLoggedIn ? <Home /> : <Navigate to="/register" />} />
+            <Route exact path="/" element={isLoggedIn ?  <Layout> <Home /> </Layout> : <Navigate to="/register" />} />
             <Route
               path="/register"
               element={isLoggedIn ? <Navigate to="/" /> : <Register />}
             />
-              <Route
-            path="/analytics"
-            element={<AnalysisPage />} // Add AnalysisPage route
-          />
+            <Route
+              path="/analytics"
+              element={<Layout><AnalysisPage /></Layout>} // Add AnalysisPage route
+            />
+            <Route
+              path="/sharequiz"
+              element={<ShareQuiz
+                questionNumber={sampleQuestion.questionNumber}
+                totalQuestions={sampleQuestion.totalQuestions}
+                questionText={sampleQuestion.questionText}
+                options={sampleQuestion.options}
+                timer={sampleQuestion.timer}
+              />} // Add sharequiz route
+            />
 
           </Route>
 
