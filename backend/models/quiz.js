@@ -15,11 +15,11 @@ const quizSchema = new mongoose.Schema({
   { type: Boolean, default: false },
 }, { timestamps: true });
 
-quizSchema.methods.incrementImpressions = function () {
-  this.impressions += 1;
-  this.isTrending = this.impressions > 10;
-  return this.save();
-};
+// quizSchema.methods.incrementImpressions = function () {
+//   this.impressions += 1;
+//   this.isTrending = this.impressions > 10;
+//   return this.save();
+// };
 
 const Quiz = mongoose.model('Quiz', quizSchema);
 

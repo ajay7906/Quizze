@@ -140,23 +140,25 @@ exports.createQuiz = async (req, res) => {
 
 exports.getDashboardData = async (req, res) => {
     try {
-        const quizzes = await Quiz.find({ user: req.user._id }).populate('questions');
+        const { userId } = req;
+        const quizzes = await Quiz.find()
 
-        const dashboardData = quizzes.map(quiz => ({
-            title: quiz.title,
-            createdAt: quiz.createdAt,
-            impressions: quiz.impressions,
-            totalQuestions: quiz.questions.length,
-            questions: quiz.questions
-        }));
+        // const dashboardData = quizzes.map(quiz => ({
+        //     title: quiz.title,
+        //     createdAt: quiz.createdAt,
+        //     impressions: quiz.impressions,
+        //     totalQuestions: quiz.questions.length,
+        //     questions: quiz.questions
+        // }));
 
-        const totalQuizzes = quizzes.length;
-        const totalImpressions = quizzes.reduce((sum, quiz) => sum + quiz.impressions, 0);
+        // const totalQuizzes = quizzes.length;
+        // const totalImpressions = quizzes.reduce((sum, quiz) => sum + quiz.impressions, 0);
 
         res.json({
-            totalQuizzes,
-            totalImpressions,
-            quizzes: dashboardData,
+            // totalQuizzes,
+            // totalImpressions,
+            // quizzes: dashboardData,
+            quizzes
         });
     } catch (error) {
         errorHandler(res, error);
@@ -214,18 +216,57 @@ exports.getAnalytics = async (req, res) => {
 exports.getShareQuestion = async (req, res) => {
     const { quizId, } = req.params;
     const { page = 1, limit = 1 } = req.query;
-   console.log(quizId);
+    console.log(quizId);
     if (!quizId) {
         return res.status(400).send({ error: 'Quiz ID is required' });
     }
 
     try {
         const questions = await Question.find({ quiz: quizId })
-        .skip((page - 1) * limit)
-        .limit(parseInt(limit));
+            .skip((page - 1) * limit)
+            .limit(parseInt(limit));
 
         res.json(questions);
     } catch (error) {
         res.status(500).send({ error: 'Failed to fetch questions' });
     }
 }
+
+exports.questiRightWrongCheck = async (req, res) => {
+   
+    const { quiId } = req.params;
+    const updatedData = req.body;
+    console.log(quiId);
+    try {
+        const updatedQuestion = await Question.findByIdAndUpdate(quiId, { $set: updatedData }, { new: true });
+        if (!updatedQuestion) {
+            return res.status(404).send({ error: 'Question not found' });
+        }
+        res.json(updatedQuestion);
+    } catch (error) {
+        res.status(500).send({ error: 'Failed to update question' });
+    }
+}
+
+
+
+// Increment the impression field of a question
+exports.incrementImpression = async (req, res) => {
+    const { quiId } = req.params;
+  
+    try {
+      const updatedQuestion = await Quiz.findByIdAndUpdate(
+        quiId,
+        { $inc: { impressions: 1 } },
+        { new: true }
+      );
+  
+      if (!updatedQuestion) {
+        return res.status(404).send({ error: 'Question not found' });
+      }
+  
+      res.json(updatedQuestion);
+    } catch (error) {
+      res.status(500).send({ error: 'Failed to update question' });
+    }
+  };

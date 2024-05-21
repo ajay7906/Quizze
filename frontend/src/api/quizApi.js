@@ -35,3 +35,25 @@ export const getShareQuestions = async (quizId, page, limit = 1) => {
     throw error;
   }
 };
+
+
+export const questionRightWronchk = async (questionId, updatedData) => {
+  try {
+    const response = await axios.patch(`http://localhost:3000/api/v1/quiz/updatequestion/${questionId}`, updatedData);
+    return response.data;
+  } catch (error) {
+    console.error('Error updating question:', error);
+    throw error;
+  }
+};
+
+
+export const empressionUpdates = async (questionId, updatedData) => {
+  try {
+    const response = await axios.patch(`http://localhost:3000/api/v1/quiz/updatequestion/${questionId}`, updatedData);
+    return response.data;
+  } catch (error) {
+    console.error('Error updating question:', error);
+    throw error;
+  }
+};
