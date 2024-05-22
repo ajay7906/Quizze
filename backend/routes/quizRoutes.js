@@ -8,7 +8,7 @@ const verifyToken = require('../middleware/verifyToken');
 const router = express.Router();
 
 router.post('/create', verifyToken, createQuiz);
-router.patch('/updatequestion/:quiId' , questiRightWrongCheck)
+router.patch('/checkquestion/:quiId' , questiRightWrongCheck)
 router.patch('/empression/:quiId' , incrementImpression)
 router.get('/shareQuestion/:quizId', getShareQuestion);
 router.get('/getquestion/:quizId', getQuestionDetails);

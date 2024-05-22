@@ -53,7 +53,7 @@ export const getDetailsQuestions = async (quizId) => {
 
 export const questionRightWronchk = async (questionId, updatedData) => {
   try {
-    const response = await axios.patch(`http://localhost:3000/api/v1/quiz/updatequestion/${questionId}`, updatedData);
+    const response = await axios.patch(`http://localhost:3000/api/v1/quiz/checkquestion/${questionId}`, updatedData);
     return response.data;
   } catch (error) {
     console.error('Error updating question:', error);
@@ -62,9 +62,9 @@ export const questionRightWronchk = async (questionId, updatedData) => {
 };
 
 
-export const empressionUpdates = async (questionId, updatedData) => {
+export const empressionUpdates = async (questionId) => {
   try {
-    const response = await axios.patch(`http://localhost:3000/api/v1/quiz/updatequestion/${questionId}`, updatedData);
+    const response = await axios.patch(`http://localhost:3000/api/v1/quiz/empression/${questionId}`);
     return response.data;
   } catch (error) {
     console.error('Error updating question:', error);

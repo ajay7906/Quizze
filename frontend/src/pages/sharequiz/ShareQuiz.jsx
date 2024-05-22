@@ -1,7 +1,7 @@
 // src/components/QuestionCard.jsx
 import React, { useState, useEffect } from 'react';
 import styles from './ShareQuiz.module.css';
-import { getShareQuestions, questionRightWronchk } from '../../api/quizApi';
+import { empressionUpdates, getShareQuestions, questionRightWronchk } from '../../api/quizApi';
 import { useParams } from 'react-router-dom';
 
 
@@ -10,10 +10,11 @@ const ShareQuiz = ({ questionNumber, totalQuestions, questionText, options, init
     const [currentQuestion, setCurrentQuestion] = useState(null);
     const [timer, setTimer] = useState(initialTimer);
     const [currentPage, setCurrentPage] = useState(1);
-    const  [rightAns, setRightAns] = useState(0);
-    const  [wrongAns, setWrongAns] = useState(0);
+    const  [rightAns, setRightAns] = useState(null);
+    const  [wrongAns, setWrongAns] = useState(null);
     //const quizId = '664c53c3a1ff95f9b87bef1f';
     const { quizId } = useParams();
+    console.log(quizId);
     useEffect(() => {
         if (timer > 0) {
             const timerId = setInterval(() => setTimer(timer - 1), 1000);
@@ -32,16 +33,26 @@ const ShareQuiz = ({ questionNumber, totalQuestions, questionText, options, init
     };
 
     //check right wrong check
-    const rightWrongCheck = async ()=>{
+    const rightWrongCheck = async (rightAnsSelect)=>{
         try {
-            const response = await questionRightWronchk(currentQuestion._id, page)
-
+            const response = await questionRightWronchk(currentQuestion._id, rightAnsSelect)
+            console.log(response);
             
         } catch (error) {
             console.error('Error fetching question:', error);
             
         }
     }
+    //update empression
+    const updateEmpression = async () => {
+        try {
+            const response = await empressionUpdates(quizId)
+            // console.log(response);
+        } catch (error) {
+            console.error('Error fetching question:', error);
+        }
+    };
+
 
     const handleOptionClick = (index, value) => {
         setSelectedOption(index);
@@ -60,6 +71,9 @@ const ShareQuiz = ({ questionNumber, totalQuestions, questionText, options, init
         fetchQuestion(currentPage);
 
     }, [currentPage]);
+    useEffect(()=>{
+        updateEmpression()
+    },[])
     console.log(currentQuestion?._id);
     return (
         <>
@@ -82,7 +96,7 @@ const ShareQuiz = ({ questionNumber, totalQuestions, questionText, options, init
                                 <button
                                     key={index}
                                     className={`${styles.option} ${selectedOption === index ? styles.selected : ''}`}
-                                    onClick={() => handleOptionClick(index, option.rightans)}
+                                    onClick={ ()=>rightWrongCheck(option.rightans)}
                                 >
                                     {option.text}
                                 </button>
