@@ -138,7 +138,7 @@ exports.createQuiz = async (req, res) => {
     }
 };
 
-exports.getDashboardData = async (req, res) => {
+exports.getQuizDetails = async (req, res) => {
     try {
         const { userId } = req;
         const quizzes = await Quiz.find()

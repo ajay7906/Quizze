@@ -57,3 +57,20 @@ export const empressionUpdates = async (questionId, updatedData) => {
     throw error;
   }
 };
+
+
+
+export const quizDetails = async () => {
+  try {
+    const token = localStorage.getItem("jwttokenuser");
+    
+  
+    axios.defaults.headers.common["Authorization"] = token;
+    const response = await axios.get(`http://localhost:3000/api/v1/quiz/dashboard`);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error updating question:', error);
+    throw error;
+  }
+};
