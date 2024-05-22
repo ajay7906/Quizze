@@ -232,6 +232,25 @@ exports.getShareQuestion = async (req, res) => {
     }
 }
 
+exports.getQuestionDetails = async (req, res) => {
+    const { quizId, } = req.params;
+    // const { page = 1, limit = 1 } = req.query;
+    // console.log(quizId);
+    if (!quizId) {
+        return res.status(400).send({ error: 'Quiz ID is required' });
+    }
+
+    try {
+        const questions = await Question.find({ quiz: quizId })
+           
+
+        res.json(questions);
+    } catch (error) {
+        res.status(500).send({ error: 'Failed to fetch questions' });
+    }
+}
+
+
 exports.questiRightWrongCheck = async (req, res) => {
 
     const { quiId } = req.params;

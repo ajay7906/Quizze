@@ -36,6 +36,20 @@ export const getShareQuestions = async (quizId, page, limit = 1) => {
   }
 };
 
+//get question details
+
+export const getDetailsQuestions = async (quizId) => {
+  try {
+    const response = await axios.get(`http://localhost:3000/api/v1/quiz/getquestion/${quizId}`);
+    console.log(response.data);
+    return response.data;
+   
+  } catch (error) {
+    console.error('Error fetching questions:', error);
+    throw error;
+  }
+};
+
 
 export const questionRightWronchk = async (questionId, updatedData) => {
   try {

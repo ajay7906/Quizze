@@ -12,8 +12,8 @@ const ShareQuiz = ({ questionNumber, totalQuestions, questionText, options, init
     const [currentPage, setCurrentPage] = useState(1);
     const  [rightAns, setRightAns] = useState(0);
     const  [wrongAns, setWrongAns] = useState(0);
-    const quizId = '664c53c3a1ff95f9b87bef1f';
-
+    //const quizId = '664c53c3a1ff95f9b87bef1f';
+    const { quizId } = useParams();
     useEffect(() => {
         if (timer > 0) {
             const timerId = setInterval(() => setTimer(timer - 1), 1000);

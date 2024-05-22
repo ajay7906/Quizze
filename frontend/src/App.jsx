@@ -30,6 +30,7 @@ import Sidebar from './components/sidebar/Sidebar';
 import AnalysisPage from './components/analytic/AnalysisPage';
 import ShareQuiz from './pages/sharequiz/ShareQuiz';
 import Layout from './components/layout/Layout';
+import QuestionPage from './pages/questionpage/QuestionPage';
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -67,7 +68,7 @@ const App = () => {
               element={<Layout><AnalysisPage /></Layout>} // Add AnalysisPage route
             />
             <Route
-              path="/sharequiz"
+              path="/sharequiz/:quizId"
               element={<ShareQuiz
                 questionNumber={sampleQuestion.questionNumber}
                 totalQuestions={sampleQuestion.totalQuestions}
@@ -76,6 +77,7 @@ const App = () => {
                 timer={sampleQuestion.timer}
               />} // Add sharequiz route
             />
+            <Route path='/questiondetails/:quizId' element={<Layout><QuestionPage/></Layout>}/>
 
           </Route>
 

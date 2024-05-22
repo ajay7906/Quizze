@@ -1,0 +1,64 @@
+.card {
+    margin-top: 2rem;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+
+.question {
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 15px;
+    font-family: Poppins;
+    font-size: 30px;
+    font-weight: 500;
+    line-height: 45px;
+    text-align: left;
+    color: #000000;
+
+
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+
+    gap: 3rem;
+}
+
+.stat {
+    text-align: center;
+    background: #FFFFFF;
+    height: 90px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+}
+
+.number {
+
+    color: #474444;
+
+    font-family: Poppins;
+    font-size: 30px;
+    font-weight: 600;
+    line-height: 45px;
+    text-align: left;
+
+}
+
+.label {
+    display: block;
+    margin-top: 5px;
+    font-size: 14px;
+    color: #474444;
+
+    font-family: Poppins;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 21px;
+    text-align: left;
+
+}

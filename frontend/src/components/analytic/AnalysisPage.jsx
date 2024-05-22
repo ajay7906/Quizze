@@ -3,12 +3,13 @@ import styles from './AnalysisPage.module.css';
 import { deleteQuiz, quizDetails } from '../../api/quizApi';
 import ShareBtn from '../../assets/share.png';
 import EditBtn from '../../assets/edit.png';
+import {Link}  from 'react-router-dom'
 import DeletBtn from '../../assets/delete.png'
 import ConfirmModal from '../confirmdeletmodal/ConfirmModal';
 const AnalysisPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [quizToDelete, setQuizToDelete] = useState(null);
-
+  const [quizData, setQuizData] = useState();
 
   const handleDeleteClick = (quizId) => {
     setQuizToDelete(quizId);
@@ -32,8 +33,24 @@ const AnalysisPage = () => {
     setIsModalOpen(false);
   };
 
+//gererate share link
 
-  const [quizData, setQuizData] = useState();
+  const generateShareLink = (quizId) => {
+   
+    const shareLink = `http://localhost:5173/sharequiz/${quizId}`;
+
+
+    if (navigator.clipboard) {
+      const link = navigator.clipboard.writeText(shareLink);
+     console.log(link);
+
+    } else {
+      window.open(shareLink, '_blank');
+    }
+  };
+
+
+  //fetch data 
   const fetchQuizData = async () => {
     try {
       const responce = await quizDetails();
@@ -84,10 +101,11 @@ const AnalysisPage = () => {
                     <td>{quiz?.impressions}</td>
                     <td className={styles.actionBtn}>
                       <button className={styles.editButton}><img src={EditBtn} alt="" /></button>
-                      <button className={styles.deleteButton}><img onClick={()=>handleDeleteClick(quiz._id)} src={DeletBtn} alt="" /></button>
-                      <button className={styles.shareButton}><img src={ShareBtn} alt="" /></button>
+                      <button className={styles.deleteButton}><img onClick={() => handleDeleteClick(quiz._id)} src={DeletBtn} alt="" /></button>
+                      <button className={styles.shareButton}><img src={ShareBtn} onClick={()=> generateShareLink(quiz._id)} alt="" /></button>
                     </td>
-                    <td><a href="#" className={styles.analysisLink}>Question Wise Analysis</a></td>
+                    {/* <td><a href="#" className={styles.analysisLink}>Question Wise Analysis</a></td> */}
+                    <td><Link to={`/questiondetails/${quiz._id}`} className={styles.analysisLink}>Question Wise Analysis</Link></td>
                   </tr>
                 ))}
               </tbody>
