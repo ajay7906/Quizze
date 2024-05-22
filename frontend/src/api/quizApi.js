@@ -58,7 +58,7 @@ export const empressionUpdates = async (questionId, updatedData) => {
   }
 };
 
-
+//quiz details
 
 export const quizDetails = async () => {
   try {
@@ -72,5 +72,19 @@ export const quizDetails = async () => {
   } catch (error) {
     console.error('Error updating question:', error);
     throw error;
+  }
+};
+
+//delete quiz 
+
+
+export const deleteQuiz = async (quizId) => {
+  try {
+    const response = await axios.delete(`http://localhost:3000/api/v1/quiz/delete/${quizId}`);
+    return response.data;
+    
+  } catch (error) {
+   return error
+    
   }
 };

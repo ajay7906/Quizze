@@ -233,7 +233,7 @@ exports.getShareQuestion = async (req, res) => {
 }
 
 exports.questiRightWrongCheck = async (req, res) => {
-   
+
     const { quiId } = req.params;
     const updatedData = req.body;
     console.log(quiId);
@@ -253,20 +253,36 @@ exports.questiRightWrongCheck = async (req, res) => {
 // Increment the impression field of a question
 exports.incrementImpression = async (req, res) => {
     const { quiId } = req.params;
-  
+
     try {
-      const updatedQuestion = await Quiz.findByIdAndUpdate(
-        quiId,
-        { $inc: { impressions: 1 } },
-        { new: true }
-      );
-  
-      if (!updatedQuestion) {
-        return res.status(404).send({ error: 'Question not found' });
-      }
-  
-      res.json(updatedQuestion);
+        const updatedQuestion = await Quiz.findByIdAndUpdate(
+            quiId,
+            { $inc: { impressions: 1 } },
+            { new: true }
+        );
+
+        if (!updatedQuestion) {
+            return res.status(404).send({ error: 'Question not found' });
+        }
+
+        res.json(updatedQuestion);
     } catch (error) {
-      res.status(500).send({ error: 'Failed to update question' });
+        res.status(500).send({ error: 'Failed to update question' });
     }
-  };
+};
+
+
+exports.deleteQuiz = async (req, res) => {
+    const { quizId } = req.params;
+
+    try {
+        const deletedQuiz = await Quiz.findByIdAndDelete(quizId);
+        if (!deletedQuiz) {
+            return res.status(404).send({ error: 'Quiz not found' });
+        }
+        res.status(200).send({ message: 'Quiz deleted successfully' });
+    } catch (error) {
+        res.status(500).send({ error: 'Failed to delete quiz' });
+    }
+
+}
