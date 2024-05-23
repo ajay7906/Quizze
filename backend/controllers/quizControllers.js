@@ -87,7 +87,7 @@ exports.createQuiz = async (req, res) => {
         const { title, type, questions } = req.body;
 
         // Validate the input
-        if (!title || !type || !questions || !Array.isArray(questions) || questions.length === 0) {
+        if (!title || !type || !questions || !Array.isArray(questions) ) {
             return res.status(400).json({ message: 'Invalid input data' });
         }
 
