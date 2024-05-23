@@ -82,6 +82,13 @@
 
     text-align: center;
 
+
+    /* padding: 8px;
+    margin: 5px 0;
+    border: 1px solid transparent;
+    transition: border 0.3s ease, padding 0.3s ease, margin 0.3s ease; */
+    transition: box-shadow 0.3s ease-in-out;
+
 }
 
 .option:hover {
@@ -111,4 +118,15 @@
     margin: 0 auto;
     
 
+}
+
+
+
+
+.isActive {
+    /* border: 2px solid blue;
+    padding: 7px; 
+    margin: 4px 0;  */
+    box-shadow: 0 0 0 5px #5076FF; 
+   
 }

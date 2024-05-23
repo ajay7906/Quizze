@@ -1,0 +1,61 @@
+/* src/components/SuccessPage.module.css */
+
+.containerLayout{
+    width: 100vw;
+    height: 100vh;
+    background: #041325;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 40px;
+  width: 80vw;
+  height: 80vh;
+  max-width: 800px;
+  margin: 0 auto;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.container h1 {
+    font-family: Poppins;
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 60px;
+    text-align: center;
+    color: #474444;
+
+}
+
+.trophy {
+  width: 40%;
+  height: auto;
+  margin-bottom: 20px;
+}
+
+.scoreContainer {
+    font-family: Poppins;
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 60px;
+    text-align: center;
+    color: #474444;
+}
+
+.scoreContainer span:first-child {
+  margin-right: 10px;
+}
+
+.score {
+  font-size: 24px;
+  font-weight: bold;
+  color: #28a745;
+}
