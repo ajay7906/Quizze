@@ -67,6 +67,7 @@ const Sidebar = () => {
   const [quizName, setQuizName] = useState('');
   const [quizType, setQuizType] = useState('');
   const [quizQuestions, setQuizQuestions] = useState([]);
+  const [sendUrlLink, setSendUrlLink]  = useState()
   const { logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -83,8 +84,11 @@ const Sidebar = () => {
     setQuizName('');
     setQuizType(' ');
     setQuizQuestions([]);
-    setShowFinalLink(false)
+    
   };
+  const closeShareLinkModal = ()=>{
+    setShowFinalLink(false)
+  }
 
   const handleContinue = (name, type) => {
     setShowFirstPopup(false);
@@ -103,6 +107,8 @@ const Sidebar = () => {
     try {
       const result = await createQuiz(quizData);
       console.log('Quiz created successfully:', quizData);
+      //const baseUrlLink = `http://localhost:5173/sharequiz/${result?._id}`
+      setSendUrlLink(`http://localhost:5173/sharequiz/${result?._id}`)
       setShowFinalLink(true)
       console.log(result);
       // handleCancel();
@@ -149,7 +155,7 @@ const Sidebar = () => {
         </Modal>
       
       </aside>
-      {showFinalLink && <ShareModal closeModal={closeModal}/>}
+      {showFinalLink && <ShareModal closeShareLinkModal={closeShareLinkModal} sendUrlLink={sendUrlLink}/>}
 
     </>
   );
