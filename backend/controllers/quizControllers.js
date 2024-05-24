@@ -1,5 +1,5 @@
-const Quiz = require('../models/Quiz');
-const Question = require('../models/Question');
+const Quiz = require('../models/quiz');
+const Question = require('../models/question');
 const { errorHandler } = require('../utils/errorHandler');
 
 // exports.createQuiz = async (req, res) => {
