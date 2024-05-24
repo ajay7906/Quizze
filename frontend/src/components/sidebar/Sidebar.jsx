@@ -49,21 +49,26 @@
 
 
 
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useContext, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import styles from './Sidebar.module.css';
 import QuizPopupOne from '../quizpopupone/QuizPopupOne';
 import QuizPopupTwo from '../quizpopuptwo/QuizPopupTwo';
 import Modal from '../modal/Modal';
 import { createQuiz } from '../../api/quizApi';
+import ShareModal from '../sharemodal/ShareModal';
+import AuthContext from '../../context/AuthContext';
 
 const Sidebar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showFirstPopup, setShowFirstPopup] = useState(false);
   const [showSecondPopup, setShowSecondPopup] = useState(false);
+  const [showFinalLink, setShowFinalLink] = useState(false)
   const [quizName, setQuizName] = useState('');
   const [quizType, setQuizType] = useState('');
   const [quizQuestions, setQuizQuestions] = useState([]);
+  const { logout } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -78,6 +83,7 @@ const Sidebar = () => {
     setQuizName('');
     setQuizType(' ');
     setQuizQuestions([]);
+    setShowFinalLink(false)
   };
 
   const handleContinue = (name, type) => {
@@ -97,6 +103,7 @@ const Sidebar = () => {
     try {
       const result = await createQuiz(quizData);
       console.log('Quiz created successfully:', quizData);
+      setShowFinalLink(true)
       console.log(result);
       // handleCancel();
       closeModal()
@@ -105,6 +112,12 @@ const Sidebar = () => {
     }
   };
 
+
+  const handleLogout = () => {
+    // localStorage.removeItem('jwttokenuser'); // Remove the token from local storage
+    logout()
+    navigate('/register'); // Navigate to the login page
+  };
 
 
   return (
@@ -124,7 +137,7 @@ const Sidebar = () => {
             </li>
           </ul>
         </nav>
-        <div className={styles.logout}>LOGOUT</div>
+        <div className={styles.logout} onClick={handleLogout}>LOGOUT</div>
 
         <Modal isOpen={isModalOpen} onClose={closeModal}>
           {showFirstPopup && <QuizPopupOne onCancel={closeModal}
@@ -132,8 +145,11 @@ const Sidebar = () => {
             />}
 
           {showSecondPopup && <QuizPopupTwo onSubmit={handleCreateQuiz} quizType={quizType} onClose={closeModal} />}
+         
         </Modal>
+      
       </aside>
+      {showFinalLink && <ShareModal closeModal={closeModal}/>}
 
     </>
   );

@@ -4,7 +4,7 @@ const quizSchema = new mongoose.Schema({
   title:
    { type: String, required: true },
   type: 
-  { type: String, required: true, enum: ['Q&A', 'Poll'] },
+  { type: String, required: true, enum: ['Q&A', 'Poll Type'] },
   questions: 
   [{ type: mongoose.Schema.Types.ObjectId, ref: 'Question' }],
   author: 

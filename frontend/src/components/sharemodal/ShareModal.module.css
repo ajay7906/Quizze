@@ -6,20 +6,30 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  
+  background: #000000CF;
+
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .modal {
-  background: white;
+  background: #ffffff;
   padding: 20px;
   border-radius: 8px;
-  width: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   max-width: 100%;
   text-align: center;
   position: relative;
+
+  width: 845px;
+  height: 481px;
+
+
 }
 
 .closeButton {
@@ -32,26 +42,53 @@
   cursor: pointer;
 }
 
-h2 {
+.modal h2 {
   margin: 0 0 20px;
+  font-family: Poppins;
+  font-size: 39px;
+  font-weight: 600;
+  line-height: 58.5px;
+  text-align: center;
+  color: #474444;
+
 }
 
 .shareLink {
-  width: calc(100% - 20px);
+  width: calc(100% - 200px);
   padding: 10px;
-  border: 1px solid #ccc;
+  border: none;
+  background: #EDEDED;
+  height: 60px;
   border-radius: 4px;
   margin-bottom: 20px;
+
+  font-family: Poppins;
+  font-size: 25px;
+  font-weight: 600;
+  line-height: 37.5px;
+  text-align: left;
+
 }
 
 .shareButton {
-  background-color: #28a745;
+  background: #60B84B;
+
   color: white;
   border: none;
-  padding: 10px 20px;
+ margin-top: 2rem;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 16px;
+  font-family: Poppins;
+  font-size: 21px;
+  font-weight: 600;
+  line-height: 31.5px;
+  
+
+
+  width: 279px;
+  height: 46.14px;
+
+
 }
 
 .shareButton:hover {

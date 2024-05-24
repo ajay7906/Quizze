@@ -1,115 +1,20 @@
-// import React from 'react';
-// import styles from './Registers.module.css';
-
-// const Register = () => {
-//     return (
-//         <div className={styles.container}>
-//             <div className={styles.card}>
-//                 <h1>QUIZZIE</h1>
-//                 <div className={styles.tabs}>
-//                     <button className={`${styles.tab} ${styles.activeTab}`}>Sign Up</button>
-//                     <button className={styles.tab}>Log In</button>
-//                 </div>
-//                 <form className={styles.form}>
-//                     <div className={styles.inputName}>
-//                         <label>Name</label>
-//                         <input type="text"  className={styles.input} />
-//                     </div>
-//                     <div className={styles.inputName}>
-//                         <label >Email</label>
-//                         <input type="email"  className={styles.input} />
-//                     </div>
-//                     <div className={styles.inputName}>
-//                         <label >Password</label>
-//                         <input type="password"  className={styles.input} />
-//                     </div>
-//                     <div   className={styles.inputName}>
-//                         <label >Confirm Password</label>
-//                         <input type="password"  className={styles.input} />
-//                     </div>
-//                     <button type="submit" className={styles.button}>Sign-Up</button>
-//                 </form>
-//             </div>
-//         </div>
-//     );
-// };
-
-// export default Register;
-
-
-
-// import  { useState } from 'react';
-// import styles from './Registers.module.css';
-
-// const Register = () => {
-//     const [isLogin, setIsLogin] = useState(false);
-
-//     return (
-//         <div className={styles.container}>
-//             <div className={styles.card}>
-//                 <h1>QUIZZIE</h1>
-//                 <div className={styles.tabs}>
-//                     <button
-//                         className={`${styles.tab} ${!isLogin ? styles.activeTab : ''}`}
-//                         onClick={() => setIsLogin(false)}
-//                     >
-//                         Sign Up
-//                     </button>
-//                     <button
-//                         className={`${styles.tab} ${isLogin ? styles.activeTab : ''}`}
-//                         onClick={() => setIsLogin(true)}
-//                     >
-//                         Log In
-//                     </button>
-//                 </div>
-//                 <form className={styles.form}>
-//                     {!isLogin && (
-//                         <>
-//                             <div className={styles.inputName}>
-//                                 <label>Name</label>
-//                                 <input type="text" className={styles.input} />
-//                             </div>
-//                         </>
-//                     )}
-//                     <div className={styles.inputName}>
-//                         <label>Email</label>
-//                         <input type="email" className={styles.input} />
-//                     </div>
-//                     <div className={styles.inputName}>
-//                         <label>Password</label>
-//                         <input type="password" className={styles.input} />
-//                     </div>
-//                     {!isLogin && (
-//                         <div className={styles.inputName}>
-//                             <label>Confirm Password</label>
-//                             <input type="password" className={styles.input} />
-//                         </div>
-//                     )}
-//                     <button type="submit" className={styles.button}>
-//                         {isLogin ? 'Log In' : 'Sign-Up'}
-//                     </button>
-//                 </form>
-//             </div>
-//         </div>
-//     );
-// };
-
-// export default Register;
 
 
 
 
 
 
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import styles from './Registers.module.css';
 import { registerUser, loginUser } from '../../api/auth';
 import { toast } from 'react-toastify'; // Assuming the API functions are in 'api.js'
 import { Navigate, useNavigate } from 'react-router-dom';
+import AuthContext from '../../context/AuthContext';
 
 const Register = () => {
     const [isLogin, setIsLogin] = useState(false);
     const navigate = useNavigate();
+    const { login } = useContext(AuthContext);
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -129,12 +34,12 @@ const Register = () => {
             const response = await loginUser({ email: formData.email, password: formData.password });
             if (response.success) {
                 toast.success("Login successful!");
-               
+                login()
                 setFormData({
-                    name: '',
+                    // name: '',
                     email: '',
                     password: '',
-                    confirmPassword: ''
+                    // confirmPassword: ''
                 });
                 navigate('/');
                
