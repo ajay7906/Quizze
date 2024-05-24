@@ -24,6 +24,19 @@
   border-radius: 10px;
   border-spacing: 0;
   overflow: hidden;
+
+ 
+ 
+}
+.tableContainer{
+  max-height: 75vh; /* Adjust the value as needed */
+  overflow-y: auto;
+  scrollbar-width: none; /* Hide scrollbar for Firefox */
+  -ms-overflow-style: none; /* Hide scrollbar for IE and Edge */
+}
+
+.tableContainer::-webkit-scrollbar {
+  display: none;
 }
 
 .table th,

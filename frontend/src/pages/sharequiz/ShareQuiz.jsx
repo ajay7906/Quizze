@@ -8,7 +8,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 const ShareQuiz = ({ questionNumber, totalQuestions, questionText, options, initialTimer, onNext }) => {
     const [selectedOption, setSelectedOption] = useState(null);
     const [currentQuestion, setCurrentQuestion] = useState(null);
-    const [timer, setTimer] = useState(initialTimer);
+    const [timer, setTimer] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [lengthOfQuestion, setLengthOfQuestion] = useState(0);
     const [rightAns, setRightAns] = useState(0);
@@ -17,18 +17,14 @@ const ShareQuiz = ({ questionNumber, totalQuestions, questionText, options, init
     //const quizId = '664c53c3a1ff95f9b87bef1f';
     const { quizId } = useParams();
     console.log(quizId);
-    useEffect(() => {
-        if (timer > 0) {
-            const timerId = setInterval(() => setTimer(timer - 1), 1000);
-            return () => clearInterval(timerId);
-        }
-    }, [timer]);
+
 
     const fetchQuestion = async (page) => {
         try {
             const response = await getShareQuestions(quizId, page)
             // console.log(currentQuestion);
             setCurrentQuestion(response[0]);
+            setTimer(response[0]?.timer || 0);
         } catch (error) {
             console.error('Error fetching question:', error);
         }
@@ -85,9 +81,9 @@ const ShareQuiz = ({ questionNumber, totalQuestions, questionText, options, init
     const handleSubmit = () => {
         const score = rightAns;  // Calculate the score
         const totalQuestions = lengthOfQuestion;
-     
+
         navigate('/successpage', { state: { score, totalQuestions } });  // Navigate to the success page with score data
-      };
+    };
     useEffect(() => {
         fetchQuestion(currentPage);
 
@@ -96,6 +92,21 @@ const ShareQuiz = ({ questionNumber, totalQuestions, questionText, options, init
         updateEmpression()
     }, [])
     console.log(currentQuestion);
+    console.log(lengthOfQuestion);
+
+    useEffect(() => {
+        if (timer > 0) {
+            const timerId = setInterval(() => setTimer((prev) => prev - 1), 1000);
+            return () => clearInterval(timerId);
+        } else if (timer === 0 && lengthOfQuestion !== currentPage) {
+            console.log(timer);
+            handleNextClick();
+        }
+        //    else if(timer===0 && lengthOfQuestion == currentPage){
+        //     handleSubmit();
+        //    }
+    }, [timer]);
+    console.log(lengthOfQuestion == currentPage);
     return (
         <>
             {
@@ -106,7 +117,7 @@ const ShareQuiz = ({ questionNumber, totalQuestions, questionText, options, init
                             <span className={styles.questionNumber}>
                                 0{currentPage}/0{lengthOfQuestion}
                             </span>
-                            <span className={styles.timer}>{String(timer).padStart(2, '0')}s</span>
+                            {timer===0 ? <></> : <><span className={styles.timer}>00:{timer}s</span></>}
                         </div>
                         <div className={styles.questionText}>
                             {currentQuestion?.question}
@@ -114,24 +125,33 @@ const ShareQuiz = ({ questionNumber, totalQuestions, questionText, options, init
                         </div>
                         <div className={styles.options}>
                             {currentQuestion?.options?.map((option, index) => (
-                                <button
-                                    key={index}
-                                    className={`${styles.option} ${selectedOption === index ? styles.isActive : ''}`}
-                                    onClick={() => rightWrongCheck(option.rightans, index)}
-                                >
-                                    {option.text}
-                                </button>
+                                // <button
+                                //     key={index}
+                                //     className={`${styles.option} ${selectedOption === index ? styles.isActive : ''}`}
+                                //     onClick={() => rightWrongCheck(option.rightans, index)}
+                                // >
+                                //     {/* {option.text} */}
+                                //     <img key={index} className={styles.images} src={option.imageURL} alt="" />
+                                // </button>
+                                <div key={index} className={`${styles.imagesAndText} ${selectedOption === index ? styles.isActive : ''}`}
+                                    onClick={() => rightWrongCheck(option.rightans, index)}>
+                                    <p>Text Here</p>
+                                    <img src={option.imageURL} alt="" />
+
+                                </div>
+                                // <img key={index}  className={`${styles.images} ${selectedOption === index ? styles.isActive : ''}`} src={option.imageURL} alt="" />
+
                             ))}
                         </div>
                         {
                             currentPage == lengthOfQuestion ?
-                            <>
-                            <button className={styles.nextButton} onClick={handleSubmit}>Submit</button>
-                            </>
-                            :
-                            <>
-                            <button className={styles.nextButton} onClick={handleNextClick}>Next</button>
-                            </>
+                                <>
+                                    <button className={styles.nextButton} onClick={handleSubmit}>Submit</button>
+                                </>
+                                :
+                                <>
+                                    <button className={styles.nextButton} onClick={handleNextClick}>Next</button>
+                                </>
                         }
                     </div>
                 </div>

@@ -32,11 +32,11 @@
 
 }
 
-input[type="text"] {
-  width: 100%;
-  padding: 10px;
+.formGroup input[type="text"] {
   border: 1px solid #ddd;
   border-radius: 5px;
+  padding: 10px;
+
 }
 
 .formGroupType {

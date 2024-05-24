@@ -75,6 +75,14 @@
   height: 250px;
   position: relative;
 }
+.fullWidth {
+    grid-template-columns: 2fr 1fr;
+}
+.textAndImagesUrl{
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 1.4rem;
+}
 
 .optionType {
   display: flex;
@@ -117,7 +125,7 @@
   align-items: center;
   gap: 12px;
   margin: 10px 0;
-  
+  width: 100%;
   background: #FFFFFF;
   
 }
@@ -165,6 +173,15 @@
   text-align: left;
   color: #9F9F9F;
 
+
+  width: 100%;
+  border-radius: 5px;
+  padding: 10px;
+
+}
+.selectWidth{
+  width: 350px;
+
 }
 
 .addOptionButton {}
@@ -178,6 +195,16 @@
   margin-left: 10px;
   position: absolute;
   left: 380px;
+}
+.removeButtonForboth{
+  left: 500px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: red;
+  margin-left: 10px;
+  position: absolute;
 }
 
 .addOptionButton {

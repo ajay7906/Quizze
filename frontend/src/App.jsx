@@ -27,7 +27,7 @@ import Register from './pages/register/RegisterPage';
 import Home from './pages/home/Home';
 import 'react-toastify/dist/ReactToastify.css';
 import Sidebar from './components/sidebar/Sidebar';
-import AnalysisPage from './components/analytic/AnalysisPage';
+import AnalysisPage from './pages/analytic/AnalysisPage';
 import ShareQuiz from './pages/sharequiz/ShareQuiz';
 import Layout from './components/layout/Layout';
 import QuestionPage from './pages/questionpage/QuestionPage';

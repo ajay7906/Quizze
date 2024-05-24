@@ -489,8 +489,9 @@
 import React, { useState } from 'react';
 import styles from './quizpopuptwo.module.css';
 import DeleteImg from '../../assets/delete.png';
+import { toast } from 'react-toastify';
 
-const QuizPopupTwo = ({ onSubmit, onClose }) => {
+const QuizPopupTwo = ({ onSubmit, onClose, quizType }) => {
     const [quizSlides, setQuizSlides] = useState([{ question: '', options: [{ text: '', imageURL: '', rightans: false }, { text: '', imageURL: '', rightans: false }], timer: 0 }]);
     const [currentSlide, setCurrentSlide] = useState(0);
     const [optionType, setOptionType] = useState('text');
@@ -555,6 +556,26 @@ const QuizPopupTwo = ({ onSubmit, onClose }) => {
     };
 
     const handleCreateQuiz = () => {
+        for (const slide of quizSlides) {
+            if (!slide.question.trim()) {
+                toast.error("Please fill out all question fields.");
+                return;
+            }
+            for (const option of slide.options) {
+                if (optionType === 'text' && !option.text.trim()) {
+                    toast.error("Please fill out all option text fields.");
+                    return;
+                }
+                if (optionType === 'imageURL' && !option.imageURL.trim()) {
+                    toast.error("Please fill out all option image URL fields.");
+                    return;
+                }
+                if (optionType === 'textAndImageURL' && (!option.text.trim() || !option.imageURL.trim())) {
+                    toast.error("Please fill out all option text and image URL fields.");
+                    return;
+                }
+            }
+        }
         onSubmit(quizSlides);
     };
 
@@ -631,10 +652,10 @@ const QuizPopupTwo = ({ onSubmit, onClose }) => {
                         Text & Image URL
                     </label>
                 </div>
-                <div className={styles.timerAndInput}>
+                <div className={`${styles.timerAndInput} ${optionType === 'textAndImageURL' ? styles.fullWidth : ''}`}>
                     <div>
                         {quizSlides[currentSlide].options.map((option, index) => (
-                            <div key={index} className={`${styles.option}`}>
+                            <div key={index} className={`${styles.option} `}>
                                 <label className={`${styles.optionColor}`}>
                                     <input
                                         id="specifyColor"
@@ -645,27 +666,29 @@ const QuizPopupTwo = ({ onSubmit, onClose }) => {
                                     />
                                 </label>
 
-                                {optionType === 'text' || optionType === 'textAndImageURL' ? (
-                                    <input
-                                        className={`${option.rightans ? styles.isActiveOption : styles.optionInput}`}
-                                        type="text"
-                                        placeholder="Text"
-                                        value={option.text}
-                                        onChange={(e) => handleOptionChange(index, e.target.value, 'text')}
-                                    />
-                                ) : null}
-                                {optionType === 'imageURL' || optionType === 'textAndImageURL' ? (
-                                    <input
-                                        className={`${option.rightans ? styles.isActiveOption : styles.optionInput}`}
-                                        type="text"
-                                        placeholder="Image URL"
-                                        value={option.imageURL}
-                                        onChange={(e) => handleOptionChange(index, e.target.value, 'imageURL')}
-                                    />
-                                ) : null}
+                                <div className={`${optionType === 'textAndImageURL' ? styles.textAndImagesUrl : styles.selectWidth}`}>
+                                    {optionType === 'text' || optionType === 'textAndImageURL' ? (
+                                        <input
+                                            className={`${option.rightans ? styles.isActiveOption : styles.optionInput}`}
+                                            type="text"
+                                            placeholder="Text"
+                                            value={option.text}
+                                            onChange={(e) => handleOptionChange(index, e.target.value, 'text')}
+                                        />
+                                    ) : null}
+                                    {optionType === 'imageURL' || optionType === 'textAndImageURL' ? (
+                                        <input
+                                            className={`${option.rightans ? styles.isActiveOption : styles.optionInput}`}
+                                            type="text"
+                                            placeholder="Image URL"
+                                            value={option.imageURL}
+                                            onChange={(e) => handleOptionChange(index, e.target.value, 'imageURL')}
+                                        />
+                                    ) : null}
+                                </div>
 
                                 {index >= 2 && (
-                                    <button className={styles.removeButton} onClick={() => removeOption(index)}> <img src={DeleteImg} alt="" /> </button>
+                                    <button className={` ${optionType === 'textAndImageURL' ? styles.removeButtonForboth : styles.removeButton}`} onClick={() => removeOption(index)}> <img src={DeleteImg} alt="" /> </button>
                                 )}
                             </div>
                         ))}
@@ -674,18 +697,24 @@ const QuizPopupTwo = ({ onSubmit, onClose }) => {
                             <button className={styles.addOptionButton} onClick={addOption}>Add option</button>
                         )}
                     </div>
-                    <div className={styles.timer}>
-                        <p>Timer</p>
-                        <label className={` ${quizSlides[currentSlide].timer === 0 ? styles.isTimerActive : styles.labelInput}`}>
-                            <input type="submit" value="OFF" onClick={handleTimerChange} />
-                        </label>
-                        <label className={` ${quizSlides[currentSlide].timer === 5 ? styles.isTimerActive : styles.labelInput}`}>
-                            <input type="submit" value="5" onClick={handleTimerChange} /> &nbsp; sec
-                        </label>
-                        <label className={` ${quizSlides[currentSlide].timer === 10 ? styles.isTimerActive : styles.labelInput}`}>
-                            <input type="submit" value="10" onClick={handleTimerChange} />&nbsp; sec
-                        </label>
-                    </div>
+                    {
+                        quizType === 'Poll Type' ? <></>
+                            :
+                            <>
+                                <div className={styles.timer}>
+                                    <p>Timer</p>
+                                    <label className={` ${quizSlides[currentSlide].timer === 0 ? styles.isTimerActive : styles.labelInput}`}>
+                                        <input type="submit" value="OFF" onClick={handleTimerChange} />
+                                    </label>
+                                    <label className={` ${quizSlides[currentSlide].timer === 5 ? styles.isTimerActive : styles.labelInput}`}>
+                                        <input type="submit" value="5" onClick={handleTimerChange} /> &nbsp; sec
+                                    </label>
+                                    <label className={` ${quizSlides[currentSlide].timer === 10 ? styles.isTimerActive : styles.labelInput}`}>
+                                        <input type="submit" value="10" onClick={handleTimerChange} />&nbsp; sec
+                                    </label>
+                                </div>
+                            </>
+                    }
                 </div>
                 <div className={styles.buttons}>
                     <button className={styles.cancelButton} onClick={onClose}>Cancel</button>

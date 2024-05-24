@@ -131,7 +131,7 @@ const Sidebar = () => {
            onContinue={(name, type) => handleContinue(name, type)}
             />}
 
-          {showSecondPopup && <QuizPopupTwo onSubmit={handleCreateQuiz} onClose={closeModal} />}
+          {showSecondPopup && <QuizPopupTwo onSubmit={handleCreateQuiz} quizType={quizType} onClose={closeModal} />}
         </Modal>
       </aside>
 

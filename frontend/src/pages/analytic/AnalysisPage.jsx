@@ -3,9 +3,10 @@ import styles from './AnalysisPage.module.css';
 import { deleteQuiz, quizDetails } from '../../api/quizApi';
 import ShareBtn from '../../assets/share.png';
 import EditBtn from '../../assets/edit.png';
-import {Link}  from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import DeletBtn from '../../assets/delete.png'
-import ConfirmModal from '../confirmdeletmodal/ConfirmModal';
+import { toast } from 'react-toastify';
+import ConfirmModal from '../../components/confirmdeletmodal/ConfirmModal';
 const AnalysisPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [quizToDelete, setQuizToDelete] = useState(null);
@@ -33,16 +34,16 @@ const AnalysisPage = () => {
     setIsModalOpen(false);
   };
 
-//gererate share link
+  //gererate share link
 
   const generateShareLink = (quizId) => {
-   
+
     const shareLink = `http://localhost:5173/sharequiz/${quizId}`;
 
 
     if (navigator.clipboard) {
       const link = navigator.clipboard.writeText(shareLink);
-     console.log(link);
+      toast.success("Copy Successfully");
 
     } else {
       window.open(shareLink, '_blank');
@@ -81,35 +82,37 @@ const AnalysisPage = () => {
         quizData !== null ?
           <div className={styles.container}>
             <h1 className={styles.title}>Quiz Analysis</h1>
-            <table className={styles.table}>
-              <thead className={styles.tableheading}>
-                <tr >
-                  <th>S.No</th>
-                  <th>Quiz Name</th>
-                  <th>Created on</th>
-                  <th>Impression</th>
-                  <th></th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {quizData?.map((quiz, index) => (
-                  <tr key={quiz._id}>
-                    <td>{index + 1}</td>
-                    <td>{quiz?.title}</td>
-                    <td>{quiz?.createdAt}</td>
-                    <td>{quiz?.impressions}</td>
-                    <td className={styles.actionBtn}>
-                      <button className={styles.editButton}><img src={EditBtn} alt="" /></button>
-                      <button className={styles.deleteButton}><img onClick={() => handleDeleteClick(quiz._id)} src={DeletBtn} alt="" /></button>
-                      <button className={styles.shareButton}><img src={ShareBtn} onClick={()=> generateShareLink(quiz._id)} alt="" /></button>
-                    </td>
-                    {/* <td><a href="#" className={styles.analysisLink}>Question Wise Analysis</a></td> */}
-                    <td><Link to={`/questiondetails/${quiz._id}`} className={styles.analysisLink}>Question Wise Analysis</Link></td>
+            <div className={styles.tableContainer}>
+              <table className={styles.table}>
+                <thead className={styles.tableheading}>
+                  <tr >
+                    <th>S.No</th>
+                    <th>Quiz Name</th>
+                    <th>Created on</th>
+                    <th>Impression</th>
+                    <th></th>
+                    <th></th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {quizData?.map((quiz, index) => (
+                    <tr key={quiz._id}>
+                      <td>{index + 1}</td>
+                      <td>{quiz?.title}</td>
+                      <td>{quiz?.createdAt}</td>
+                      <td>{quiz?.impressions}</td>
+                      <td className={styles.actionBtn}>
+                        <button className={styles.editButton}><img src={EditBtn} alt="" /></button>
+                        <button className={styles.deleteButton}><img onClick={() => handleDeleteClick(quiz._id)} src={DeletBtn} alt="" /></button>
+                        <button className={styles.shareButton}><img src={ShareBtn} onClick={() => generateShareLink(quiz._id)} alt="" /></button>
+                      </td>
+                      {/* <td><a href="#" className={styles.analysisLink}>Question Wise Analysis</a></td> */}
+                      <td><Link to={`/questiondetails/${quiz._id}`} className={styles.analysisLink}>Question Wise Analysis</Link></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div> :
           <>
             <h1>Data not found</h1>
