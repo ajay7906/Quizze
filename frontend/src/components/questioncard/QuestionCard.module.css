@@ -1,6 +1,6 @@
 .card {
     margin-top: 2rem;
-    padding: 20px;
+   
     margin-bottom: 20px;
     border-radius: 5px;
 }
@@ -61,4 +61,9 @@
     line-height: 21px;
     text-align: left;
 
+}
+
+.hrLine{
+    margin-top: 40px;
+    margin-bottom: 20px;
 }

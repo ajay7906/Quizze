@@ -117,7 +117,7 @@ const ShareQuiz = ({ questionNumber, totalQuestions, questionText, options, init
                             <span className={styles.questionNumber}>
                                 0{currentPage}/0{lengthOfQuestion}
                             </span>
-                            {timer===0 ? <></> : <><span className={styles.timer}>00:{timer}s</span></>}
+                            {timer === 0 ? <></> : <><span className={styles.timer}>00:{timer}s</span></>}
                         </div>
                         <div className={styles.questionText}>
                             {currentQuestion?.question}
@@ -125,23 +125,40 @@ const ShareQuiz = ({ questionNumber, totalQuestions, questionText, options, init
                         </div>
                         <div className={styles.options}>
                             {currentQuestion?.options?.map((option, index) => (
-                                // <button
-                                //     key={index}
-                                //     className={`${styles.option} ${selectedOption === index ? styles.isActive : ''}`}
-                                //     onClick={() => rightWrongCheck(option.rightans, index)}
-                                // >
-                                //     {/* {option.text} */}
-                                //     <img key={index} className={styles.images} src={option.imageURL} alt="" />
-                                // </button>
-                                <div key={index} className={`${styles.imagesAndText} ${selectedOption === index ? styles.isActive : ''}`}
-                                    onClick={() => rightWrongCheck(option.rightans, index)}>
-                                    <p>Text Here</p>
-                                    <img src={option.imageURL} alt="" />
+                                option?.text && option?.imageURL ?
 
-                                </div>
-                                // <img key={index}  className={`${styles.images} ${selectedOption === index ? styles.isActive : ''}`} src={option.imageURL} alt="" />
 
-                            ))}
+
+
+                                    <>
+                                        <div className={`${styles.imagesAndText} ${selectedOption === index ? styles.isActive : ''}`}
+                                            onClick={() => rightWrongCheck(option.rightans, index)}>
+                                            <p>{option?.text}</p>
+                                            <img src={option.imageURL} alt="" />
+
+                                        </div>
+                                    </> :
+
+                                    <>
+                                        <button
+                                            key={index}
+                                            className={`${styles.option} ${selectedOption === index ? styles.isActive : ''}`}
+                                            onClick={() => rightWrongCheck(option.rightans, index)}
+                                        >
+                                            {/* {option.text} */}
+                                            {/* <img key={index} className={styles.images} src={option.imageURL} alt="" /> */}
+                                            {option?.text && <p>{option.text}</p>}
+                                            {option?.imageURL && <img src={option.imageURL} alt="option" className={styles.images} />}
+                                        </button>
+
+
+
+
+                                        {/* // <img key={index}  className={`${styles.images} ${selectedOption === index ? styles.isActive : ''}`} src={option.imageURL} alt="" /> */}
+                                    </>
+
+                            )
+                            )}
                         </div>
                         {
                             currentPage == lengthOfQuestion ?

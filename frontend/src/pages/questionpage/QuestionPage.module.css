@@ -1,7 +1,8 @@
 .container {
-    padding: 40px 30px 20px 40px;
+    padding: 60px 30px 30px 60px;
     background: #EDEDED;
     width: 100%;
+
 }
 
 .title {
@@ -42,4 +43,11 @@
 
 .metaData span {
     margin-left: 20px;
+}
+
+.numberOfQuestion {
+    max-height: 75vh;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }

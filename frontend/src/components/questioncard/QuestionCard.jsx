@@ -19,7 +19,7 @@ const QuestionCard = ({ question, attempts, correct, incorrect }) => {
           <p className={styles.label}>people Answered Incorrectly</p>
         </div>
       </div>
-      <hr />
+      <hr  className={styles.hrLine}/>
     </div>
   );
 };
