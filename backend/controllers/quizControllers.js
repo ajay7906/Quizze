@@ -138,6 +138,82 @@ exports.createQuiz = async (req, res) => {
     }
 };
 
+
+//update quiz here 
+
+
+
+exports.updateQuiz = async (req, res) => {
+    const { userId } = req;
+    const { quizId } = req.params;
+    const { title, type, questions } = req.body;
+
+    try {
+        // Validate the input
+        if (!title || !type || !questions || !Array.isArray(questions)) {
+            return res.status(400).json({ message: 'Invalid input data' });
+        }
+
+        // Validate questions input
+        for (let question of questions) {
+            if (!question.question || !question.options || !Array.isArray(question.options) || question.options.length === 0) {
+                return res.status(400).json({ message: 'Invalid question data' });
+            }
+        }
+
+        // Find the existing quiz
+        const existingQuiz = await Quiz.findById(quizId);
+        if (!existingQuiz) {
+            return res.status(404).json({ message: 'Quiz not found' });
+        }
+
+        // Check if the user is the author of the quiz
+        if (existingQuiz.author.toString() !== userId) {
+            return res.status(403).json({ message: 'Unauthorized' });
+        }
+
+        // Update the quiz details
+        existingQuiz.title = title;
+        existingQuiz.type = type;
+
+        // Delete existing questions
+        await Question.deleteMany({ quiz: quizId });
+
+        // Create new Question documents
+        const questionDocs = await Promise.all(
+            questions.map(async (question) => {
+                const newQuestion = new Question({
+                    quiz: quizId,
+                    question: question.question,
+                    options: question.options,
+                    correctOption: question.correctOption,
+                    timer: question.timer
+                });
+                return await newQuestion.save();
+            })
+        );
+
+        // Update the Quiz document with the new question IDs
+        existingQuiz.questions = questionDocs.map(q => q._id);
+        await existingQuiz.save();
+
+        // Populate the author and questions fields in the response
+        const populatedQuiz = await Quiz.findById(existingQuiz._id)
+            .populate('author', 'name email')
+            .populate('questions');
+
+        res.status(200).json(populatedQuiz);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+
+
+
+
+
 exports.getQuizDetails = async (req, res) => {
     try {
         const { userId } = req;

@@ -5,6 +5,12 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [quizData, setQuizData] = useState([]);
+
+  const addQuiz = (newQuiz) => {
+    setQuizData((prevQuizData) => [...prevQuizData, newQuiz]);
+  };
+
 
   useEffect(() => {
     // Check for token in local storage
@@ -25,7 +31,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, login, logout }}>
+    <AuthContext.Provider value={{ isLoggedIn, login, logout, quizData, addQuiz  }}>
       {children}
     </AuthContext.Provider>
   );

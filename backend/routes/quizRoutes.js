@@ -3,11 +3,14 @@ const { createQuiz, submitQuiz, getAnalytics,
      getShareQuestion,  questiRightWrongCheck, incrementImpression, 
      getQuizDetails,
      deleteQuiz,
-     getQuestionDetails} = require('../controllers/quizControllers');
+     getQuestionDetails,
+     updateQuiz} = require('../controllers/quizControllers');
 const verifyToken = require('../middleware/verifyToken');
 const router = express.Router();
 
 router.post('/create', verifyToken, createQuiz);
+
+router.put('/updatequiz/:quizId',  verifyToken, updateQuiz);
 router.patch('/checkquestion/:quiId' , questiRightWrongCheck)
 router.patch('/empression/:quiId' , incrementImpression)
 router.get('/shareQuestion/:quizId', getShareQuestion);

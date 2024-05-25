@@ -69,16 +69,18 @@
 }
 
 .timerAndInput {
- display: grid; 
- grid-template-columns: 1fr 1fr;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   margin-left: -23px;
   height: 250px;
   position: relative;
 }
+
 .fullWidth {
-    grid-template-columns: 2fr 1fr;
+  grid-template-columns: 2fr 1fr;
 }
-.textAndImagesUrl{
+
+.textAndImagesUrl {
   display: grid;
   grid-template-columns: 1fr 2fr;
   gap: 1.4rem;
@@ -127,7 +129,7 @@
   margin: 10px 0;
   width: 100%;
   background: #FFFFFF;
-  
+
 }
 
 .isActiveOption {
@@ -141,15 +143,18 @@
   line-height: 30px;
   text-align: left;
   background: #60B84B;
-  
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
 
 }
-.isActiveOption::placeholder{
+
+.isActiveOption::placeholder {
   color: #ffffff;
 
 }
 
- .optionColor  input[type=radio] {
+.optionColor input[type=radio] {
   accent-color: green;
 }
 
@@ -179,7 +184,8 @@
   padding: 10px;
 
 }
-.selectWidth{
+
+.selectWidth {
   width: 350px;
 
 }
@@ -196,7 +202,8 @@
   position: absolute;
   left: 380px;
 }
-.removeButtonForboth{
+
+.removeButtonForboth {
   left: 500px;
   background: none;
   border: none;
@@ -407,6 +414,18 @@
   border: none;
   background: #ffffff;
   box-shadow: 0px 0px 10px 0px #00000026;
+
+
+}
+
+
+
+.addOptionButtonBoth {
+  width: 279px;
+  height: 46.14px;
+
+  border-radius: 10px;
+  box-shadow: 0px 0px 15px 0px #00000040;
 
 
 }

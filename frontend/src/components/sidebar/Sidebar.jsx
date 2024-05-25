@@ -68,7 +68,7 @@ const Sidebar = () => {
   const [quizType, setQuizType] = useState('');
   const [quizQuestions, setQuizQuestions] = useState([]);
   const [sendUrlLink, setSendUrlLink]  = useState()
-  const { logout } = useContext(AuthContext);
+  const { logout ,addQuiz } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const openModal = () => {
@@ -110,6 +110,7 @@ const Sidebar = () => {
       //const baseUrlLink = `http://localhost:5173/sharequiz/${result?._id}`
       setSendUrlLink(`http://localhost:5173/sharequiz/${result?._id}`)
       setShowFinalLink(true)
+      addQuiz(result);
       console.log(result);
       // handleCancel();
       closeModal()
