@@ -1,6 +1,7 @@
 // src/api/quizApi.js
 import axios from 'axios';
 
+
 const API_URL = 'http://localhost:3000/api/v1/quiz/create';
 
 export const createQuiz = async (quizData) => {
@@ -93,6 +94,8 @@ export const empressionUpdates = async (questionId) => {
   }
 };
 
+
+
 //quiz details
 
 export const quizDetails = async () => {
@@ -102,6 +105,40 @@ export const quizDetails = async () => {
 
     axios.defaults.headers.common["Authorization"] = token;
     const response = await axios.get(`http://localhost:3000/api/v1/quiz/dashboard`);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error updating question:', error);
+    throw error;
+  }
+};
+//get tranding quiz 
+
+export const fetchTrendingQuizzes = async () => {
+  try {
+    const token = localStorage.getItem("jwttokenuser");
+
+
+    axios.defaults.headers.common["Authorization"] = token;
+    const response = await axios.get(`http://localhost:3000/api/v1/quiz/trending`);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error updating question:', error);
+    throw error;
+  }
+};
+
+
+//stats dashborad data
+
+export const fetchDashboardStats = async () => {
+  try {
+    const token = localStorage.getItem("jwttokenuser");
+
+
+    axios.defaults.headers.common["Authorization"] = token;
+    const response = await axios.get(`http://localhost:3000/api/v1/quiz/dashboardstats`);
     console.log(response.data);
     return response.data;
   } catch (error) {
@@ -123,3 +160,5 @@ export const deleteQuiz = async (quizId) => {
 
   }
 };
+
+

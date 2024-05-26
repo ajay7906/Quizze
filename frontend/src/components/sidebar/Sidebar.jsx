@@ -50,7 +50,7 @@
 
 
 import React, { useContext, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import styles from './Sidebar.module.css';
 import QuizPopupOne from '../quizpopupone/QuizPopupOne';
 import QuizPopupTwo from '../quizpopuptwo/QuizPopupTwo';
@@ -134,13 +134,27 @@ const Sidebar = () => {
         <nav className={styles.sidebarnav}>
           <ul>
             <li>
-              <Link to="/" className={styles.link} activeClassName={styles.active}>Dashboard</Link>
+              {/* <NavLink to="/" className={styles.link} activeClassName={styles.active}>Dashboard</NavLink> */}
+              <NavLink 
+                to="/" 
+                className={({ isActive }) => isActive ? `${styles.link} ${styles.active}` : styles.link}
+              >
+                Dashboard
+              </NavLink> 
+
+
             </li>
             <li>
-              <Link to="/analytics" className={styles.link} activeClassName={styles.active}>Analytics</Link>
+              {/* <NavLink to="/analytics" className={styles.link} activeClassName={styles.active}>Analytics</NavLink> */}
+              <NavLink 
+                to="/analytics" 
+                className={({ isActive }) => isActive ? `${styles.link} ${styles.active}` : styles.link}
+              >
+                Analytics
+              </NavLink>
             </li>
             <li>
-              <Link className={styles.link} onClick={openModal} activeClassName={styles.active}>Create Quiz</Link>
+              <NavLink className={styles.link} onClick={openModal} activeClassName={styles.active}>Create Quiz</NavLink>
             </li>
           </ul>
         </nav>

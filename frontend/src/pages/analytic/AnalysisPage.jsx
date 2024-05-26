@@ -264,6 +264,7 @@ const AnalysisPage = () => {
 
 
   const fetchQuizQuestions = async (quizId) => {
+   
     try {
       const response = await getDetailsQuestions(quizId);
       console.log(response);
@@ -294,6 +295,7 @@ const AnalysisPage = () => {
   };
 
   const handleUpdateQuiz = async (questions) => {
+    console.log('Kuch Nahi');
     try {
       const updatedQuiz = {
         ...quizToEdit,
@@ -397,7 +399,7 @@ const AnalysisPage = () => {
         />}
 
         {showSecondPopup && <QuizPopupTwo
-          onSubmit={handleUpdateQuiz}
+          handleUpdateQuiz={handleUpdateQuiz}
           onClose={closeModal}
           quizQuestions={quizQuestions}
         />}

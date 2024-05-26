@@ -1,9 +1,10 @@
 import React from 'react'
-import Dashboard from '../../components/dashboard/Dashboard'
+import Dashboard from '../../components/dashboard/Dashboard';
+import styles from './Home.module.css'
 
 function Home() {
   return (
-    <div>
+    <div className={styles.dashboard}>
       <Dashboard/>
     </div>
   )

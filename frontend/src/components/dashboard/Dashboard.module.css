@@ -7,6 +7,7 @@
   justify-content: center;
   height: 100vh;
   background: #EDEDED;
+  width: 100%;
 
 }
 
@@ -32,8 +33,8 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-
-
+  
+  line-height: 40px;
   font-family: Poppins;
 
   font-weight: 600;
@@ -59,12 +60,22 @@
   border-radius: 5px;
   padding-left: 3rem;
     padding-right: 3rem;
+    max-height: 75vh; 
+  overflow-y: auto;
+  scrollbar-width: none; 
+  -ms-overflow-style: none;
+  width: 100%;
+     /* Hide scrollbar for IE and Edge */
   /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
 }
 
 .quizzes {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 2.5rem;
+  width: 100%;
+  padding: 10px;
+  
 
 }
 
@@ -72,12 +83,14 @@
   background: #FFFFFF;
 
   padding: 10px;
-  margin: 10px;
-  flex: 1 1 calc(33% - 20px);
+ 
+  flex: 1 1 calc(32% - 20px);
   border-radius: 5px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  width: 100%;
+ 
 
 
 
@@ -93,7 +106,7 @@
   font-family: Poppins;
   font-size: 23px;
   color: #474444;
-
+  
   font-weight: 600;
 
   text-align: left;

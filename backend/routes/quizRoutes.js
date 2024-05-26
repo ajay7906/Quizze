@@ -4,7 +4,9 @@ const { createQuiz, submitQuiz, getAnalytics,
      getQuizDetails,
      deleteQuiz,
      getQuestionDetails,
-     updateQuiz} = require('../controllers/quizControllers');
+     updateQuiz,
+     getTrendingQuiz,
+     getDashBoardData} = require('../controllers/quizControllers');
 const verifyToken = require('../middleware/verifyToken');
 const router = express.Router();
 
@@ -17,6 +19,8 @@ router.get('/shareQuestion/:quizId', getShareQuestion);
 router.get('/getquestion/:quizId', getQuestionDetails);
 router.delete('/delete/:quizId', deleteQuiz)
 router.get('/analytics', verifyToken, getAnalytics);
+router.get('/trending', verifyToken, getTrendingQuiz);
+router.get('/dashboardstats', verifyToken, getDashBoardData);
 router.get('/dashboard', verifyToken, getQuizDetails);
 router.post('/:id/submit', submitQuiz);
 

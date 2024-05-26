@@ -87,16 +87,16 @@ exports.createQuiz = async (req, res) => {
         const { title, type, questions } = req.body;
 
         // Validate the input
-        if (!title || !type || !questions || !Array.isArray(questions) ) {
+        if (!title || !type || !questions || !Array.isArray(questions)) {
             return res.status(400).json({ message: 'Invalid input data' });
         }
 
         // Validate questions input
-        for (let question of questions) {
-            if (!question.question || !question.options || !Array.isArray(question.options) || question.options.length === 0) {
-                return res.status(400).json({ message: 'Invalid question data' });
-            }
-        }
+        // for (let question of questions) {
+        //     if (!question.question || !question.options || !Array.isArray(question.options) || question.options.length === 0) {
+        //         return res.status(400).json({ message: 'Invalid question data' });
+        //     }
+        // }
 
         // Create the Quiz document
         const newQuiz = new Quiz({
@@ -116,7 +116,9 @@ exports.createQuiz = async (req, res) => {
                     question: question.question,
                     options: question.options,
                     correctOption: question.correctOption,
-                    timer: question.timer
+                    timer: question.timer,
+                    optionType: question.optionType,
+                    optionsTextAndImg: question.optionsTextAndImg
                 });
                 return await newQuestion.save();
             })
@@ -210,10 +212,6 @@ exports.updateQuiz = async (req, res) => {
 };
 
 
-
-
-
-
 exports.getQuizDetails = async (req, res) => {
     try {
         const { userId } = req;
@@ -240,6 +238,45 @@ exports.getQuizDetails = async (req, res) => {
         errorHandler(res, error);
     }
 };
+
+
+
+//get trending quiz
+
+exports.getTrendingQuiz = async (req, res) => {
+    try {
+        const trendingQuizzes = await Quiz.find({ impressions: { $gt: 10 } }).sort({ impressions: -1 });
+        res.json(trendingQuizzes);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+//get dashboard stats
+exports.getDashBoardData = async (req,  res)=>{
+    try {
+        const totalQuizzes = await Quiz.countDocuments();
+        const totalQuestions = await Quiz.aggregate([
+            { $unwind: '$questions' },
+            { $count: 'totalQuestions' }
+        ]);
+        const totalImpressions = await Quiz.aggregate([
+            { $group: { _id: null, totalImpressions: { $sum: '$impressions' } } }
+        ]);
+    
+        res.json({
+            totalQuizzes,
+            totalQuestions: totalQuestions[0]?.totalQuestions || 0,
+            totalImpressions: totalImpressions[0]?.totalImpressions || 0
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+
+}
+
+
+
 
 exports.submitQuiz = async (req, res) => {
     try {
@@ -318,7 +355,7 @@ exports.getQuestionDetails = async (req, res) => {
 
     try {
         const questions = await Question.find({ quiz: quizId })
-           
+
 
         res.json(questions);
     } catch (error) {
@@ -347,7 +384,7 @@ exports.questiRightWrongCheck = async (req, res) => {
 
     try {
         let update;
-      
+
         if (isCorrect === true) {
             update = { $inc: { correctAttempts: 1 } };
         } else {
@@ -356,7 +393,7 @@ exports.questiRightWrongCheck = async (req, res) => {
         }
 
         const updatedQuestion = await Question.findByIdAndUpdate(quiId, update, { new: true });
-        
+
         if (!updatedQuestion) {
             return res.status(404).send({ error: 'Question not found' });
         }
