@@ -6,7 +6,7 @@ import axios from 'axios'
 export async function registerUser({ name,email, password , confirmPassword}) {
     try {
         console.log(name, email, password);
-      const response = await axios.post('http://localhost:3000/api/v1/user/register', {
+      const response = await axios.post('https://quizze-se3g.onrender.com/api/v1/user/register', {
         name,
         email,
         password,
@@ -36,7 +36,7 @@ export async function registerUser({ name,email, password , confirmPassword}) {
   
 export async function loginUser({ email, password }) {
     try {
-      const response = await axios.post('http://localhost:3000/api/v1/user/login', {
+      const response = await axios.post('https://quizze-se3g.onrender.com/api/v1/user/login', {
         email,
         password
       });
@@ -56,6 +56,7 @@ export async function loginUser({ email, password }) {
   
       return response.data; // return any response data if needed
     } catch (error) {
+      console.log(error.response.data.errorMessage);
       return error.response.data.errorMessage;
     }
   }

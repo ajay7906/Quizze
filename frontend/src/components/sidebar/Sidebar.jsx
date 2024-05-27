@@ -88,6 +88,7 @@ const Sidebar = () => {
   };
   const closeShareLinkModal = ()=>{
     setShowFinalLink(false)
+    closeModal()
   }
 
   const handleContinue = (name, type) => {
@@ -113,7 +114,7 @@ const Sidebar = () => {
       addQuiz(result);
       console.log(result);
       // handleCancel();
-      closeModal()
+      // closeModal()
     } catch (error) {
       console.error('Error creating quiz:', error);
     }
@@ -170,7 +171,10 @@ const Sidebar = () => {
         </Modal>
       
       </aside>
-      {showFinalLink && <ShareModal closeShareLinkModal={closeShareLinkModal} sendUrlLink={sendUrlLink}/>}
+      {showFinalLink && <ShareModal 
+       closeShareLinkModal={closeShareLinkModal} 
+       onClose={closeModal}
+       sendUrlLink={sendUrlLink}/>}
 
     </>
   );

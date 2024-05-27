@@ -2,7 +2,8 @@
 import axios from 'axios';
 
 
-const API_URL = 'http://localhost:3000/api/v1/quiz/create';
+const API_URL = 'https://quizze-se3g.onrender.com/api/v1/quiz/create';
+//const API_URL = 'https://quizze-se3g.onrender.com/api/v1/quiz/analytics';
 
 export const createQuiz = async (quizData) => {
   try {
@@ -32,7 +33,7 @@ export const updateQuiz = async (quizId, updatedQuizData) => {
     const token = localStorage.getItem("jwttokenuser");
 
     axios.defaults.headers.common["Authorization"] = token;
-    const response = await axios.put(`http://localhost:3000/api/v1/quiz/updatequiz/${quizId}`, updatedQuizData, {
+    const response = await axios.put(`https://quizze-se3g.onrender.com/api/v1/quiz/updatequiz/${quizId}`, updatedQuizData, {
       headers: {
         'Content-Type': 'application/json',
       },
@@ -48,7 +49,7 @@ export const updateQuiz = async (quizId, updatedQuizData) => {
 
 export const getShareQuestions = async (quizId, page, limit = 1) => {
   try {
-    const response = await axios.get(`http://localhost:3000/api/v1/quiz/shareQuestion/${quizId}?page=${page}&limit=1`);
+    const response = await axios.get(`https://quizze-se3g.onrender.com/api/v1/quiz/shareQuestion/${quizId}?page=${page}&limit=1`);
     console.log(response.data);
     return response.data;
 
@@ -62,7 +63,7 @@ export const getShareQuestions = async (quizId, page, limit = 1) => {
 
 export const getDetailsQuestions = async (quizId) => {
   try {
-    const response = await axios.get(`http://localhost:3000/api/v1/quiz/getquestion/${quizId}`);
+    const response = await axios.get(`https://quizze-se3g.onrender.com/api/v1/quiz/getquestion/${quizId}`);
     console.log(response.data);
     return response.data;
 
@@ -75,7 +76,7 @@ export const getDetailsQuestions = async (quizId) => {
 
 export const questionRightWronchk = async (questionId, updatedData) => {
   try {
-    const response = await axios.patch(`http://localhost:3000/api/v1/quiz/checkquestion/${questionId}`, updatedData);
+    const response = await axios.patch(`https://quizze-se3g.onrender.com/api/v1/quiz/checkquestion/${questionId}`, updatedData);
     return response.data;
   } catch (error) {
     console.error('Error updating question:', error);
@@ -86,7 +87,7 @@ export const questionRightWronchk = async (questionId, updatedData) => {
 
 export const empressionUpdates = async (questionId) => {
   try {
-    const response = await axios.patch(`http://localhost:3000/api/v1/quiz/empression/${questionId}`);
+    const response = await axios.patch(`https://quizze-se3g.onrender.com/api/v1/quiz/empression/${questionId}`);
     return response.data;
   } catch (error) {
     console.error('Error updating question:', error);
@@ -104,7 +105,9 @@ export const quizDetails = async () => {
 
 
     axios.defaults.headers.common["Authorization"] = token;
-    const response = await axios.get(`http://localhost:3000/api/v1/quiz/dashboard`);
+    const response = await axios.get(`https://quizze-se3g.onrender.com/api/v1/quiz/dashboard`);
+
+    
     console.log(response.data);
     return response.data;
   } catch (error) {
@@ -120,7 +123,7 @@ export const fetchTrendingQuizzes = async () => {
 
 
     axios.defaults.headers.common["Authorization"] = token;
-    const response = await axios.get(`http://localhost:3000/api/v1/quiz/trending`);
+    const response = await axios.get(`https://quizze-se3g.onrender.com/api/v1/quiz/trending`);
     console.log(response.data);
     return response.data;
   } catch (error) {
@@ -138,7 +141,9 @@ export const fetchDashboardStats = async () => {
 
 
     axios.defaults.headers.common["Authorization"] = token;
-    const response = await axios.get(`http://localhost:3000/api/v1/quiz/dashboardstats`);
+    const response = await axios.get(`https://quizze-se3g.onrender.com/api/v1/quiz/dashboardstats`);
+   // https://quizze-se3g.onrender.com/api/v1/quiz/analytics
+   //http://localhost:3000/api/v1/quiz
     console.log(response.data);
     return response.data;
   } catch (error) {
@@ -152,7 +157,7 @@ export const fetchDashboardStats = async () => {
 
 export const deleteQuiz = async (quizId) => {
   try {
-    const response = await axios.delete(`http://localhost:3000/api/v1/quiz/delete/${quizId}`);
+    const response = await axios.delete(`https://quizze-se3g.onrender.com/api/v1/quiz/delete/${quizId}`);
     return response.data;
 
   } catch (error) {

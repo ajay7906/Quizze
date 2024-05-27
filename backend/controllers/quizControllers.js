@@ -187,6 +187,7 @@ exports.updateQuiz = async (req, res) => {
                 const newQuestion = new Question({
                     quiz: quizId,
                     question: question.question,
+                    optionType:question.optionType,
                     options: question.options,
                     correctOption: question.correctOption,
                     timer: question.timer
@@ -367,19 +368,7 @@ exports.getQuestionDetails = async (req, res) => {
 exports.questiRightWrongCheck = async (req, res) => {
 
     const { quiId } = req.params;
-    // const updatedData = req.body;
-    // console.log(quiId);
-    // try {
-    //     const updatedQuestion = await Question.findByIdAndUpdate(quiId, { $set: updatedData }, { new: true });
-    //     if (!updatedQuestion) {
-    //         return res.status(404).send({ error: 'Question not found' });
-    //     }
-    //     res.json(updatedQuestion);
-    // } catch (error) {
-    //     res.status(500).send({ error: 'Failed to update question' });
-    // }
-
-    // const { quiId } = req.params;
+   
     const { isCorrect } = req.body;  // `isCorrect` can be true, false, or null
 
     try {

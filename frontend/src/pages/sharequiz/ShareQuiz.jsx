@@ -145,8 +145,7 @@ const ShareQuiz = ({ questionNumber, totalQuestions, questionText, options, init
                                             className={`${styles.option} ${selectedOption === index ? styles.isActive : ''}`}
                                             onClick={() => rightWrongCheck(option.rightans, index)}
                                         >
-                                            {/* {option.text} */}
-                                            {/* <img key={index} className={styles.images} src={option.imageURL} alt="" /> */}
+                                           
                                             {option?.text && <p>{option.text}</p>}
                                             {option?.imageURL && <img src={option.imageURL} alt="option" className={styles.images} />}
                                         </button>

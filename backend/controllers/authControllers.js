@@ -64,16 +64,16 @@ const loginUser = async (req, res) => {
         if (!email || !password) {
             return res.status(400).json({
                 success: false,
-                errorMessage: "Bad Request! Invalid credentials",
+                errorMessage: " Invalid credentials",
             });
         }
-        console.log(req);
+      
         const userDetails = await User.findOne({ email });
 
         if (!userDetails) {
             return res
                 .status(401)
-                .json({ success: false, errorMessage: "Please enter valid name" });
+                .json({ success: false, errorMessage: "Invalid Email" });
         }
 
         const passwordMatch = await bcrypt.compare(

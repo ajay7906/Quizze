@@ -132,3 +132,21 @@ h1 {
 .button:hover {
     background-color: #4500b5;
 }
+
+
+
+
+.errorInput {
+    border: 1px solid red;
+}
+
+.input::placeholder {
+    color: #D60000;
+
+    font-family: Poppins;
+font-size: 12px;
+font-weight: 500;
+line-height: 18px;
+text-align: left;
+
+}

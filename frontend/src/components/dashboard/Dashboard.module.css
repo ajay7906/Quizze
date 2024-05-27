@@ -141,3 +141,21 @@
   color: orange;
   font-weight: bold;
 }
+
+
+
+
+
+/* Add these styles to Dashboard.module.css */
+
+.loaderContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Full viewport height */
+}
+
+.noData {
+  text-align: center;
+  margin-top: 20px;
+}
