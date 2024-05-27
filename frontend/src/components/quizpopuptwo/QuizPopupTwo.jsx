@@ -1,10 +1,16 @@
 
 
 
+
+
+
+
+
 // import React, { useState, useEffect } from 'react';
 // import styles from './quizpopuptwo.module.css';
 // import DeleteImg from '../../assets/delete.png';
 // import { toast } from 'react-toastify';
+// import { ColorRing, ThreeDots } from 'react-loader-spinner';
 
 // const QuizPopupTwo = ({ onSubmit, onClose, quizType, quizQuestions, handleUpdateQuiz }) => {
 //     const [optionType, setOptionType] = useState('text');
@@ -23,7 +29,7 @@
 //     }]);
 
 //     const [currentSlide, setCurrentSlide] = useState(0);
-
+//     const [isLoading, setIsLoading] = useState(false);
 
 //     useEffect(() => {
 //         if (quizQuestions && quizQuestions.length > 0) {
@@ -97,7 +103,7 @@
 //         newSlides[currentSlide].timer = value;
 //         setQuizSlides(newSlides);
 //     };
-//    console.log(optionType==='text');
+
 //     const handleAddSlide = () => {
 //         if (quizSlides.length < 5) {
 //             setQuizSlides([...quizSlides, {
@@ -137,8 +143,8 @@
 //         newSlides[currentSlide].optionType = type;
 //         setQuizSlides(newSlides);
 //     };
-//     console.log(quizSlides);
-//     const handleCreateQuiz = () => {
+
+//     const handleCreateQuiz = async () => {
 //         for (const slide of quizSlides) {
 //             if (!slide.question.trim()) {
 //                 toast.error("Please fill out all question fields.");
@@ -160,13 +166,18 @@
 //                 }
 //             }
 //         }
-//         // onSubmit(quizSlides);
-//         if (quizQuestions && quizQuestions.length > 0) {
-//             handleUpdateQuiz(quizSlides)
 
-//         } else {
-//              onSubmit(quizSlides);
-
+//         setIsLoading(true); // Set loading to true when quiz creation starts
+//         try {
+//             if (quizQuestions && quizQuestions.length > 0) {
+//                 await handleUpdateQuiz(quizSlides);
+//             } else {
+//                 await onSubmit(quizSlides);
+//             }
+//             setIsLoading(false); // Set loading to false when quiz creation is done
+//         } catch (error) {
+//             toast.error("An error occurred while creating the quiz.");
+//             setIsLoading(false);
 //         }
 //     };
 
@@ -330,8 +341,32 @@
 //                     <button className={styles.cancelButton} onClick={onClose}>Cancel</button>
 //                     {
 //                         quizQuestions && quizQuestions.length > 0 ?
-//                             <button className={styles.createButton} onClick={handleCreateQuiz}>Update Quiz</button> :
-//                             <button className={styles.createButton} onClick={handleCreateQuiz}>Create Quiz</button>
+//                             <button className={styles.createButton} onClick={handleCreateQuiz}>
+//                                 {isLoading ? (
+//                                     <ColorRing
+//                                         visible={true}
+//                                         height="25"
+//                                         width="50"
+//                                         ariaLabel="color-ring-loading"
+//                                         wrapperStyle={{}}
+//                                         wrapperClass="color-ring-wrapper"
+//                                         colors={['#e15b64', '#f47e60', '#f8b26a', '#abbd81', '#849b87']}
+//                                     />
+//                                 ) : 'Update Quiz'}
+//                             </button> :
+//                             <button className={styles.createButton} onClick={handleCreateQuiz}>
+//                                 {isLoading ? (
+//                                     <ColorRing
+//                                         visible={true}
+//                                         height="25"
+//                                         width="50"
+//                                         ariaLabel="color-ring-loading"
+//                                         wrapperStyle={{}}
+//                                         wrapperClass="color-ring-wrapper"
+//                                         colors={['#e15b64', '#f47e60', '#f8b26a', '#abbd81', '#849b87']}
+//                                     />
+//                                 ) : 'Create Quiz'}
+//                             </button>
 //                     }
 //                 </div>
 //             </div>
@@ -344,33 +379,46 @@
 
 
 
-
-
-
-
-
-
 import React, { useState, useEffect } from 'react';
 import styles from './quizpopuptwo.module.css';
 import DeleteImg from '../../assets/delete.png';
 import { toast } from 'react-toastify';
-import { ColorRing, ThreeDots } from 'react-loader-spinner';
+import { ColorRing } from 'react-loader-spinner';
 
 const QuizPopupTwo = ({ onSubmit, onClose, quizType, quizQuestions, handleUpdateQuiz }) => {
-    const [optionType, setOptionType] = useState('text');
-    const [quizSlides, setQuizSlides] = useState([{
-        question: '',
-        optionType: optionType,
-        options: [
-            { text: '', imageURL: '', rightans: false },
-            { text: '', imageURL: '', rightans: false }
-        ],
-        optionsTextAndImg: [
-            { text: '', imageURL: '', rightans: false },
-            { text: '', imageURL: '', rightans: false }
-        ],
-        timer: 0
-    }]);
+
+
+
+    const initialQuizSlides = quizQuestions && quizQuestions.length > 0
+        ? quizQuestions
+        : [{
+            question: '',
+            optionType: 'text',
+            options: [
+                { text: '', imageURL: '', rightans: false },
+                { text: '', imageURL: '', rightans: false }
+            ],
+            optionsTextAndImg: [
+                { text: '', imageURL: '', rightans: false },
+                { text: '', imageURL: '', rightans: false }
+            ],
+            timer: 0
+        }];
+    const [quizSlides, setQuizSlides] = useState( initialQuizSlides
+        // [{
+        //     question: '',
+        //     optionType: 'text',
+        //     options: [
+        //         { text: '', imageURL: '', rightans: false },
+        //         { text: '', imageURL: '', rightans: false }
+        //     ],
+        //     optionsTextAndImg: [
+        //         { text: '', imageURL: '', rightans: false },
+        //         { text: '', imageURL: '', rightans: false }
+        //     ],
+        //     timer: 0
+        // }]
+    );
 
     const [currentSlide, setCurrentSlide] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
@@ -378,18 +426,24 @@ const QuizPopupTwo = ({ onSubmit, onClose, quizType, quizQuestions, handleUpdate
     useEffect(() => {
         if (quizQuestions && quizQuestions.length > 0) {
             setQuizSlides(quizQuestions);
+            console.log(quizQuestions);
         }
     }, [quizQuestions]);
 
+    console.log(quizSlides);
+  
+
     useEffect(() => {
-        if (quizQuestions && quizQuestions.length > 0) {
-            setOptionType(quizSlides[currentSlide].optionType);
-        }
-    }, [currentSlide, quizSlides]);
+        const firstSlideOptionType = quizSlides[0].optionType;
+        const newSlides = quizSlides.map((slide, index) => (
+            index === 0 ? slide : { ...slide, optionType: firstSlideOptionType }
+        ));
+        setQuizSlides(newSlides);
+    }, [quizSlides[0].optionType]);
 
     const addOption = () => {
         const newSlides = [...quizSlides];
-        if (optionType === 'textAndImageURL') {
+        if (quizSlides[currentSlide].optionType === 'textAndImageURL') {
             if (newSlides[currentSlide].optionsTextAndImg.length < 5) {
                 newSlides[currentSlide].optionsTextAndImg.push({ text: '', imageURL: '', rightans: false });
                 setQuizSlides(newSlides);
@@ -404,7 +458,7 @@ const QuizPopupTwo = ({ onSubmit, onClose, quizType, quizQuestions, handleUpdate
 
     const removeOption = (index) => {
         const newSlides = [...quizSlides];
-        if (optionType === 'textAndImageURL') {
+        if (quizSlides[currentSlide].optionType === 'textAndImageURL') {
             if (newSlides[currentSlide].optionsTextAndImg.length > 1) {
                 newSlides[currentSlide].optionsTextAndImg.splice(index, 1);
                 setQuizSlides(newSlides);
@@ -419,7 +473,7 @@ const QuizPopupTwo = ({ onSubmit, onClose, quizType, quizQuestions, handleUpdate
 
     const handleOptionChange = (optionIndex, value, field) => {
         const newSlides = [...quizSlides];
-        if (optionType === 'textAndImageURL') {
+        if (quizSlides[currentSlide].optionType === 'textAndImageURL') {
             newSlides[currentSlide].optionsTextAndImg[optionIndex][field] = value;
         } else {
             newSlides[currentSlide].options[optionIndex][field] = value;
@@ -429,7 +483,7 @@ const QuizPopupTwo = ({ onSubmit, onClose, quizType, quizQuestions, handleUpdate
 
     const handleRightAnswerChange = (optionIndex) => {
         const newSlides = [...quizSlides];
-        if (optionType === 'textAndImageURL') {
+        if (quizSlides[currentSlide].optionType === 'textAndImageURL') {
             newSlides[currentSlide].optionsTextAndImg.forEach((option, index) => {
                 option.rightans = index === optionIndex;
             });
@@ -452,7 +506,7 @@ const QuizPopupTwo = ({ onSubmit, onClose, quizType, quizQuestions, handleUpdate
         if (quizSlides.length < 5) {
             setQuizSlides([...quizSlides, {
                 question: '',
-                optionType: '',
+                optionType: quizSlides[0].optionType,
                 options: [
                     { text: '', imageURL: '', rightans: false },
                     { text: '', imageURL: '', rightans: false }
@@ -482,9 +536,8 @@ const QuizPopupTwo = ({ onSubmit, onClose, quizType, quizQuestions, handleUpdate
     };
 
     const handleOptionTypeChange = (type) => {
-        setOptionType(type);
         const newSlides = [...quizSlides];
-        newSlides[currentSlide].optionType = type;
+        newSlides[0].optionType = type;
         setQuizSlides(newSlides);
     };
 
@@ -494,17 +547,17 @@ const QuizPopupTwo = ({ onSubmit, onClose, quizType, quizQuestions, handleUpdate
                 toast.error("Please fill out all question fields.");
                 return;
             }
-            const optionsToCheck = optionType === 'textAndImageURL' ? slide.optionsTextAndImg : slide.options;
+            const optionsToCheck = quizSlides[0].optionType === 'textAndImageURL' ? slide.optionsTextAndImg : slide.options;
             for (const option of optionsToCheck) {
-                if (optionType === 'text' && !option.text.trim()) {
+                if (quizSlides[0].optionType === 'text' && !option.text.trim()) {
                     toast.error("Please fill out all option text fields.");
                     return;
                 }
-                if (optionType === 'imageURL' && !option.imageURL.trim()) {
+                if (quizSlides[0].optionType === 'imageURL' && !option.imageURL.trim()) {
                     toast.error("Please fill out all option image URL fields.");
                     return;
                 }
-                if (optionType === 'textAndImageURL' && (!option.text.trim() || !option.imageURL.trim())) {
+                if (quizSlides[0].optionType === 'textAndImageURL' && (!option.text.trim() || !option.imageURL.trim())) {
                     toast.error("Please fill out all option text and image URL fields.");
                     return;
                 }
@@ -523,10 +576,6 @@ const QuizPopupTwo = ({ onSubmit, onClose, quizType, quizQuestions, handleUpdate
             toast.error("An error occurred while creating the quiz.");
             setIsLoading(false);
         }
-    };
-
-    const getTimerLabel = (value) => {
-        return value === 0 ? 'OFF' : value;
     };
 
     return (
@@ -571,9 +620,10 @@ const QuizPopupTwo = ({ onSubmit, onClose, quizType, quizQuestions, handleUpdate
                         <input
                             type="radio"
                             name="optionType"
-                            value={quizSlides[currentSlide].optionType}
-                            checked={optionType === 'text'}
+                            value="text"
+                            checked={quizSlides[0].optionType === 'text'}
                             onChange={() => handleOptionTypeChange('text')}
+                            disabled={currentSlide !== 0}
                         />
                         Text
                     </label>
@@ -581,9 +631,10 @@ const QuizPopupTwo = ({ onSubmit, onClose, quizType, quizQuestions, handleUpdate
                         <input
                             type="radio"
                             name="optionType"
-                            value={quizSlides[currentSlide].optionType}
-                            checked={optionType === 'imageURL'}
+                            value="imageURL"
+                            checked={quizSlides[0].optionType === 'imageURL'}
                             onChange={() => handleOptionTypeChange('imageURL')}
+                            disabled={currentSlide !== 0}
                         />
                         Image URL
                     </label>
@@ -591,16 +642,18 @@ const QuizPopupTwo = ({ onSubmit, onClose, quizType, quizQuestions, handleUpdate
                         <input
                             type="radio"
                             name="optionType"
-                            value={quizSlides[currentSlide].optionType}
-                            checked={optionType === 'textAndImageURL'}
+                            value="textAndImageURL"
+                            checked={quizSlides[0].optionType === 'textAndImageURL'}
                             onChange={() => handleOptionTypeChange('textAndImageURL')}
+                            disabled={currentSlide !== 0}
                         />
                         Text & Image URL
                     </label>
                 </div>
-                <div className={`${styles.timerAndInput} ${optionType === 'textAndImageURL' ? styles.fullWidth : ''}`}>
+
+                <div className={`${styles.timerAndInput} ${quizSlides[0].optionType === 'textAndImageURL' ? styles.fullWidth : ''}`}>
                     <div>
-                        {(optionType === 'textAndImageURL' ? quizSlides[currentSlide].optionsTextAndImg : quizSlides[currentSlide].options).map((option, index) => (
+                        {(quizSlides[0].optionType === 'textAndImageURL' ? quizSlides[currentSlide].optionsTextAndImg : quizSlides[currentSlide].options).map((option, index) => (
                             <div key={index} className={`${styles.option} `}>
                                 <label className={`${styles.optionColor}`}>
                                     <input
@@ -612,8 +665,8 @@ const QuizPopupTwo = ({ onSubmit, onClose, quizType, quizQuestions, handleUpdate
                                     />
                                 </label>
 
-                                <div className={`${optionType === 'textAndImageURL' ? styles.textAndImagesUrl : styles.selectWidth}`}>
-                                    {optionType === 'text' ? (
+                                <div className={`${quizSlides[0].optionType === 'textAndImageURL' ? styles.textAndImagesUrl : styles.selectWidth}`}>
+                                    {quizSlides[0].optionType === 'text' ? (
                                         <input
                                             className={`${option.rightans ? styles.isActiveOption : styles.optionInput}`}
                                             type="text"
@@ -622,7 +675,7 @@ const QuizPopupTwo = ({ onSubmit, onClose, quizType, quizQuestions, handleUpdate
                                             onChange={(e) => handleOptionChange(index, e.target.value, 'text')}
                                         />
                                     ) : null}
-                                    {optionType === 'imageURL' ? (
+                                    {quizSlides[0].optionType === 'imageURL' ? (
                                         <input
                                             className={`${option.rightans ? styles.isActiveOption : styles.optionInput}`}
                                             type="text"
@@ -632,7 +685,7 @@ const QuizPopupTwo = ({ onSubmit, onClose, quizType, quizQuestions, handleUpdate
                                         />
                                     ) : null}
 
-                                    {optionType === 'textAndImageURL' ? (
+                                    {quizSlides[0].optionType === 'textAndImageURL' ? (
                                         <>
                                             <input
                                                 className={`${option.rightans ? styles.isActiveOption : styles.optionInput}`}
@@ -653,13 +706,13 @@ const QuizPopupTwo = ({ onSubmit, onClose, quizType, quizQuestions, handleUpdate
                                 </div>
 
                                 {index >= 2 && (
-                                    <button className={` ${optionType === 'textAndImageURL' ? styles.removeButtonForboth : styles.removeButton}`} onClick={() => removeOption(index)}> <img src={DeleteImg} alt="" /> </button>
+                                    <button className={` ${quizSlides[0].optionType === 'textAndImageURL' ? styles.removeButtonForboth : styles.removeButton}`} onClick={() => removeOption(index)}> <img src={DeleteImg} alt="" /> </button>
                                 )}
                             </div>
                         ))}
 
-                        {(optionType === 'textAndImageURL' ? quizSlides[currentSlide].optionsTextAndImg : quizSlides[currentSlide].options).length < 4 && (
-                            <button className={`${styles.addOptionButton} ${optionType === 'textAndImageURL' ? styles.addOptionButtonBoth : ''}`} onClick={addOption}>Add option</button>
+                        {(quizSlides[0].optionType === 'textAndImageURL' ? quizSlides[currentSlide].optionsTextAndImg : quizSlides[currentSlide].options).length < 4 && (
+                            <button className={`${styles.addOptionButton} ${quizSlides[0].optionType === 'textAndImageURL' ? styles.addOptionButtonBoth : ''}`} onClick={addOption}>Add option</button>
                         )}
                     </div>
                     {
@@ -719,4 +772,3 @@ const QuizPopupTwo = ({ onSubmit, onClose, quizType, quizQuestions, handleUpdate
 };
 
 export default QuizPopupTwo;
-

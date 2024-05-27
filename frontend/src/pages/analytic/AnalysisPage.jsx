@@ -346,8 +346,9 @@ const AnalysisPage = () => {
   };
 
   const handleEditClick = (quiz) => {
-    setQuizToEdit(quiz);
     fetchQuizQuestions(quiz._id);
+    setQuizToEdit(quiz);
+    
     setShowFirstPopup(true);
   };
 

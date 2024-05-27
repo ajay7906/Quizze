@@ -332,7 +332,7 @@ const Register = () => {
 
         if (!formData.password) {
             errors.password = 'Password is required';
-        } else if (formData.password.length < 6) {
+        } else if (formData.password.length < 3) {
             errors.password = 'Weak password';
         }
 
@@ -357,6 +357,7 @@ const Register = () => {
                 });
                 navigate('/');
             } else {
+                // setErrorMessage({ [response.includes('Email') ? 'email' : 'password']: response });
                 console.log(response);
                 toast.error(response || 'Login failed');
             }
