@@ -427,7 +427,18 @@ const AnalysisPage = () => {
                         <button className={styles.deleteButton}><img onClick={() => handleDeleteClick(quiz._id)} src={DeletBtn} alt="Delete" /></button>
                         <button className={styles.shareButton}><img src={ShareBtn} onClick={() => generateShareLink(quiz._id)} alt="Share" /></button>
                       </td>
-                      <td><Link to={`/questiondetails/${quiz._id}`} className={styles.analysisLink}>Question Wise Analysis</Link></td>
+                      {/* <td><Link to={`/questiondetails/${quiz._id}`} className={styles.analysisLink}>Question Wise Analysis</Link></td> */}
+                      <td><Link  to={
+                                    // pathname: `/questiondetails/${quiz._id}`,
+                                    // state: { impressions: quiz.impressions }
+                                    `/questiondetails/${quiz._id}`}
+                                state={{ impressions: quiz.impressions,
+                                  createdAt: quiz.createdAt,
+                                 title: quiz.title
+                                 }
+                                   
+                                } 
+                                className={styles.analysisLink}>Question Wise Analysis</Link></td>
                     </tr>
                   ))}
                 </tbody>

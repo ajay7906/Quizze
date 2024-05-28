@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import QuestionCard from '../../components/questioncard/QuestionCard';
 import styles from './QuestionPage.module.css';
 import { getDetailsQuestions } from '../../api/quizApi'
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { format, parseISO } from 'date-fns';
 const questionsData = [
     { question: 'Q.1 Question place holder for analysis ?', attempts: 60, correct: 38, incorrect: 22 },
@@ -12,12 +12,15 @@ const questionsData = [
 
 const QuestionPage = () => {
     const [questionDetails, setQuestionDetails] = useState()
+    const location = useLocation();
     const { quizId } = useParams();
+    const { impressions,  createdAt, title    } = location.state ||  {}
+    console.log(impressions, createdAt, title);
     const getAllQuestionDetails = async () => {
         try {
             const response = await getDetailsQuestions(quizId)
             setQuestionDetails(response);
-            console.log(questionDetails);
+         
 
         } catch (error) {
             console.log(error);
@@ -25,6 +28,7 @@ const QuestionPage = () => {
         }
 
     }
+    console.log(questionDetails);
 
     useEffect(() => {
         getAllQuestionDetails()
@@ -33,9 +37,9 @@ const QuestionPage = () => {
     return (
         <div className={styles.container}>
             <div className={styles.questionanlysis}>
-                <h1 className={styles.title}>Quiz 2 Question Analysis</h1>
+                <h1 className={styles.title}>{title} Question Analysis</h1>
                 <div className={styles.metaData}>
-                    <span>Created on: 04 Sep, 2023 <br />Impressions: 667 </span>
+                    <span>Created on: {createdAt} <br />Impressions: {impressions} </span>
                     {/* <span>Impressions: 667</span> */}
                 </div>
             </div>

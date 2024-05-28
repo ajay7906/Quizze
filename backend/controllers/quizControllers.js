@@ -2,82 +2,6 @@ const Quiz = require('../models/quiz');
 const Question = require('../models/question');
 const { errorHandler } = require('../utils/errorHandler');
 
-// exports.createQuiz = async (req, res) => {
-//     //   try {
-//     //     const { title, questions, isPoll } = req.body;
-//     const { userId } = req;
-//     //     const quiz = new Quiz({ title, user: userId, isPoll });
-
-//     //     const savedQuestions = await Promise.all(questions.map(async (q) => {
-//     //       const question = new Question(q);
-//     //       await question.save();
-//     //       return question._id;
-//     //     }));
-
-//     //     quiz.questions = savedQuestions;
-//     //     await quiz.save();
-//     //     res.status(201).json(quiz);
-//     //   } catch (error) {
-//     //     errorHandler(res, error);
-//     //   }
-
-
-//     try {
-//         const { title, type, questions } = req.body;
-
-//         // Validate the input
-//         if (!title || !type || !questions || !Array.isArray(questions) || questions.length === 0) {
-//             return res.status(400).json({ message: 'Invalid input data' });
-//         }
-
-//         // Validate questions input
-//         for (let question of questions) {
-//             if (!question.text || !question.options || !Array.isArray(question.options) || !question.correctOption) {
-//                 return res.status(400).json({ message: 'Invalid question data' });
-//             }
-//         }
-
-//         // Create the Quiz document
-//         const newQuiz = new Quiz({
-//             title,
-//             type,
-//             questions: [],
-//             author: userId // Assuming the user ID is available in the request
-//         });
-
-//         const savedQuiz = await newQuiz.save();
-
-//         // Create Question documents
-//         const questionDocs = await Promise.all(
-//             questions.map(async (question) => {
-//                 const newQuestion = new Question({
-//                     quiz: savedQuiz._id,
-//                     text: question.text,
-//                     options: question.options,
-//                     correctOption: question.correctOption
-//                 });
-//                 return await newQuestion.save();
-//             })
-//         );
-
-//         // Update the Quiz document with the question IDs
-//         newQuiz.questions = questionDocs.map(q => q._id);
-//         await newQuiz.save();
-
-//         // Populate the author and questions fields in the response
-//         const populatedQuiz = await Quiz.findById(newQuiz._id)
-//             .populate('author', 'name email')
-//             .populate('questions');
-
-//         res.status(201).json(populatedQuiz);
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).json({ message: 'Server error' });
-//     }
-
-
-
-// };
 
 
 exports.createQuiz = async (req, res) => {
@@ -91,12 +15,7 @@ exports.createQuiz = async (req, res) => {
             return res.status(400).json({ message: 'Invalid input data' });
         }
 
-        // Validate questions input
-        // for (let question of questions) {
-        //     if (!question.question || !question.options || !Array.isArray(question.options) || question.options.length === 0) {
-        //         return res.status(400).json({ message: 'Invalid question data' });
-        //     }
-        // }
+     
 
         // Create the Quiz document
         const newQuiz = new Quiz({
@@ -213,27 +132,12 @@ exports.updateQuiz = async (req, res) => {
 };
 
 
-// exports.getQuizDetails = async (req, res) => {
-//     try {
-//         const { userId } = req;
-//         const quizzes = await Quiz.find()
-
-        
-
-//         res.json({
-            
-//             quizzes
-//         });
-//     } catch (error) {
-//         errorHandler(res, error);
-//     }
-// };
 
 
 exports.getQuizDetails = async (req, res) => {
     try {
         const { userId } = req;
-        const quizzes = await Quiz.find();
+        const quizzes = await Quiz.find({ user: userId });
 
         const formattedQuizzes = quizzes.map(quiz => {
             const date = new Date(quiz.createdAt);
@@ -257,17 +161,6 @@ exports.getQuizDetails = async (req, res) => {
 };
 
 
-
-//get trending quiz
-
-// exports.getTrendingQuiz = async (req, res) => {
-//     try {
-//         const trendingQuizzes = await Quiz.find({ impressions: { $gt: 10 } }).sort({ impressions: -1 });
-//         res.json(trendingQuizzes);
-//     } catch (err) {
-//         res.status(500).json({ error: err.message });
-//     }
-// };
 
 
 exports.getTrendingQuiz = async (req, res) => {
@@ -348,7 +241,8 @@ exports.submitQuiz = async (req, res) => {
 
 exports.getAnalytics = async (req, res) => {
     try {
-        const quizzes = await Quiz.find({ user: req.user._id }).populate('questions');
+        const { quizId } = req;
+        const quizzes = await Quiz.find({ user: quizId }).populate('questions');
 
         const analytics = quizzes.map(quiz => ({
             title: quiz.title,

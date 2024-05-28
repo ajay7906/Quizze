@@ -136,7 +136,7 @@ const Dashboard = () => {
                       <p>{quiz.impressions >= 1000 ? (quiz.impressions / 1000).toFixed(1) + 'K' : quiz.impressions} <img src={EmpressionImg} alt="" /></p>
                     </div>
                     <div className={styles.createdTime}>
-                      <span>Created on: {new Date(quiz.createdAt).toLocaleDateString()}</span>
+                      <span>Created on: {quiz.createdAt}</span>
                     </div>
                   </div>
                 ))
