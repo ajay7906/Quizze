@@ -22,7 +22,7 @@ exports.createQuiz = async (req, res) => {
             title,
             type,
             questions: [],
-            author: userId
+            user: userId
         });
 
         const savedQuiz = await newQuiz.save();
@@ -47,9 +47,9 @@ exports.createQuiz = async (req, res) => {
         newQuiz.questions = questionDocs.map(q => q._id);
         await newQuiz.save();
 
-        // Populate the author and questions fields in the response
+        // Populate the user and questions fields in the response
         const populatedQuiz = await Quiz.findById(newQuiz._id)
-            .populate('author', 'name email')
+            .populate('user', 'name email')
             .populate('questions');
 
         res.status(201).json(populatedQuiz);
@@ -88,8 +88,8 @@ exports.updateQuiz = async (req, res) => {
             return res.status(404).json({ message: 'Quiz not found' });
         }
 
-        // Check if the user is the author of the quiz
-        if (existingQuiz.author.toString() !== userId) {
+        // Check if the user is the user of the quiz
+        if (existingQuiz.user.toString() !== userId) {
             return res.status(403).json({ message: 'Unauthorized' });
         }
 
@@ -119,9 +119,9 @@ exports.updateQuiz = async (req, res) => {
         existingQuiz.questions = questionDocs.map(q => q._id);
         await existingQuiz.save();
 
-        // Populate the author and questions fields in the response
+        // Populate the user and questions fields in the response
         const populatedQuiz = await Quiz.findById(existingQuiz._id)
-            .populate('author', 'name email')
+            .populate('user', 'name email')
             .populate('questions');
 
         res.status(200).json(populatedQuiz);
@@ -137,7 +137,8 @@ exports.updateQuiz = async (req, res) => {
 exports.getQuizDetails = async (req, res) => {
     try {
         const { userId } = req;
-        const quizzes = await Quiz.find({ author: userId });
+       console.log(userId);
+        const quizzes = await Quiz.find({ user: userId });
 
         const formattedQuizzes = quizzes.map(quiz => {
             const date = new Date(quiz.createdAt);
@@ -192,7 +193,7 @@ exports.getTrendingQuiz = async (req, res) => {
         const { userId } = req; // Assuming userId is attached to the request object
 
         // Fetch quizzes created by the user with impressions greater than 10
-        const trendingQuizzes = await Quiz.find({ author: userId, impressions: { $gt: 10 } }).sort({ impressions: -1 });
+        const trendingQuizzes = await Quiz.find({ user: userId, impressions: { $gt: 10 } }).sort({ impressions: -1 });
 
         // Format the createdAt date
         const formattedTrendingQuizzes = trendingQuizzes.map(quiz => {
@@ -220,17 +221,48 @@ exports.getTrendingQuiz = async (req, res) => {
 
 
 //get dashboard stats
-exports.getDashBoardData = async (req,  res)=>{
+// exports.getDashBoardData = async (req,  res)=>{
+//     try {
+//         const totalQuizzes = await Quiz.countDocuments();
+//         const totalQuestions = await Quiz.aggregate([
+//             { $unwind: '$questions' },
+//             { $count: 'totalQuestions' }
+//         ]);
+//         const totalImpressions = await Quiz.aggregate([
+//             { $group: { _id: null, totalImpressions: { $sum: '$impressions' } } }
+//         ]);
+    
+//         res.json({
+//             totalQuizzes,
+//             totalQuestions: totalQuestions[0]?.totalQuestions || 0,
+//             totalImpressions: totalImpressions[0]?.totalImpressions || 0
+//         });
+//     } catch (err) {
+//         res.status(500).json({ error: err.message });
+//     }
+
+// }
+
+exports.getDashBoardData = async (req, res) => {
     try {
-        const totalQuizzes = await Quiz.countDocuments();
+        const { userId } = req; // Ensure userId is correctly attached
+
+        // Count the total number of quizzes created by the user
+        const totalQuizzes = await Quiz.countDocuments({ user: userId });
+
+        // Count the total number of questions in quizzes created by the user
         const totalQuestions = await Quiz.aggregate([
+            { $match: { author: userId } },
             { $unwind: '$questions' },
             { $count: 'totalQuestions' }
         ]);
+
+        // Sum the total impressions of quizzes created by the user
         const totalImpressions = await Quiz.aggregate([
+            { $match: { author: userId } },
             { $group: { _id: null, totalImpressions: { $sum: '$impressions' } } }
         ]);
-    
+
         res.json({
             totalQuizzes,
             totalQuestions: totalQuestions[0]?.totalQuestions || 0,
@@ -239,8 +271,8 @@ exports.getDashBoardData = async (req,  res)=>{
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
+};
 
-}
 
 
 
