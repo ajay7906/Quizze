@@ -213,27 +213,43 @@ exports.updateQuiz = async (req, res) => {
 };
 
 
+// exports.getQuizDetails = async (req, res) => {
+//     try {
+//         const { userId } = req;
+//         const quizzes = await Quiz.find()
+
+        
+
+//         res.json({
+            
+//             quizzes
+//         });
+//     } catch (error) {
+//         errorHandler(res, error);
+//     }
+// };
+
+
 exports.getQuizDetails = async (req, res) => {
     try {
         const { userId } = req;
-        const quizzes = await Quiz.find()
+        const quizzes = await Quiz.find();
 
-        // const dashboardData = quizzes.map(quiz => ({
-        //     title: quiz.title,
-        //     createdAt: quiz.createdAt,
-        //     impressions: quiz.impressions,
-        //     totalQuestions: quiz.questions.length,
-        //     questions: quiz.questions
-        // }));
+        const formattedQuizzes = quizzes.map(quiz => {
+            const date = new Date(quiz.createdAt);
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = date.toLocaleString('default', { month: 'short' });
+            const year = date.getFullYear();
+            const formattedDate = `${day} ${month}, ${year}`;
 
-        // const totalQuizzes = quizzes.length;
-        // const totalImpressions = quizzes.reduce((sum, quiz) => sum + quiz.impressions, 0);
+            return {
+                ...quiz._doc,
+                createdAt: formattedDate
+            };
+        });
 
         res.json({
-            // totalQuizzes,
-            // totalImpressions,
-            // quizzes: dashboardData,
-            quizzes
+            quizzes: formattedQuizzes
         });
     } catch (error) {
         errorHandler(res, error);
