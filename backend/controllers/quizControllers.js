@@ -260,14 +260,42 @@ exports.getQuizDetails = async (req, res) => {
 
 //get trending quiz
 
+// exports.getTrendingQuiz = async (req, res) => {
+//     try {
+//         const trendingQuizzes = await Quiz.find({ impressions: { $gt: 10 } }).sort({ impressions: -1 });
+//         res.json(trendingQuizzes);
+//     } catch (err) {
+//         res.status(500).json({ error: err.message });
+//     }
+// };
+
+
 exports.getTrendingQuiz = async (req, res) => {
     try {
         const trendingQuizzes = await Quiz.find({ impressions: { $gt: 10 } }).sort({ impressions: -1 });
-        res.json(trendingQuizzes);
+
+        const formattedTrendingQuizzes = trendingQuizzes.map(quiz => {
+            const date = new Date(quiz.createdAt);
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = date.toLocaleString('default', { month: 'short' });
+            const year = date.getFullYear();
+            const formattedDate = `${day} ${month}, ${year}`;
+
+            return {
+                ...quiz._doc,
+                createdAt: formattedDate
+            };
+        });
+
+        res.json(formattedTrendingQuizzes);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 };
+
+
+
+
 
 //get dashboard stats
 exports.getDashBoardData = async (req,  res)=>{
