@@ -5,7 +5,7 @@
 
 // import React, { useContext, useEffect, useState } from 'react';
 // import styles from './AnalysisPage.module.css';
-// import { deleteQuiz, getDetailsQuestions, quizDetails, updateQuiz } from '../../api/quizApi'; // Ensure you have an updateQuiz function in your API
+// import { deleteQuiz, getDetailsQuestions, quizDetails, updateQuiz } from '../../api/quizApi';
 // import ShareBtn from '../../assets/share.png';
 // import EditBtn from '../../assets/edit.png';
 // import { Link } from 'react-router-dom';
@@ -17,8 +17,10 @@
 // import QuizPopupOne from '../../components/quizpopupone/QuizPopupOne';
 // import QuizPopupTwo from '../../components/quizpopuptwo/QuizPopupTwo';
 // import ShareModal from '../../components/sharemodal/ShareModal';
+// import { RotatingLines } from 'react-loader-spinner'; // Import the spinner
 
 // const AnalysisPage = () => {
+//   const [isLoading, setIsLoading] = useState(true); // State to manage loading
 //   const [isModalOpen, setIsModalOpen] = useState(false);
 //   const [quizToDelete, setQuizToDelete] = useState(null);
 //   const [quizData, setQuizData] = useState([]);
@@ -30,7 +32,6 @@
 //   const [sendUrlLink, setSendUrlLink] = useState('');
 //   const [quizQuestions, setQuizQuestions] = useState();
 //   const [isDeleteModal, setIsDeleteModal] = useState(false);
-
 
 //   const openModal = () => {
 //     setIsModalOpen(true);
@@ -80,29 +81,27 @@
 //       setQuizData(response.quizzes);
 //     } catch (error) {
 //       console.error('Error fetching quizzes:', error);
+//     } finally {
+//       setIsLoading(false); // Set loading to false when data is fetched
 //     }
 //   };
 
-
 //   const fetchQuizQuestions = async (quizId) => {
-
 //     try {
 //       const response = await getDetailsQuestions(quizId);
 //       console.log(response);
-//       setQuizQuestions(response)
+//       setQuizQuestions(response);
 //     } catch (error) {
 //       console.error('Error fetching quiz questions:', error);
 //       return [];
 //     }
 //   };
-//   console.log(quizToEdit);
-//   const handleEditClick =  (quiz) => {
+
+//   const handleEditClick = (quiz) => {
+//     fetchQuizQuestions(quiz._id);
 //     setQuizToEdit(quiz);
-//     // const questions = await fetchQuizQuestions(quiz._id);
-//     fetchQuizQuestions(quiz._id)
+    
 //     setShowFirstPopup(true);
-
-
 //   };
 
 //   const handleContinue = (name, type) => {
@@ -116,7 +115,6 @@
 //   };
 
 //   const handleUpdateQuiz = async (questions) => {
-//     console.log('Kuch Nahi');
 //     try {
 //       const updatedQuiz = {
 //         ...quizToEdit,
@@ -127,15 +125,13 @@
 //       setSendUrlLink(`http://localhost:5173/sharequiz/${result._id}`);
 //       setShowFinalLink(true);
 //       setShowSecondPopup(false);
-//       closeModal()
+//       closeModal();
 //       toast.success('Quiz updated successfully!');
 //     } catch (error) {
 //       console.error('Error updating quiz:', error);
 //       toast.error('Failed to update quiz.');
 //     }
 //   };
-
-
 
 //   const closeShareLinkModal = () => {
 //     setShowFinalLink(false);
@@ -151,42 +147,59 @@
 
 //   return (
 //     <>
-//       {quizData && quizData.length > 0 ? (
-//         <div className={styles.container}>
-//           <h1 className={styles.title}>Quiz Analysis</h1>
-//           <div className={styles.tableContainer}>
-//             <table className={styles.table}>
-//               <thead className={styles.tableheading}>
-//                 <tr>
-//                   <th>S.No</th>
-//                   <th>Quiz Name</th>
-//                   <th>Created on</th>
-//                   <th>Impression</th>
-//                   <th></th>
-//                   <th></th>
-//                 </tr>
-//               </thead>
-//               <tbody>
-//                 {quizData.map((quiz, index) => (
-//                   <tr key={quiz._id}>
-//                     <td>{index + 1}</td>
-//                     <td>{quiz.title}</td>
-//                     <td>{quiz.createdAt}</td>
-//                     <td>{quiz.impressions}</td>
-//                     <td className={styles.actionBtn}>
-//                       <button className={styles.editButton}><img onClick={() => { handleEditClick(quiz); openModal() }} src={EditBtn} alt="Edit" /></button>
-//                       <button className={styles.deleteButton}><img onClick={() => handleDeleteClick(quiz._id)} src={DeletBtn} alt="Delete" /></button>
-//                       <button className={styles.shareButton}><img src={ShareBtn} onClick={() => generateShareLink(quiz._id)} alt="Share" /></button>
-//                     </td>
-//                     <td><Link to={`/questiondetails/${quiz._id}`} className={styles.analysisLink}>Question Wise Analysis</Link></td>
-//                   </tr>
-//                 ))}
-//               </tbody>
-//             </table>
-//           </div>
+//       {isLoading ? (
+//         <div className={styles.loaderContainer}>
+//           <RotatingLines width="100" visible={true} />
 //         </div>
 //       ) : (
-//         <h1>Data not found</h1>
+//         quizData && quizData.length > 0 ? (
+//           <div className={styles.container}>
+//             <h1 className={styles.title}>Quiz Analysis</h1>
+//             <div className={styles.tableContainer}>
+//               <table className={styles.table}>
+//                 <thead className={styles.tableheading}>
+//                   <tr>
+//                     <th>S.No</th>
+//                     <th>Quiz Name</th>
+//                     <th>Created on</th>
+//                     <th>Impression</th>
+//                     <th></th>
+//                     <th></th>
+//                   </tr>
+//                 </thead>
+//                 <tbody>
+//                   {quizData.map((quiz, index) => (
+//                     <tr key={quiz._id}>
+//                       <td>{index + 1}</td>
+//                       <td>{quiz.title}</td>
+//                       <td>{quiz.createdAt}</td>
+//                       <td>{quiz.impressions >= 1000 ? (quiz.impressions / 1000).toFixed(1) + 'K' : quiz.impressions}</td>
+//                       <td className={styles.actionBtn}>
+//                         <button className={styles.editButton}><img onClick={() => { handleEditClick(quiz); openModal() }} src={EditBtn} alt="Edit" /></button>
+//                         <button className={styles.deleteButton}><img onClick={() => handleDeleteClick(quiz._id)} src={DeletBtn} alt="Delete" /></button>
+//                         <button className={styles.shareButton}><img src={ShareBtn} onClick={() => generateShareLink(quiz._id)} alt="Share" /></button>
+//                       </td>
+//                       {/* <td><Link to={`/questiondetails/${quiz._id}`} className={styles.analysisLink}>Question Wise Analysis</Link></td> */}
+//                       <td><Link  to={
+//                                     // pathname: `/questiondetails/${quiz._id}`,
+//                                     // state: { impressions: quiz.impressions }
+//                                     `/questiondetails/${quiz._id}`}
+//                                 state={{ impressions: quiz.impressions,
+//                                   createdAt: quiz.createdAt,
+//                                  title: quiz.title
+//                                  }
+                                   
+//                                 } 
+//                                 className={styles.analysisLink}>Question Wise Analysis</Link></td>
+//                     </tr>
+//                   ))}
+//                 </tbody>
+//               </table>
+//             </div>
+//           </div>
+//         ) : (
+//           <h1>Data not found</h1>
+//         )
 //       )}
 //       {isDeleteModal && (
 //         <ConfirmModal
@@ -195,44 +208,12 @@
 //           onConfirm={handleConfirmDelete}
 //         />
 //       )}
-//       {/* {showFirstPopup && (
-//         <Modal isOpen={showFirstPopup} onClose={() => setShowFirstPopup(false)}>
-//           <QuizPopupOne
-//             quiz={quizToEdit}
-//             onCancel={() => setShowFirstPopup(false)}
-//             onContinue={(name, type) => handleContinue(name, type)}
-//           />
-//         </Modal>
-//       )}
-//       {showSecondPopup && (
-//         <Modal isOpen={showSecondPopup} onClose={() => setShowSecondPopup(false)}>
-//           <QuizPopupTwo
-//             quiz={quizToEdit}
-//             onCancel={() => setShowSecondPopup(false)}
-//             onUpdate={handleUpdateQuiz}
-//           />
-//         </Modal>
-//       )} */}
-
 //       <Modal isOpen={isModalOpen} onClose={closeModal}>
-//         {showFirstPopup && <QuizPopupOne onCancel={closeModal}
-//           onContinue={(name, type) => handleContinue(name, type)}
-//           quizToEdit={quizToEdit}
-//         />}
-
-//         {showSecondPopup && <QuizPopupTwo
-//           handleUpdateQuiz={handleUpdateQuiz}
-//           onClose={closeModal}
-//           quizQuestions={quizQuestions}
-//         />}
-
+//         {showFirstPopup && <QuizPopupOne onCancel={closeModal} onContinue={(name, type) => handleContinue(name, type)} quizToEdit={quizToEdit} />}
+//         {showSecondPopup && <QuizPopupTwo handleUpdateQuiz={handleUpdateQuiz} onClose={closeModal} quizQuestions={quizQuestions} />}
 //       </Modal>
-
-
-
 //       {showFinalLink && (
-//         <ShareModal 
-//         // onClose={closeModal}
+//         <ShareModal
 //           isOpen={showFinalLink}
 //           closeShareLinkModal={closeShareLinkModal}
 //           shareLink={sendUrlLink}
@@ -243,6 +224,7 @@
 // };
 
 // export default AnalysisPage;
+
 
 
 
@@ -265,6 +247,7 @@ import Modal from '../../components/modal/Modal';
 import QuizPopupOne from '../../components/quizpopupone/QuizPopupOne';
 import QuizPopupTwo from '../../components/quizpopuptwo/QuizPopupTwo';
 import ShareModal from '../../components/sharemodal/ShareModal';
+import NoData from '../../assets/nostory.jpg'
 import { RotatingLines } from 'react-loader-spinner'; // Import the spinner
 
 const AnalysisPage = () => {
@@ -400,9 +383,9 @@ const AnalysisPage = () => {
           <RotatingLines width="100" visible={true} />
         </div>
       ) : (
-        quizData && quizData.length > 0 ? (
-          <div className={styles.container}>
-            <h1 className={styles.title}>Quiz Analysis</h1>
+        <div className={styles.container}>
+          <h1 className={styles.title}>Quiz Analysis</h1>
+          {quizData && quizData.length > 0 ? (
             <div className={styles.tableContainer}>
               <table className={styles.table}>
                 <thead className={styles.tableheading}>
@@ -427,27 +410,20 @@ const AnalysisPage = () => {
                         <button className={styles.deleteButton}><img onClick={() => handleDeleteClick(quiz._id)} src={DeletBtn} alt="Delete" /></button>
                         <button className={styles.shareButton}><img src={ShareBtn} onClick={() => generateShareLink(quiz._id)} alt="Share" /></button>
                       </td>
-                      {/* <td><Link to={`/questiondetails/${quiz._id}`} className={styles.analysisLink}>Question Wise Analysis</Link></td> */}
-                      <td><Link  to={
-                                    // pathname: `/questiondetails/${quiz._id}`,
-                                    // state: { impressions: quiz.impressions }
-                                    `/questiondetails/${quiz._id}`}
-                                state={{ impressions: quiz.impressions,
-                                  createdAt: quiz.createdAt,
-                                 title: quiz.title
-                                 }
-                                   
-                                } 
-                                className={styles.analysisLink}>Question Wise Analysis</Link></td>
+                      <td><Link to={`/questiondetails/${quiz._id}`} state={{ impressions: quiz.impressions, createdAt: quiz.createdAt, title: quiz.title }} className={styles.analysisLink}>Question Wise Analysis</Link></td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
+          ) : (
+            <div className={styles.NoBookMark}>
+            <p>Quiz not found</p>
+            <img src={NoData} alt="" />
+            
           </div>
-        ) : (
-          <h1>Data not found</h1>
-        )
+          )}
+        </div>
       )}
       {isDeleteModal && (
         <ConfirmModal

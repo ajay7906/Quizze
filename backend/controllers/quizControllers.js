@@ -137,7 +137,7 @@ exports.updateQuiz = async (req, res) => {
 exports.getQuizDetails = async (req, res) => {
     try {
         const { userId } = req;
-        const quizzes = await Quiz.find({ user: userId });
+        const quizzes = await Quiz.find({ author: userId });
 
         const formattedQuizzes = quizzes.map(quiz => {
             const date = new Date(quiz.createdAt);
@@ -163,10 +163,38 @@ exports.getQuizDetails = async (req, res) => {
 
 
 
+// exports.getTrendingQuiz = async (req, res) => {
+//     try {
+//         const trendingQuizzes = await Quiz.find({ impressions: { $gt: 10 } }).sort({ impressions: -1 });
+
+//         const formattedTrendingQuizzes = trendingQuizzes.map(quiz => {
+//             const date = new Date(quiz.createdAt);
+//             const day = date.getDate().toString().padStart(2, '0');
+//             const month = date.toLocaleString('default', { month: 'short' });
+//             const year = date.getFullYear();
+//             const formattedDate = `${day} ${month}, ${year}`;
+
+//             return {
+//                 ...quiz._doc,
+//                 createdAt: formattedDate
+//             };
+//         });
+
+//         res.json(formattedTrendingQuizzes);
+//     } catch (err) {
+//         res.status(500).json({ error: err.message });
+//     }
+// };
+
+
 exports.getTrendingQuiz = async (req, res) => {
     try {
-        const trendingQuizzes = await Quiz.find({ impressions: { $gt: 10 } }).sort({ impressions: -1 });
+        const { userId } = req; // Assuming userId is attached to the request object
 
+        // Fetch quizzes created by the user with impressions greater than 10
+        const trendingQuizzes = await Quiz.find({ author: userId, impressions: { $gt: 10 } }).sort({ impressions: -1 });
+
+        // Format the createdAt date
         const formattedTrendingQuizzes = trendingQuizzes.map(quiz => {
             const date = new Date(quiz.createdAt);
             const day = date.getDate().toString().padStart(2, '0');
@@ -185,6 +213,7 @@ exports.getTrendingQuiz = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
+
 
 
 

@@ -153,3 +153,26 @@ text-align: center;
   height: 100vh; 
   width: 100%;
 }
+
+
+
+.NoBookMark {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 4rem;
+}
+
+.NoBookMark p {
+  color: #ff7373;
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+
+  text-align: center;
+}
+
+.NoBookMark img {
+  width: 50%;
+}
