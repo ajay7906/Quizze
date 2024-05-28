@@ -137,7 +137,8 @@ h1 {
 
 
 .errorInput {
-    border: 1px solid red;
+  
+    border: 1px solid #D60000
 }
 
 .input::placeholder {
