@@ -71,9 +71,16 @@
 .timerAndInput {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  margin-left: -23px;
+  
   height: 250px;
   position: relative;
+}
+.setMargin{
+  margin-left: -23px;
+}
+.setButton{
+  margin-left: 2px !important;
+  width: 96% !important;
 }
 
 .fullWidth {
@@ -94,6 +101,13 @@
   border-radius: 10px;
 
 
+
+}
+.optionType  input[type=radio]{
+  accent-color: #353434;
+ 
+  width: 15px;
+  height: 15px;
 
 }
 

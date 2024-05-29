@@ -2,383 +2,6 @@
 
 
 
-
-
-
-
-// import React, { useState, useEffect } from 'react';
-// import styles from './quizpopuptwo.module.css';
-// import DeleteImg from '../../assets/delete.png';
-// import { toast } from 'react-toastify';
-// import { ColorRing, ThreeDots } from 'react-loader-spinner';
-
-// const QuizPopupTwo = ({ onSubmit, onClose, quizType, quizQuestions, handleUpdateQuiz }) => {
-//     const [optionType, setOptionType] = useState('text');
-//     const [quizSlides, setQuizSlides] = useState([{
-//         question: '',
-//         optionType: optionType,
-//         options: [
-//             { text: '', imageURL: '', rightans: false },
-//             { text: '', imageURL: '', rightans: false }
-//         ],
-//         optionsTextAndImg: [
-//             { text: '', imageURL: '', rightans: false },
-//             { text: '', imageURL: '', rightans: false }
-//         ],
-//         timer: 0
-//     }]);
-
-//     const [currentSlide, setCurrentSlide] = useState(0);
-//     const [isLoading, setIsLoading] = useState(false);
-
-//     useEffect(() => {
-//         if (quizQuestions && quizQuestions.length > 0) {
-//             setQuizSlides(quizQuestions);
-//         }
-//     }, [quizQuestions]);
-
-//     useEffect(() => {
-//         if (quizQuestions && quizQuestions.length > 0) {
-//             setOptionType(quizSlides[currentSlide].optionType);
-//         }
-//     }, [currentSlide, quizSlides]);
-
-//     const addOption = () => {
-//         const newSlides = [...quizSlides];
-//         if (optionType === 'textAndImageURL') {
-//             if (newSlides[currentSlide].optionsTextAndImg.length < 5) {
-//                 newSlides[currentSlide].optionsTextAndImg.push({ text: '', imageURL: '', rightans: false });
-//                 setQuizSlides(newSlides);
-//             }
-//         } else {
-//             if (newSlides[currentSlide].options.length < 5) {
-//                 newSlides[currentSlide].options.push({ text: '', imageURL: '', rightans: false });
-//                 setQuizSlides(newSlides);
-//             }
-//         }
-//     };
-
-//     const removeOption = (index) => {
-//         const newSlides = [...quizSlides];
-//         if (optionType === 'textAndImageURL') {
-//             if (newSlides[currentSlide].optionsTextAndImg.length > 1) {
-//                 newSlides[currentSlide].optionsTextAndImg.splice(index, 1);
-//                 setQuizSlides(newSlides);
-//             }
-//         } else {
-//             if (newSlides[currentSlide].options.length > 1) {
-//                 newSlides[currentSlide].options.splice(index, 1);
-//                 setQuizSlides(newSlides);
-//             }
-//         }
-//     };
-
-//     const handleOptionChange = (optionIndex, value, field) => {
-//         const newSlides = [...quizSlides];
-//         if (optionType === 'textAndImageURL') {
-//             newSlides[currentSlide].optionsTextAndImg[optionIndex][field] = value;
-//         } else {
-//             newSlides[currentSlide].options[optionIndex][field] = value;
-//         }
-//         setQuizSlides(newSlides);
-//     };
-
-//     const handleRightAnswerChange = (optionIndex) => {
-//         const newSlides = [...quizSlides];
-//         if (optionType === 'textAndImageURL') {
-//             newSlides[currentSlide].optionsTextAndImg.forEach((option, index) => {
-//                 option.rightans = index === optionIndex;
-//             });
-//         } else {
-//             newSlides[currentSlide].options.forEach((option, index) => {
-//                 option.rightans = index === optionIndex;
-//             });
-//         }
-//         setQuizSlides(newSlides);
-//     };
-
-//     const handleTimerChange = (event) => {
-//         const value = event.target.value === 'OFF' ? 0 : parseInt(event.target.value);
-//         const newSlides = [...quizSlides];
-//         newSlides[currentSlide].timer = value;
-//         setQuizSlides(newSlides);
-//     };
-
-//     const handleAddSlide = () => {
-//         if (quizSlides.length < 5) {
-//             setQuizSlides([...quizSlides, {
-//                 question: '',
-//                 optionType: '',
-//                 options: [
-//                     { text: '', imageURL: '', rightans: false },
-//                     { text: '', imageURL: '', rightans: false }
-//                 ],
-//                 optionsTextAndImg: [
-//                     { text: '', imageURL: '', rightans: false },
-//                     { text: '', imageURL: '', rightans: false }
-//                 ],
-//                 timer: 0
-//             }]);
-//             setCurrentSlide(quizSlides.length); // Switch to the new slide
-//         }
-//     };
-
-//     const handleRemoveSlide = (index) => {
-//         if (quizSlides.length > 1) {
-//             const newSlides = quizSlides.filter((_, i) => i !== index);
-//             setQuizSlides(newSlides);
-//             setCurrentSlide(Math.max(0, currentSlide - 1)); // Switch to the previous slide if current is removed
-//         }
-//     };
-
-//     const handleQuestionChange = (value) => {
-//         const newSlides = [...quizSlides];
-//         newSlides[currentSlide].question = value;
-//         setQuizSlides(newSlides);
-//     };
-
-//     const handleOptionTypeChange = (type) => {
-//         setOptionType(type);
-//         const newSlides = [...quizSlides];
-//         newSlides[currentSlide].optionType = type;
-//         setQuizSlides(newSlides);
-//     };
-
-//     const handleCreateQuiz = async () => {
-//         for (const slide of quizSlides) {
-//             if (!slide.question.trim()) {
-//                 toast.error("Please fill out all question fields.");
-//                 return;
-//             }
-//             const optionsToCheck = optionType === 'textAndImageURL' ? slide.optionsTextAndImg : slide.options;
-//             for (const option of optionsToCheck) {
-//                 if (optionType === 'text' && !option.text.trim()) {
-//                     toast.error("Please fill out all option text fields.");
-//                     return;
-//                 }
-//                 if (optionType === 'imageURL' && !option.imageURL.trim()) {
-//                     toast.error("Please fill out all option image URL fields.");
-//                     return;
-//                 }
-//                 if (optionType === 'textAndImageURL' && (!option.text.trim() || !option.imageURL.trim())) {
-//                     toast.error("Please fill out all option text and image URL fields.");
-//                     return;
-//                 }
-//             }
-//         }
-
-//         setIsLoading(true); // Set loading to true when quiz creation starts
-//         try {
-//             if (quizQuestions && quizQuestions.length > 0) {
-//                 await handleUpdateQuiz(quizSlides);
-//             } else {
-//                 await onSubmit(quizSlides);
-//             }
-//             setIsLoading(false); // Set loading to false when quiz creation is done
-//         } catch (error) {
-//             toast.error("An error occurred while creating the quiz.");
-//             setIsLoading(false);
-//         }
-//     };
-
-//     const getTimerLabel = (value) => {
-//         return value === 0 ? 'OFF' : value;
-//     };
-
-//     return (
-//         <div className={styles.container}>
-//             <div className={styles.form}>
-//                 <div className={styles.slideButtonContainer}>
-//                     <div className={styles.slideButtonList}>
-//                         {quizSlides.map((_, index) => (
-//                             <div key={index} className={styles.slideButtonWrapper}>
-//                                 <div>
-//                                     <button
-//                                         onClick={() => setCurrentSlide(index)}
-//                                         className={`${styles.slideButton} ${currentSlide === index ? styles.active : ''}`}
-//                                     >
-//                                         {index + 1}
-//                                     </button>
-
-//                                     {index >= 1 && (
-//                                         <div className={styles.removeSlide} onClick={() => handleRemoveSlide(index)}>✖</div>
-//                                     )}
-//                                 </div>
-//                             </div>
-//                         ))}
-//                         {quizSlides.length < 5 && (
-//                             <button className={styles.addSlideButton} onClick={handleAddSlide}>+</button>
-//                         )}
-//                     </div>
-//                     <p className={styles.maxQuestions}>Max 5 questions</p>
-//                 </div>
-
-//                 <input
-//                     className={styles.polInput}
-//                     type="text"
-//                     placeholder="Poll Question"
-//                     value={quizSlides[currentSlide].question}
-//                     onChange={(e) => handleQuestionChange(e.target.value)}
-//                 />
-
-//                 <div className={styles.optionType}>
-//                     <h2>Option Type</h2>
-//                     <label>
-//                         <input
-//                             type="radio"
-//                             name="optionType"
-//                             value={quizSlides[currentSlide].optionType}
-//                             checked={optionType === 'text'}
-//                             onChange={() => handleOptionTypeChange('text')}
-//                         />
-//                         Text
-//                     </label>
-//                     <label>
-//                         <input
-//                             type="radio"
-//                             name="optionType"
-//                             value={quizSlides[currentSlide].optionType}
-//                             checked={optionType === 'imageURL'}
-//                             onChange={() => handleOptionTypeChange('imageURL')}
-//                         />
-//                         Image URL
-//                     </label>
-//                     <label>
-//                         <input
-//                             type="radio"
-//                             name="optionType"
-//                             value={quizSlides[currentSlide].optionType}
-//                             checked={optionType === 'textAndImageURL'}
-//                             onChange={() => handleOptionTypeChange('textAndImageURL')}
-//                         />
-//                         Text & Image URL
-//                     </label>
-//                 </div>
-//                 <div className={`${styles.timerAndInput} ${optionType === 'textAndImageURL' ? styles.fullWidth : ''}`}>
-//                     <div>
-//                         {(optionType === 'textAndImageURL' ? quizSlides[currentSlide].optionsTextAndImg : quizSlides[currentSlide].options).map((option, index) => (
-//                             <div key={index} className={`${styles.option} `}>
-//                                 <label className={`${styles.optionColor}`}>
-//                                     <input
-//                                         id="specifyColor"
-//                                         type="radio"
-//                                         name={`rightans-${currentSlide}`}
-//                                         checked={option.rightans}
-//                                         onChange={() => handleRightAnswerChange(index)}
-//                                     />
-//                                 </label>
-
-//                                 <div className={`${optionType === 'textAndImageURL' ? styles.textAndImagesUrl : styles.selectWidth}`}>
-//                                     {optionType === 'text' ? (
-//                                         <input
-//                                             className={`${option.rightans ? styles.isActiveOption : styles.optionInput}`}
-//                                             type="text"
-//                                             placeholder="Text"
-//                                             value={option.text}
-//                                             onChange={(e) => handleOptionChange(index, e.target.value, 'text')}
-//                                         />
-//                                     ) : null}
-//                                     {optionType === 'imageURL' ? (
-//                                         <input
-//                                             className={`${option.rightans ? styles.isActiveOption : styles.optionInput}`}
-//                                             type="text"
-//                                             placeholder="Image URL"
-//                                             value={option.imageURL}
-//                                             onChange={(e) => handleOptionChange(index, e.target.value, 'imageURL')}
-//                                         />
-//                                     ) : null}
-
-//                                     {optionType === 'textAndImageURL' ? (
-//                                         <>
-//                                             <input
-//                                                 className={`${option.rightans ? styles.isActiveOption : styles.optionInput}`}
-//                                                 type="text"
-//                                                 placeholder="Text"
-//                                                 value={option.text}
-//                                                 onChange={(e) => handleOptionChange(index, e.target.value, 'text')}
-//                                             />
-//                                             <input
-//                                                 className={`${option.rightans ? styles.isActiveOption : styles.optionInput}`}
-//                                                 type="text"
-//                                                 placeholder="Image URL"
-//                                                 value={option.imageURL}
-//                                                 onChange={(e) => handleOptionChange(index, e.target.value, 'imageURL')}
-//                                             />
-//                                         </>
-//                                     ) : null}
-//                                 </div>
-
-//                                 {index >= 2 && (
-//                                     <button className={` ${optionType === 'textAndImageURL' ? styles.removeButtonForboth : styles.removeButton}`} onClick={() => removeOption(index)}> <img src={DeleteImg} alt="" /> </button>
-//                                 )}
-//                             </div>
-//                         ))}
-
-//                         {(optionType === 'textAndImageURL' ? quizSlides[currentSlide].optionsTextAndImg : quizSlides[currentSlide].options).length < 4 && (
-//                             <button className={`${styles.addOptionButton} ${optionType === 'textAndImageURL' ? styles.addOptionButtonBoth : ''}`} onClick={addOption}>Add option</button>
-//                         )}
-//                     </div>
-//                     {
-//                         quizType === 'Poll Type' ? <></>
-//                             :
-//                             <>
-//                                 <div className={styles.timer}>
-//                                     <p>Timer</p>
-//                                     <label className={` ${quizSlides[currentSlide].timer === 0 ? styles.isTimerActive : styles.labelInput}`}>
-//                                         <input type="submit" value="OFF" onClick={handleTimerChange} />
-//                                     </label>
-//                                     <label className={` ${quizSlides[currentSlide].timer === 5 ? styles.isTimerActive : styles.labelInput}`}>
-//                                         <input type="submit" value="5" onClick={handleTimerChange} /> &nbsp; sec
-//                                     </label>
-//                                     <label className={` ${quizSlides[currentSlide].timer === 10 ? styles.isTimerActive : styles.labelInput}`}>
-//                                         <input type="submit" value="10" onClick={handleTimerChange} />&nbsp; sec
-//                                     </label>
-//                                 </div>
-//                             </>
-//                     }
-//                 </div>
-//                 <div className={styles.buttons}>
-//                     <button className={styles.cancelButton} onClick={onClose}>Cancel</button>
-//                     {
-//                         quizQuestions && quizQuestions.length > 0 ?
-//                             <button className={styles.createButton} onClick={handleCreateQuiz}>
-//                                 {isLoading ? (
-//                                     <ColorRing
-//                                         visible={true}
-//                                         height="25"
-//                                         width="50"
-//                                         ariaLabel="color-ring-loading"
-//                                         wrapperStyle={{}}
-//                                         wrapperClass="color-ring-wrapper"
-//                                         colors={['#e15b64', '#f47e60', '#f8b26a', '#abbd81', '#849b87']}
-//                                     />
-//                                 ) : 'Update Quiz'}
-//                             </button> :
-//                             <button className={styles.createButton} onClick={handleCreateQuiz}>
-//                                 {isLoading ? (
-//                                     <ColorRing
-//                                         visible={true}
-//                                         height="25"
-//                                         width="50"
-//                                         ariaLabel="color-ring-loading"
-//                                         wrapperStyle={{}}
-//                                         wrapperClass="color-ring-wrapper"
-//                                         colors={['#e15b64', '#f47e60', '#f8b26a', '#abbd81', '#849b87']}
-//                                     />
-//                                 ) : 'Create Quiz'}
-//                             </button>
-//                     }
-//                 </div>
-//             </div>
-//         </div>
-//     );
-// };
-
-// export default QuizPopupTwo;
-
-
-
-
 import React, { useState, useEffect } from 'react';
 import styles from './quizpopuptwo.module.css';
 import DeleteImg from '../../assets/delete.png';
@@ -404,7 +27,7 @@ const QuizPopupTwo = ({ onSubmit, onClose, quizType, quizQuestions, handleUpdate
             ],
             timer: 0
         }];
-    const [quizSlides, setQuizSlides] = useState( initialQuizSlides
+    const [quizSlides, setQuizSlides] = useState(initialQuizSlides
         // [{
         //     question: '',
         //     optionType: 'text',
@@ -431,7 +54,7 @@ const QuizPopupTwo = ({ onSubmit, onClose, quizType, quizQuestions, handleUpdate
     }, [quizQuestions]);
 
     console.log(quizSlides);
-  
+
 
     useEffect(() => {
         const firstSlideOptionType = quizSlides[0].optionType;
@@ -651,19 +274,22 @@ const QuizPopupTwo = ({ onSubmit, onClose, quizType, quizQuestions, handleUpdate
                     </label>
                 </div>
 
-                <div className={`${styles.timerAndInput} ${quizSlides[0].optionType === 'textAndImageURL' ? styles.fullWidth : ''}`}>
+                <div className={`${styles.timerAndInput} ${quizType==='Q&A' ? styles.setMargin : ''} ${quizSlides[0].optionType === 'textAndImageURL' ? styles.fullWidth : ''}`}>
                     <div>
                         {(quizSlides[0].optionType === 'textAndImageURL' ? quizSlides[currentSlide].optionsTextAndImg : quizSlides[currentSlide].options).map((option, index) => (
                             <div key={index} className={`${styles.option} `}>
-                                <label className={`${styles.optionColor}`}>
-                                    <input
-                                        id="specifyColor"
-                                        type="radio"
-                                        name={`rightans-${currentSlide}`}
-                                        checked={option.rightans}
-                                        onChange={() => handleRightAnswerChange(index)}
-                                    />
-                                </label>
+                                {
+                                    quizType === 'Q&A' &&
+                                    <label className={`${styles.optionColor}`}>
+                                        <input
+                                            id="specifyColor"
+                                            type="radio"
+                                            name={`rightans-${currentSlide}`}
+                                            checked={option.rightans}
+                                            onChange={() => handleRightAnswerChange(index)}
+                                        />
+                                    </label>
+                                }
 
                                 <div className={`${quizSlides[0].optionType === 'textAndImageURL' ? styles.textAndImagesUrl : styles.selectWidth}`}>
                                     {quizSlides[0].optionType === 'text' ? (
@@ -712,7 +338,7 @@ const QuizPopupTwo = ({ onSubmit, onClose, quizType, quizQuestions, handleUpdate
                         ))}
 
                         {(quizSlides[0].optionType === 'textAndImageURL' ? quizSlides[currentSlide].optionsTextAndImg : quizSlides[currentSlide].options).length < 4 && (
-                            <button className={`${styles.addOptionButton} ${quizSlides[0].optionType === 'textAndImageURL' ? styles.addOptionButtonBoth : ''}`} onClick={addOption}>Add option</button>
+                            <button className={`${styles.addOptionButton} ${quizType==='Poll Type'? styles.setButton : ''} ${quizSlides[0].optionType === 'textAndImageURL' ? styles.addOptionButtonBoth : ''}`} onClick={addOption}>Add option</button>
                         )}
                     </div>
                     {

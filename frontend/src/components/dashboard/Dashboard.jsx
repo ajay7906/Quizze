@@ -79,6 +79,7 @@ import EmpressionImg from '../../assets/eye.png';
 import { fetchDashboardStats, fetchTrendingQuizzes } from '../../api/quizApi';
 import { formatNumber } from '../../utils/formatNumber';
 import { RotatingLines } from 'react-loader-spinner';
+import NoDataImg from '../../assets/NoNmae.png'
 
 const Dashboard = () => {
   const [stats, setStats] = useState(null);
@@ -141,7 +142,10 @@ const Dashboard = () => {
                   </div>
                 ))
               ) : (
-                <h2 className={styles.noData}>No data exist</h2>
+                <div className={styles.noData}>
+                  <img src={NoDataImg} alt="" />
+                  <h2>No Quiz Available</h2>
+                </div>
               )}
             </div>
           </div>
