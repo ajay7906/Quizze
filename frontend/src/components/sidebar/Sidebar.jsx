@@ -1,50 +1,3 @@
-// import React, { useState } from 'react';
-// import { Link } from 'react-router-dom';
-// import styles from './Sidebar.module.css';
-// import QuizPopupOne from '../quizpopupone/QuizPopupOne';
-// import QuizPopupTwo from '../quizpopuptwo/QuizPopupTwo';
-// import Modal from '../modal/Modal';
-
-// const Sidebar = () => {
-//   const [isModalOpen, setIsModalOpen] = useState(false);
-//   const [secondPopups, setSecondPopups] = useState(false)
-//   const openModal = () => setIsModalOpen(true);
-//   const closeModal = () => setIsModalOpen(false);
-//   const continueButton = ()=>{
-//     setIsModalOpen(false)
-//     setSecondPopups(true)
-//   }
-//   return (
-//     <>
-//     <aside className={styles.sidebar}>
-//       <div className={styles.logo}><h2>QUIZZIE</h2></div>
-//       <nav className={styles.sidebarnav}>
-//         <ul>
-//           <li>
-//             <Link to="/" className={styles.link} activeClassName={styles.active}>Dashboard</Link>
-//           </li>
-//           <li>
-//             <Link to="/analytics" className={styles.link} activeClassName={styles.active}>Analytics</Link>
-//           </li>
-//           <li>
-//             <Link  className={styles.link} onClick={openModal} activeClassName={styles.active}>Create Quiz</Link>
-//           </li>
-//         </ul>
-//       </nav>
-//       <div className={styles.logout}>LOGOUT</div>
-//       {/* {showFirstPopup && <QuizPopupOne onContinue={handleContinueClick} />} */}
-//       <Modal isOpen={isModalOpen} onClose={closeModal}>
-//           <QuizPopupOne onCancel={closeModal} onContinue={continueButton} />
-//           {secondPopups && <QuizPopupTwo />}
-//         </Modal>
-
-//     </aside>
-
-//     </>
-//   );
-// };
-
-// export default Sidebar;
 
 
 
@@ -106,15 +59,15 @@ const Sidebar = () => {
     };
 
     try {
+      //create quiz 
       const result = await createQuiz(quizData);
-      console.log('Quiz created successfully:', quizData);
-      //const baseUrlLink = `http://localhost:5173/sharequiz/${result?._id}`
+      
+    
       setSendUrlLink(`http://localhost:5173/sharequiz/${result?._id}`)
       setShowFinalLink(true)
       addQuiz(result);
-      console.log(result);
-      // handleCancel();
-      // closeModal()
+      
+    
     } catch (error) {
       console.error('Error creating quiz:', error);
     }
@@ -122,7 +75,7 @@ const Sidebar = () => {
 
 
   const handleLogout = () => {
-    // localStorage.removeItem('jwttokenuser'); // Remove the token from local storage
+    
     logout()
     navigate('/register'); // Navigate to the login page
   };
@@ -135,7 +88,7 @@ const Sidebar = () => {
         <nav className={styles.sidebarnav}>
           <ul>
             <li>
-              {/* <NavLink to="/" className={styles.link} activeClassName={styles.active}>Dashboard</NavLink> */}
+            
               <NavLink 
                 to="/" 
                 className={({ isActive }) => isActive ? `${styles.link} ${styles.active}` : styles.link}
@@ -146,7 +99,7 @@ const Sidebar = () => {
 
             </li>
             <li>
-              {/* <NavLink to="/analytics" className={styles.link} activeClassName={styles.active}>Analytics</NavLink> */}
+           
               <NavLink 
                 to="/analytics" 
                 className={({ isActive }) => isActive ? `${styles.link} ${styles.active}` : styles.link}

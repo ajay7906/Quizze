@@ -3,7 +3,7 @@
 
 import React from 'react';
 import styles from './ShareModal.module.css';
-import { toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 
 const ShareModal = ({ shareLink, sendUrlLink, closeShareLinkModal , onClose}) => {
   const linkToDisplay = shareLink || sendUrlLink;
@@ -11,6 +11,9 @@ const ShareModal = ({ shareLink, sendUrlLink, closeShareLinkModal , onClose}) =>
   return (
     <div className={styles.overlay}>
       <div className={styles.modal}>
+      <ToastContainer
+      className={styles.toastcontainer}
+      />
         <button className={styles.closeButton} onClick={()=>{
           closeShareLinkModal();
           onClose()

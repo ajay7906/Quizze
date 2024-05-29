@@ -10,8 +10,8 @@ import { ColorRing } from 'react-loader-spinner';
 
 const QuizPopupTwo = ({ onSubmit, onClose, quizType, quizQuestions, handleUpdateQuiz }) => {
 
-
-
+    console.log(quizQuestions);
+   // this is initial QuizSlide based on you are creating or updating quiz
     const initialQuizSlides = quizQuestions && quizQuestions.length > 0
         ? quizQuestions
         : [{
@@ -28,19 +28,7 @@ const QuizPopupTwo = ({ onSubmit, onClose, quizType, quizQuestions, handleUpdate
             timer: 0
         }];
     const [quizSlides, setQuizSlides] = useState(initialQuizSlides
-        // [{
-        //     question: '',
-        //     optionType: 'text',
-        //     options: [
-        //         { text: '', imageURL: '', rightans: false },
-        //         { text: '', imageURL: '', rightans: false }
-        //     ],
-        //     optionsTextAndImg: [
-        //         { text: '', imageURL: '', rightans: false },
-        //         { text: '', imageURL: '', rightans: false }
-        //     ],
-        //     timer: 0
-        // }]
+       
     );
 
     const [currentSlide, setCurrentSlide] = useState(0);
@@ -53,7 +41,7 @@ const QuizPopupTwo = ({ onSubmit, onClose, quizType, quizQuestions, handleUpdate
         }
     }, [quizQuestions]);
 
-    console.log(quizSlides);
+    
 
 
     useEffect(() => {
@@ -63,6 +51,10 @@ const QuizPopupTwo = ({ onSubmit, onClose, quizType, quizQuestions, handleUpdate
         ));
         setQuizSlides(newSlides);
     }, [quizSlides[0].optionType]);
+
+
+
+    // Add option function
 
     const addOption = () => {
         const newSlides = [...quizSlides];
@@ -79,6 +71,8 @@ const QuizPopupTwo = ({ onSubmit, onClose, quizType, quizQuestions, handleUpdate
         }
     };
 
+
+    //Remove option function 
     const removeOption = (index) => {
         const newSlides = [...quizSlides];
         if (quizSlides[currentSlide].optionType === 'textAndImageURL') {
@@ -94,6 +88,7 @@ const QuizPopupTwo = ({ onSubmit, onClose, quizType, quizQuestions, handleUpdate
         }
     };
 
+    // optionType change funtion 
     const handleOptionChange = (optionIndex, value, field) => {
         const newSlides = [...quizSlides];
         if (quizSlides[currentSlide].optionType === 'textAndImageURL') {
@@ -104,6 +99,7 @@ const QuizPopupTwo = ({ onSubmit, onClose, quizType, quizQuestions, handleUpdate
         setQuizSlides(newSlides);
     };
 
+    //Handle right answer change
     const handleRightAnswerChange = (optionIndex) => {
         const newSlides = [...quizSlides];
         if (quizSlides[currentSlide].optionType === 'textAndImageURL') {
@@ -117,14 +113,18 @@ const QuizPopupTwo = ({ onSubmit, onClose, quizType, quizQuestions, handleUpdate
         }
         setQuizSlides(newSlides);
     };
+  
 
+    //handle Timer changes funtion
     const handleTimerChange = (event) => {
         const value = event.target.value === 'OFF' ? 0 : parseInt(event.target.value);
         const newSlides = [...quizSlides];
         newSlides[currentSlide].timer = value;
         setQuizSlides(newSlides);
     };
+  
 
+    // Add new slide function
     const handleAddSlide = () => {
         if (quizSlides.length < 5) {
             setQuizSlides([...quizSlides, {
@@ -144,6 +144,8 @@ const QuizPopupTwo = ({ onSubmit, onClose, quizType, quizQuestions, handleUpdate
         }
     };
 
+
+    //Remove slide funtion
     const handleRemoveSlide = (index) => {
         if (quizSlides.length > 1) {
             const newSlides = quizSlides.filter((_, i) => i !== index);
@@ -151,7 +153,8 @@ const QuizPopupTwo = ({ onSubmit, onClose, quizType, quizQuestions, handleUpdate
             setCurrentSlide(Math.max(0, currentSlide - 1)); // Switch to the previous slide if current is removed
         }
     };
-
+   
+    // change question
     const handleQuestionChange = (value) => {
         const newSlides = [...quizSlides];
         newSlides[currentSlide].question = value;
@@ -163,7 +166,8 @@ const QuizPopupTwo = ({ onSubmit, onClose, quizType, quizQuestions, handleUpdate
         newSlides[0].optionType = type;
         setQuizSlides(newSlides);
     };
-
+ 
+    // create quiz function 
     const handleCreateQuiz = async () => {
         for (const slide of quizSlides) {
             if (!slide.question.trim()) {

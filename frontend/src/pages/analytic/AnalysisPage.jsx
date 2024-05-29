@@ -274,7 +274,7 @@ const AnalysisPage = () => {
     setIsModalOpen(false);
     setShowFirstPopup(false);
     setShowSecondPopup(false);
-    setShowFinalLink(false);
+    // setShowFinalLink(false);
   };
 
   const handleDeleteClick = (quizId) => {
@@ -284,6 +284,7 @@ const AnalysisPage = () => {
 
   const handleConfirmDelete = async () => {
     try {
+      // delete quiz 
       await deleteQuiz(quizToDelete);
       setQuizData(quizData.filter(quiz => quiz._id !== quizToDelete));
       setIsDeleteModal(false);
@@ -295,7 +296,7 @@ const AnalysisPage = () => {
   const handleCloseModal = () => {
     setIsDeleteModal(false);
   };
-
+ // generate link function
   const generateShareLink = (quizId) => {
     const shareLink = `http://localhost:5173/sharequiz/${quizId}`;
     if (navigator.clipboard) {
@@ -308,6 +309,7 @@ const AnalysisPage = () => {
 
   const fetchQuizData = async () => {
     try {
+      //fetch quiz data
       const response = await quizDetails();
       setQuizData(response.quizzes);
     } catch (error) {
@@ -334,7 +336,7 @@ const AnalysisPage = () => {
     
     setShowFirstPopup(true);
   };
-
+ //handle continue function
   const handleContinue = (name, type) => {
     setShowFirstPopup(false);
     setShowSecondPopup(true);
@@ -351,11 +353,13 @@ const AnalysisPage = () => {
         ...quizToEdit,
         questions,
       };
+      //update quiz function
       const result = await updateQuiz(quizToEdit._id, updatedQuiz);
       setQuizData(quizData.map(quiz => (quiz._id === quizToEdit._id ? updatedQuiz : quiz)));
       setSendUrlLink(`http://localhost:5173/sharequiz/${result._id}`);
-      setShowFinalLink(true);
+      
       setShowSecondPopup(false);
+      setShowFinalLink(true);
       closeModal();
       toast.success('Quiz updated successfully!');
     } catch (error) {
@@ -434,7 +438,11 @@ const AnalysisPage = () => {
       )}
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         {showFirstPopup && <QuizPopupOne onCancel={closeModal} onContinue={(name, type) => handleContinue(name, type)} quizToEdit={quizToEdit} />}
-        {showSecondPopup && <QuizPopupTwo handleUpdateQuiz={handleUpdateQuiz} onClose={closeModal} quizQuestions={quizQuestions} />}
+        {showSecondPopup && <QuizPopupTwo 
+         handleUpdateQuiz={handleUpdateQuiz} onClose={closeModal} 
+          quizQuestions={quizQuestions} 
+          quizType={quizToEdit.type}
+           />}
       </Modal>
       {showFinalLink && (
         <ShareModal

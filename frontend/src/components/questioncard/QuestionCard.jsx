@@ -1,10 +1,10 @@
 import React from 'react';
 import styles from './QuestionCard.module.css';
 
-const QuestionCard = ({ question, attempts, correct, incorrect }) => {
+const QuestionCard = ({ question, attempts, correct, incorrect, index }) => {
   return (
     <div className={styles.card}>
-      <div className={styles.question}>{question}</div>
+      <div className={styles.question}>Q.{index+1} {question}</div>
       <div className={styles.stats}>
         <div className={styles.stat}>
           <p className={styles.number}>{attempts}</p>

@@ -22,6 +22,6 @@ router.get('/analytics', verifyToken, getAnalytics);
 router.get('/trending', verifyToken, getTrendingQuiz);
 router.get('/dashboardstats', verifyToken, getDashBoardData);
 router.get('/dashboard', verifyToken, getQuizDetails);
-router.post('/:id/submit', submitQuiz);
+// router.post('/:id/submit', submitQuiz);
 
 module.exports = router;

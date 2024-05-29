@@ -94,3 +94,9 @@
 .shareButton:hover {
   background-color: #218838;
 }
+
+.toastcontainer{
+  top: 16% !important;
+  right: 22% !important;
+  background-color: #ffffff;
+}

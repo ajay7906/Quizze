@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const { errorHandler } = require('../utils/errorHandler');
 
 
-
+// register controller function
 const registerUser = async (req, res) => {
     try {
         const { name, password, email, confirmPassword } = req.body;
@@ -38,11 +38,7 @@ const registerUser = async (req, res) => {
             password: hashedPassword,
 
         });
-        // const token = jwt.sign(
-        //     { userId: userData._id, name: userData.name, email:userData.email },
-        //     process.env.SECRET_CODE,
-        //     { expiresIn: "60h" }
-        // );
+        
 
         await userData.save();
         res.json({
@@ -57,6 +53,7 @@ const registerUser = async (req, res) => {
     }
 };
 
+//login controllers functions
 const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -90,7 +87,7 @@ const loginUser = async (req, res) => {
         const token = jwt.sign(
             { userId: userDetails._id, email: userDetails.email },
             process.env.SECRET_CODE,
-            { expiresIn: "60h" }
+            { expiresIn: "20d" }
         );
 
         res.json({

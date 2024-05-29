@@ -51,3 +51,12 @@
     scrollbar-width: none;
     -ms-overflow-style: none;
 }
+
+/* Add this to your QuestionPage.module.css */
+.loaderContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}

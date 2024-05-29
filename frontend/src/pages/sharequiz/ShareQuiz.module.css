@@ -16,8 +16,8 @@
     box-shadow: 0px 0px 30px 0px #00000026;
     background: #FFFFFF;
     width: 80vw;
-    height: 80vh;
-    padding: 30px 60px 30px 60px;
+    
+    padding: 3% 6% 3% 6%;
 }
 
 .header {
@@ -152,16 +152,16 @@
     object-fit: cover;
     height: 100%;
     border-radius: 6px;
-
+    background-position: center;
 
 }
 
 .imagesAndText {
     background: #F0F0F0;
-    height: 100px;
+    height: 130px;
     /* padding: 10px; */
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     border: none;
     gap: 5px;
     border-radius: 5px;
@@ -172,17 +172,42 @@
     font-weight: 600;
     align-items: center;
     text-align: center;
-    padding: 5px;
+    padding: 8px;
 }
 
 .imagesAndText img {
-    height: 80%;
+    /* height: 100%;
+    display: block;
+    max-width: 140px; /* Limit image width if necessary */
+   /* Maintain aspect ratio */
+   /* flex: 1;  */
+   height: 100%;
+   max-width: 140px; /* Limit image width if necessary */
+   object-fit: cover; /* Ensure the image maintains its aspect ratio */
+   margin-left: 1rem; /* Space between text and image */
+   flex-shrink: 0;  
+    width: auto; 
+    border-radius: 6px;
+
+}
+.imagesAndText p{
+    text-align: left; /* Ensure text is aligned to the left */
+    overflow: hidden; /* Ensure long text doesn't overflow */
+    white-space: nowrap; /* Prevent text from wrapping */
+    text-overflow: ellipsis; /* Add ellipsis for overflow text */
+}
+
+@media screen and (max-width: 1000px){
+    .cardContent{
+        padding: 3% 3% 3% 3%;
+
+    }
 }
 
 @media screen and (max-width: 960px) {
 
     .options {
-        gap: 5rem 4rem;
+        gap: 4rem 3rem;
     }
 
     .questionText {
@@ -192,6 +217,12 @@
     .option {
         font-size: 25px;
     }
+    .cardContent{
+        padding: 2.6% 2.6% 2.6% 2.6%;
+
+    }
+    
+
 }
 
 
@@ -199,8 +230,12 @@
 @media screen and (max-width: 780px) {
     .cardContent {
         width: 100%;
-        height: 100vh;
+        box-shadow: none;
+        border: none;
         padding: 50px 30px 30px 30px;
+    }
+    .card{
+        box-shadow: none;
     }
 
     .options {

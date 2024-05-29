@@ -3,7 +3,7 @@ const Question = require('../models/question');
 const { errorHandler } = require('../utils/errorHandler');
 
 
-
+// create new quiz controllers functions
 exports.createQuiz = async (req, res) => {
     const { userId } = req;
 
@@ -60,10 +60,10 @@ exports.createQuiz = async (req, res) => {
 };
 
 
-//update quiz here 
 
 
 
+//update quiz function 
 exports.updateQuiz = async (req, res) => {
     const { userId } = req;
     const { quizId } = req.params;
@@ -133,7 +133,7 @@ exports.updateQuiz = async (req, res) => {
 
 
 
-
+//get quiz details 
 exports.getQuizDetails = async (req, res) => {
     try {
         const { userId } = req;
@@ -163,34 +163,10 @@ exports.getQuizDetails = async (req, res) => {
 
 
 
-
-// exports.getTrendingQuiz = async (req, res) => {
-//     try {
-//         const trendingQuizzes = await Quiz.find({ impressions: { $gt: 10 } }).sort({ impressions: -1 });
-
-//         const formattedTrendingQuizzes = trendingQuizzes.map(quiz => {
-//             const date = new Date(quiz.createdAt);
-//             const day = date.getDate().toString().padStart(2, '0');
-//             const month = date.toLocaleString('default', { month: 'short' });
-//             const year = date.getFullYear();
-//             const formattedDate = `${day} ${month}, ${year}`;
-
-//             return {
-//                 ...quiz._doc,
-//                 createdAt: formattedDate
-//             };
-//         });
-
-//         res.json(formattedTrendingQuizzes);
-//     } catch (err) {
-//         res.status(500).json({ error: err.message });
-//     }
-// };
-
-
+//  get trending function 
 exports.getTrendingQuiz = async (req, res) => {
     try {
-        const { userId } = req; // Assuming userId is attached to the request object
+        const { userId } = req; 
 
         // Fetch quizzes created by the user with impressions greater than 10
         const trendingQuizzes = await Quiz.find({ user: userId, impressions: { $gt: 10 } }).sort({ impressions: -1 });
@@ -219,33 +195,11 @@ exports.getTrendingQuiz = async (req, res) => {
 
 
 
-
-//get dashboard stats
-// exports.getDashBoardData = async (req,  res)=>{
-//     try {
-//         const totalQuizzes = await Quiz.countDocuments();
-//         const totalQuestions = await Quiz.aggregate([
-//             { $unwind: '$questions' },
-//             { $count: 'totalQuestions' }
-//         ]);
-//         const totalImpressions = await Quiz.aggregate([
-//             { $group: { _id: null, totalImpressions: { $sum: '$impressions' } } }
-//         ]);
-    
-//         res.json({
-//             totalQuizzes,
-//             totalQuestions: totalQuestions[0]?.totalQuestions || 0,
-//             totalImpressions: totalImpressions[0]?.totalImpressions || 0
-//         });
-//     } catch (err) {
-//         res.status(500).json({ error: err.message });
-//     }
-
-// }
+// get dashboard stats 
 
 exports.getDashBoardData = async (req, res) => {
     try {
-        const { userId } = req; // Ensure userId is correctly attached
+        const { userId } = req; 
 
         // Count the total number of quizzes created by the user
         const totalQuizzes = await Quiz.countDocuments({ user: userId });
@@ -277,50 +231,50 @@ exports.getDashBoardData = async (req, res) => {
 
 
 
-exports.submitQuiz = async (req, res) => {
-    try {
-        const { answers } = req.body;
-        const quiz = await Quiz.findById(req.params.id).populate('questions');
+// exports.submitQuiz = async (req, res) => {
+//     try {
+//         const { answers } = req.body;
+//         const quiz = await Quiz.findById(req.params.id).populate('questions');
 
-        let score = 0;
-        quiz.questions.forEach((question, index) => {
-            question.attempts += 1;
-            if (question.correctOption === answers[index]) {
-                question.correctAttempts += 1;
-                score += 1;
-            } else {
-                question.wrongAttempts += 1;
-            }
-            question.save();
-        });
+//         let score = 0;
+//         quiz.questions.forEach((question, index) => {
+//             question.attempts += 1;
+//             if (question.correctOption === answers[index]) {
+//                 question.correctAttempts += 1;
+//                 score += 1;
+//             } else {
+//                 question.wrongAttempts += 1;
+//             }
+//             question.save();
+//         });
 
-        res.json({ score });
-    } catch (error) {
-        errorHandler(res, error);
-    }
-};
+//         res.json({ score });
+//     } catch (error) {
+//         errorHandler(res, error);
+//     }
+// };
 
-exports.getAnalytics = async (req, res) => {
-    try {
-        const { quizId } = req;
-        const quizzes = await Quiz.find({ user: quizId }).populate('questions');
+// exports.getAnalytics = async (req, res) => {
+//     try {
+//         const { quizId } = req;
+//         const quizzes = await Quiz.find({ user: quizId }).populate('questions');
 
-        const analytics = quizzes.map(quiz => ({
-            title: quiz.title,
-            impressions: quiz.impressions,
-            questions: quiz.questions.map(question => ({
-                text: question.text,
-                attempts: question.attempts,
-                correctAttempts: question.correctAttempts,
-                wrongAttempts: question.wrongAttempts
-            }))
-        }));
+//         const analytics = quizzes.map(quiz => ({
+//             title: quiz.title,
+//             impressions: quiz.impressions,
+//             questions: quiz.questions.map(question => ({
+//                 text: question.text,
+//                 attempts: question.attempts,
+//                 correctAttempts: question.correctAttempts,
+//                 wrongAttempts: question.wrongAttempts
+//             }))
+//         }));
 
-        res.json(analytics);
-    } catch (error) {
-        errorHandler(res, error);
-    }
-};
+//         res.json(analytics);
+//     } catch (error) {
+//         errorHandler(res, error);
+//     }
+// };
 
 
 
@@ -364,6 +318,8 @@ exports.getQuestionDetails = async (req, res) => {
 }
 
 
+
+//check right and wronng answer
 exports.questiRightWrongCheck = async (req, res) => {
 
     const { quiId } = req.params;
@@ -415,7 +371,7 @@ exports.incrementImpression = async (req, res) => {
     }
 };
 
-
+//delete quiz
 exports.deleteQuiz = async (req, res) => {
     const { quizId } = req.params;
 

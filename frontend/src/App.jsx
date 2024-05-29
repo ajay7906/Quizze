@@ -36,17 +36,9 @@ import AuthContext from './context/AuthContext';
 
 
 const App = () => {
-  // const [isLoggedIn, setIsLoggedIn] = useState(false);
+  
   const { isLoggedIn } = useContext(AuthContext);
-  // const navigate = useNavigate() 
-  // useEffect(() => {
-  //   // Check for token in local storage
-  //   const token = localStorage.getItem('jwttokenuser');
-  //   if (token) {
-  //     setIsLoggedIn(true);
-  //   }
-  // }, []);
-  console.log(isLoggedIn);
+ 
   const sampleQuestion = {
     questionNumber: 1,
     totalQuestions: 4,
