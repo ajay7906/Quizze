@@ -5,7 +5,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from './quizpopuptwo.module.css';
 import DeleteImg from '../../assets/delete.png';
-import { toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import { ColorRing } from 'react-loader-spinner';
 
 const QuizPopupTwo = ({ onSubmit, onClose, quizType, quizQuestions, handleUpdateQuiz }) => {
@@ -171,13 +171,13 @@ const QuizPopupTwo = ({ onSubmit, onClose, quizType, quizQuestions, handleUpdate
     const handleCreateQuiz = async () => {
         for (const slide of quizSlides) {
             if (!slide.question.trim()) {
-                toast.error("Please fill out all question fields.");
+                toast.error("Please fill out the question.");
                 return;
             }
             const optionsToCheck = quizSlides[0].optionType === 'textAndImageURL' ? slide.optionsTextAndImg : slide.options;
             for (const option of optionsToCheck) {
                 if (quizSlides[0].optionType === 'text' && !option.text.trim()) {
-                    toast.error("Please fill out all option text fields.");
+                    toast.error("Please fill out all text option.");
                     return;
                 }
                 if (quizSlides[0].optionType === 'imageURL' && !option.imageURL.trim()) {
@@ -186,6 +186,13 @@ const QuizPopupTwo = ({ onSubmit, onClose, quizType, quizQuestions, handleUpdate
                 }
                 if (quizSlides[0].optionType === 'textAndImageURL' && (!option.text.trim() || !option.imageURL.trim())) {
                     toast.error("Please fill out all option text and image URL fields.");
+                    return;
+                }
+            }
+            if (quizType === 'Q&A') {
+                const hasRightAnswer = optionsToCheck.some(option => option.rightans);
+                if (!hasRightAnswer) {
+                    toast.error("Please select at least one right answer.");
                     return;
                 }
             }
@@ -397,6 +404,7 @@ const QuizPopupTwo = ({ onSubmit, onClose, quizType, quizQuestions, handleUpdate
                     }
                 </div>
             </div>
+            <ToastContainer />
         </div>
     );
 };

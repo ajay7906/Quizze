@@ -196,36 +196,98 @@ exports.getTrendingQuiz = async (req, res) => {
 
 
 // get dashboard stats 
+// exports.getDashBoardData = async (req,  res)=>{
+//     try {
+//         const totalQuizzes = await Quiz.countDocuments();
+//         const totalQuestions = await Quiz.aggregate([
+//             { $unwind: '$questions' },
+//             { $count: 'totalQuestions' }
+//         ]);
+//         const totalImpressions = await Quiz.aggregate([
+//             { $group: { _id: null, totalImpressions: { $sum: '$impressions' } } }
+//         ]);
+    
+//         res.json({
+//             totalQuizzes,
+//             totalQuestions: totalQuestions[0]?.totalQuestions || 0,
+//             totalImpressions: totalImpressions[0]?.totalImpressions || 0
+//         });
+//     } catch (err) {
+//         res.status(500).json({ error: err.message });
+//     }
+
+// }
+
+const mongoose = require('mongoose');
+// exports.getDashBoardData = async (req, res) => {
+//     try {
+//         const { userId } = req; 
+//         const userObjectId = new mongoose.Types.ObjectId(userId);
+//         console.log(userObjectId);
+//         // Count the total number of quizzes created by the user
+//         const totalQuizzes = await Quiz.countDocuments({ user: userId });
+
+//         // Count the total number of questions in quizzes created by the user
+//         const totalQuestions = await Quiz.aggregate([
+//             { $match: { user: userId } },
+//             { $unwind: '$questions' },
+//             { $count: 'totalQuestions' }
+//         ]);
+
+//         // Sum the total impressions of quizzes created by the user
+//         const totalImpressions = await Quiz.aggregate([
+            
+//             { $group: { _id: null, totalImpressions: { $sum: '$impressions' } } }
+//         ]);
+
+//         res.json({
+//             totalQuizzes,
+//             totalQuestions: totalQuestions[0]?.totalQuestions || 0,
+//             totalImpressions: totalImpressions[0]?.totalImpressions || 0
+//         });
+//     } catch (err) {
+//         res.status(500).json({ error: err.message });
+//     }
+// };
+
 
 exports.getDashBoardData = async (req, res) => {
     try {
-        const { userId } = req; 
+        const { userId } = req;
+
+        // Ensure userId is an ObjectId if stored as ObjectId in the database
+        const userObjectId = new mongoose.Types.ObjectId(userId);
 
         // Count the total number of quizzes created by the user
-        const totalQuizzes = await Quiz.countDocuments({ user: userId });
+        const totalQuizzes = await Quiz.countDocuments({ user: userObjectId });
 
         // Count the total number of questions in quizzes created by the user
         const totalQuestions = await Quiz.aggregate([
-            { $match: { author: userId } },
-            { $unwind: '$questions' },
-            { $count: 'totalQuestions' }
+            { $match: { user: userObjectId } },
+            { $project: { numOfQuestions: { $size: '$questions' } } },
+            { $group: { _id: null, totalQuestions: { $sum: '$numOfQuestions' } } }
         ]);
 
         // Sum the total impressions of quizzes created by the user
         const totalImpressions = await Quiz.aggregate([
-            { $match: { author: userId } },
+            { $match: { user: userObjectId } },
             { $group: { _id: null, totalImpressions: { $sum: '$impressions' } } }
         ]);
 
+        // Check if aggregation results are empty and handle appropriately
+        const totalQuestionsCount = totalQuestions.length > 0 ? totalQuestions[0].totalQuestions : 0;
+        const totalImpressionsCount = totalImpressions.length > 0 ? totalImpressions[0].totalImpressions : 0;
+
         res.json({
             totalQuizzes,
-            totalQuestions: totalQuestions[0]?.totalQuestions || 0,
-            totalImpressions: totalImpressions[0]?.totalImpressions || 0
+            totalQuestions: totalQuestionsCount,
+            totalImpressions: totalImpressionsCount
         });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 };
+
 
 
 

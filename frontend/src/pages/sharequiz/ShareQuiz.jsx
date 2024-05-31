@@ -90,6 +90,9 @@ const ShareQuiz = () => {
         } else if (timer === 0 && lengthOfQuestion > currentPage) {
             handleNextClick();
         }
+        else if(timer===0 && lengthOfQuestion===currentPage){
+            handleSubmit()
+        }
     }, [timer]);
 
     return (

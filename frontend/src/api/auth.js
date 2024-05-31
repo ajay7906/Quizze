@@ -13,17 +13,7 @@ export async function registerUser({ name,email, password , confirmPassword}) {
         confirmPassword
       });
   
-    //   const token = response.data.token;
-    //   const expirationTime = Date.now() + 60 * 60 * 1000 * 60; // 60 hours from now
-  
-    //   localStorage.setItem("token", token);
-    //   localStorage.setItem("tokenExpiration", expirationTime);
-  
-    //   // Set a timeout to remove the token after 60 hours
-    //   setTimeout(() => {
-    //     localStorage.removeItem("token");
-    //     localStorage.removeItem("tokenExpiration");
-    //   }, 60 * 60 * 1000 * 60);
+    
   
       return response.data; // return any response data if needed
     } catch (error) {
@@ -43,7 +33,7 @@ export async function loginUser({ email, password }) {
       
       const jwttokenuser = response.data.token;
       console.log(jwttokenuser);
-      const expirationTime = Date.now() + 60 * 60 * 1000 * 60; 
+      const expirationTime = Date.now() + 19 * 24 * 60 * 60 * 1000; 
   
       localStorage.setItem("jwttokenuser", jwttokenuser);
       localStorage.setItem("tokenExpiration", expirationTime);
@@ -52,7 +42,7 @@ export async function loginUser({ email, password }) {
       setTimeout(() => {
         localStorage.removeItem("jwttokenuser");
         localStorage.removeItem("tokenExpiration");
-      }, 60 * 60 * 1000 * 60);
+      }, 19 * 24 * 60 * 60 * 1000);
   
       return response.data; // return any response data if needed
     } catch (error) {

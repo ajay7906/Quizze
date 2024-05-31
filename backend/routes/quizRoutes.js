@@ -18,7 +18,7 @@ router.patch('/empression/:quiId' , incrementImpression)
 router.get('/shareQuestion/:quizId', getShareQuestion);
 router.get('/getquestion/:quizId', getQuestionDetails);
 router.delete('/delete/:quizId', deleteQuiz)
-router.get('/analytics', verifyToken, getAnalytics);
+//router.get('/analytics', verifyToken, getAnalytics);
 router.get('/trending', verifyToken, getTrendingQuiz);
 router.get('/dashboardstats', verifyToken, getDashBoardData);
 router.get('/dashboard', verifyToken, getQuizDetails);
