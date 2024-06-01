@@ -292,6 +292,7 @@ const AnalysisPage = () => {
     const shareLink = `http://localhost:5173/sharequiz/${quizId}`;
     if (navigator.clipboard) {
       navigator.clipboard.writeText(shareLink);
+   
       toast.success("Copied Successfully");
     } else {
       window.open(shareLink, '_blank');
@@ -349,7 +350,7 @@ const AnalysisPage = () => {
     }
   };
 
-  const closeShareLinkModal = () => {
+  const onClose = () => {
     setShowFinalLink(false);
   };
 
@@ -430,7 +431,7 @@ const AnalysisPage = () => {
       {showFinalLink && (
         <ShareModal
           isOpen={showFinalLink}
-          closeShareLinkModal={closeShareLinkModal}
+          onClose={onClose}
           shareLink={sendUrlLink}
         />
       )}

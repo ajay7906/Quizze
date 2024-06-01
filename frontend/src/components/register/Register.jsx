@@ -32,6 +32,19 @@ const Register = () => {
         }
     };
 
+
+    const handleTabSwitch = (isLoginMode) => {
+        setIsLogin(isLoginMode);
+        setFormData({
+            name: '',
+            email: '',
+            password: '',
+            confirmPassword: ''
+        });
+        // setLoginErrors({});
+        // setRegisterErrors({});
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsLoading(true);
@@ -116,8 +129,8 @@ const Register = () => {
             <div className={styles.card}>
                 <h1>QUIZZIE</h1>
                 <div className={styles.tabs}>
-                    <button className={`${styles.tab} ${!isLogin ? styles.activeTab : ''}`} onClick={() => setIsLogin(false)}>Sign Up</button>
-                    <button className={`${styles.tab} ${isLogin ? styles.activeTab : ''}`} onClick={() => setIsLogin(true)}>Log In</button>
+                    <button className={`${styles.tab} ${!isLogin ? styles.activeTab : ''}`} onClick={() => handleTabSwitch(false)}>Sign Up</button>
+                    <button className={`${styles.tab} ${isLogin ? styles.activeTab : ''}`} onClick={() => handleTabSwitch(true)}>Log In</button>
                 </div>
                 <form className={styles.form} onSubmit={handleSubmit}>
                     {!isLogin && (

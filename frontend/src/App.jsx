@@ -39,13 +39,7 @@ const App = () => {
   
   const { isLoggedIn } = useContext(AuthContext);
  
-  const sampleQuestion = {
-    questionNumber: 1,
-    totalQuestions: 4,
-    questionText: 'Your question text comes here, its a sample text.',
-    options: ['Option 1', 'Option 2', 'Option 3', 'Option 4'],
-    timer: 10,
-  };
+ 
   return (
 
     <Router>
@@ -67,11 +61,7 @@ const App = () => {
           <Route
             path="/sharequiz/:quizId"
             element={<ShareQuiz
-              questionNumber={sampleQuestion.questionNumber}
-              totalQuestions={sampleQuestion.totalQuestions}
-              questionText={sampleQuestion.questionText}
-              options={sampleQuestion.options}
-              timer={sampleQuestion.timer}
+            
             />} // Add sharequiz route
           />
           <Route path='/questiondetails/:quizId' element={<Layout><QuestionPage /></Layout>} />

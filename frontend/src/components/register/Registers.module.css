@@ -9,8 +9,8 @@
 
 .card {
     background: #ffffff;
-    width: 106rem;
-    height: 60rem;
+    width: 100rem;
+    height: 56rem;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0px 0px 40px 0px #00000026;
@@ -102,6 +102,9 @@ h1 {
     border: none;
     gap: 0px;
     border-radius: 10px 10px 0px 0px;
+    font-family: Poppins;
+    font-size: 16px; 
+    font-weight: 600;
 
 
 }
@@ -117,12 +120,12 @@ h1 {
     height: 38px;
     border-radius: 8px;
     font-family: Poppins;
-    font-size: 16px; /* Increased font size */
+    font-size: 16px; 
     font-weight: 600;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 2rem;
+    margin-top: 1rem;
    
    
     

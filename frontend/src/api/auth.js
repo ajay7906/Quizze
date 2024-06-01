@@ -42,7 +42,7 @@ export async function loginUser({ email, password }) {
       setTimeout(() => {
         localStorage.removeItem("jwttokenuser");
         localStorage.removeItem("tokenExpiration");
-      }, 19 * 24 * 60 * 60 * 1000);
+      },  19 * 24 * 60 * 60 * 1000);
   
       return response.data; // return any response data if needed
     } catch (error) {

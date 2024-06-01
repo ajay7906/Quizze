@@ -15,7 +15,7 @@ const ShareModal = ({ shareLink, sendUrlLink, closeShareLinkModal , onClose}) =>
       className={styles.toastcontainer}
       />
         <button className={styles.closeButton} onClick={()=>{
-          closeShareLinkModal();
+          // closeShareLinkModal();
           onClose()
           
           }}>✖</button>
