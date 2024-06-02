@@ -76,9 +76,10 @@ const Register = () => {
         //     errors.password = 'Weak password';
         // }
 
-        if (!isLogin && formData.password !== formData.confirmPassword) {
-            errors.confirmPassword = 'Password doesn’t match';
-        }
+        // if (!isLogin && formData.password !== formData.confirmPassword) {
+        //     formData.confirmPassword = ''
+        //     errors.confirmPassword = 'Password doesn’t match';
+        // }
 
         if (Object.keys(errors).length > 0) {
             if (isLogin) {
