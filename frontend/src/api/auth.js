@@ -14,7 +14,7 @@ export async function registerUser({ name,email, password , confirmPassword}) {
       });
   
     
-     console.log(response.data);
+     console.log(response);
       return response.data; // return any response data if needed
     } catch (error) {
       console.log(error.response.data);

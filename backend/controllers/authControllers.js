@@ -45,7 +45,7 @@ const registerUser = async (req, res) => {
         // }
 
         if (password !== confirmPassword) {
-            return res.status(400).json({success: false, message: 'Passwords do not match' });
+            return res.status(400).json({success: false, errorMessage: 'Passwords do not match' });
           }
         // console.log(req);
         const isExistingUser = await User.findOne({ email: email });

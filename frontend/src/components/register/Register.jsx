@@ -111,7 +111,9 @@ const Register = () => {
             }
         } else {
             const response = await registerUser({ name: formData.name, email: formData.email, password: formData.password, confirmPassword: formData.confirmPassword });
+            console.log(response.success ,response.success === false);
             if (response.success) {
+                console.log('scuess');
                 toast.success('Registration successful!');
                 setFormData({
                     name: '',
