@@ -13,6 +13,7 @@ const Register = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [loginErrors, setLoginErrors] = useState({});
     const [registerErrors, setRegisterErrors] = useState({});
+    const [backendError, setBackendError] = useState('');
     const navigate = useNavigate();
     const { login } = useContext(AuthContext);
     const [formData, setFormData] = useState({
@@ -75,11 +76,13 @@ const Register = () => {
         // else if (formData.password.length < 3) {
         //     errors.password = 'Weak password';
         // }
-
-        // if (!isLogin && formData.password !== formData.confirmPassword) {
-        //     formData.confirmPassword = ''
-        //     errors.confirmPassword = 'Password doesn’t match';
-        // }
+       
+        if (!isLogin &&  formData.confirmPassword !== formData.password) {
+           
+           formData.confirmPassword = ''
+            errors.confirmPassword =   'Password doesn’t match';
+           // formData.confirmPassword = ''
+        }
 
         if (Object.keys(errors).length > 0) {
             if (isLogin) {
@@ -111,7 +114,7 @@ const Register = () => {
             }
         } else {
             const response = await registerUser({ name: formData.name, email: formData.email, password: formData.password, confirmPassword: formData.confirmPassword });
-            console.log(response.success ,response.success === false);
+           
             if (response.success) {
                 console.log('scuess');
                 toast.success('Registration successful!');
@@ -123,7 +126,8 @@ const Register = () => {
                 });
                 setIsLogin(true);
             } else {
-                setRegisterErrors({ [response.field]: response.message });
+                setRegisterErrors({ [response.field]: response });
+                setBackendError(response)
                 console.log(response);
                 toast.error(response.message || 'Registration failed');
             }

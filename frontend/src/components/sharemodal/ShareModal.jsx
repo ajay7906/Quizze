@@ -15,10 +15,9 @@ const ShareModal = ({ shareLink, sendUrlLink, closeShareLinkModal , onClose}) =>
       className={styles.toastcontainer}
       />
         <button className={styles.closeButton} onClick={()=>{
-          // closeShareLinkModal();
-          onClose()
-          
-          }}>✖</button>
+          onClose();
+          closeShareLinkModal();
+        }}>✖</button>
         <h2>Congrats your Quiz is <br /> Published!</h2>
         <input className={styles.shareLink} type="text" placeholder='your link is here' value={linkToDisplay} readOnly />
         <button className={styles.shareButton} onClick={() => {
