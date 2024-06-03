@@ -169,7 +169,7 @@ exports.getTrendingQuiz = async (req, res) => {
         const { userId } = req; 
 
         // Fetch quizzes created by the user with impressions greater than 10
-        const trendingQuizzes = await Quiz.find({ user: userId, impressions: { $gt: 10 } }).sort({ impressions: -1 });
+        const trendingQuizzes = await Quiz.find({ user: userId, impressions: { $gt: 5 } }).sort({ impressions: -1 });
 
         // Format the createdAt date
         const formattedTrendingQuizzes = trendingQuizzes.map(quiz => {
