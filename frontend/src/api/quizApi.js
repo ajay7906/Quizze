@@ -76,6 +76,7 @@ export const getDetailsQuestions = async (quizId) => {
 
 export const questionRightWronchk = async (questionId, updatedData) => {
   try {
+    console.log(updatedData);
     const response = await axios.patch(`https://quizze-se3g.onrender.com/api/v1/quiz/checkquestion/${questionId}`, updatedData);
     return response.data;
   } catch (error) {

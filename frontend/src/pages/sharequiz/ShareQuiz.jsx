@@ -39,6 +39,8 @@ const ShareQuiz = () => {
     const rightWrongCheck = async (rightAnsSelect, index) => {
         setSelectedOption(index);
         if (rightAnsSelect) {
+            console.log(rightAnsSelect);
+            console.log('right ans');
             setRightAns((prev) => prev + 1);
         } else {
             setWrongAns((prev) => prev + 1);
