@@ -131,7 +131,7 @@ const ShareQuiz = () => {
                                                 onClick={() => rightWrongCheck(option.rightans, index)}
                                                 disabled={loading}
                                             >
-                                                {option.text}
+                                               <p> {option.text}</p>
                                             </button>
                                         )}
                                         {option?.imageURL && (

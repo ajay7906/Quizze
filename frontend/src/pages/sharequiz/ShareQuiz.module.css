@@ -16,7 +16,7 @@
     box-shadow: 0px 0px 30px 0px #00000026;
     background: #FFFFFF;
     width: 80vw;
-    
+
     padding: 3% 6% 3% 6%;
 }
 
@@ -176,29 +176,40 @@
 }
 
 .imagesAndText img {
-    /* height: 100%;
-    display: block;
-    max-width: 140px; /* Limit image width if necessary */
-   /* Maintain aspect ratio */
-   /* flex: 1;  */
-   height: 100%;
-   max-width: 140px; /* Limit image width if necessary */
-   object-fit: cover; /* Ensure the image maintains its aspect ratio */
-   margin-left: 1rem; /* Space between text and image */
-   flex-shrink: 0;  
-    width: auto; 
+    
+    height: 100%;
+    max-width: 140px;
+    /* Limit image width if necessary */
+    object-fit: cover;
+    /* Ensure the image maintains its aspect ratio */
+    margin-left: 1rem;
+    /* Space between text and image */
+    flex-shrink: 0;
+    width: auto;
     border-radius: 6px;
 
 }
-.imagesAndText p{
-    text-align: left; /* Ensure text is aligned to the left */
-    overflow: hidden; /* Ensure long text doesn't overflow */
-    white-space: nowrap; /* Prevent text from wrapping */
-    text-overflow: ellipsis; /* Add ellipsis for overflow text */
-}
 
-@media screen and (max-width: 1000px){
-    .cardContent{
+
+
+.imagesAndText p {
+   
+  
+    max-width: 150px; /* Adjust as needed */
+    text-align: left;
+    overflow: hidden; /* Add overflow hidden */
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    
+} 
+
+.option p{
+    max-height: 100px;
+    overflow: hidden;
+    }
+
+@media screen and (max-width: 1000px) {
+    .cardContent {
         padding: 3% 3% 3% 3%;
 
     }
@@ -216,25 +227,36 @@
 
     .option {
         font-size: 25px;
+       
+        /* Show ellipsis for overflow text */
     }
-    .cardContent{
+    
+
+    .cardContent {
         padding: 2.6% 2.6% 2.6% 2.6%;
 
     }
-    
+    .imagesAndText p{
+        max-width: 100px;
+    }
+
 
 }
 
 
 
 @media screen and (max-width: 780px) {
+    .imagesAndText p{
+        max-width: 50%;
+    }
     .cardContent {
         width: 100%;
         box-shadow: none;
         border: none;
         padding: 50px 30px 30px 30px;
     }
-    .card{
+
+    .card {
         box-shadow: none;
     }
 
@@ -255,24 +277,29 @@
         font-size: 20px;
 
     }
-    .option img{
-    border-radius: 5px;
-   
-   
-}
-.card{
-   height: 100%;
-}
-.nextButtonDiv{
-   padding-bottom: 1rem;
-}
-.imagesAndText{
-    justify-content: space-between;
-    padding: 5px 17px 5px 17px !important;
-    font-size: 22px;
-}
-.imagesAndText img{
-  width: 50%;
-}
+
+    .option img {
+        border-radius: 5px;
+
+
+    }
+
+    .card {
+        height: 100%;
+    }
+
+    .nextButtonDiv {
+        padding-bottom: 1rem;
+    }
+
+    .imagesAndText {
+        justify-content: space-between;
+        padding: 5px 17px 5px 17px !important;
+        font-size: 22px;
+    }
+
+    .imagesAndText img {
+        width: 50%;
+    }
 
 }

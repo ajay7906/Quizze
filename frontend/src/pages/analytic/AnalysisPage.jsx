@@ -57,6 +57,11 @@ const AnalysisPage = () => {
     }
   };
 
+  const closeShareLinkModal = ()=>{
+    setShowFinalLink(false)
+    closeModal()
+  }
+
   const handleCloseModal = () => {
     setIsDeleteModal(false);
   };
@@ -66,7 +71,7 @@ const AnalysisPage = () => {
     const shareLink = `https://quizze-nine.vercel.app/sharequiz/${quizId}`;
     if (navigator.clipboard) {
       navigator.clipboard.writeText(shareLink);
-   
+      console.log('Link copied to clipboard: ', shareLink);
       toast.success("Copied Successfully");
     } else {
       window.open(shareLink, '_blank');
@@ -207,6 +212,7 @@ const AnalysisPage = () => {
         <ShareModal
           isOpen={showFinalLink}
           onClose={onClose}
+          closeShareLinkModal={closeShareLinkModal}
           shareLink={sendUrlLink}
         />
       )}

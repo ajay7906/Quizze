@@ -1,7 +1,8 @@
 const Quiz = require('../models/quiz');
 const Question = require('../models/question');
-const { errorHandler } = require('../utils/errorHandler');
 
+
+const mongoose = require('mongoose');
 
 // create new quiz controllers functions
 exports.createQuiz = async (req, res) => {
@@ -157,7 +158,7 @@ exports.getQuizDetails = async (req, res) => {
             quizzes: formattedQuizzes
         });
     } catch (error) {
-        errorHandler(res, error);
+        res.status(500).send({ error: 'Failed to get quizDetailis' });
     }
 };
 
@@ -186,8 +187,8 @@ exports.getTrendingQuiz = async (req, res) => {
         });
 
         res.json(formattedTrendingQuizzes);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+    } catch (error) {
+        res.status(500).send({ error: 'Failed to get trending data ' });
     }
 };
 
@@ -195,60 +196,6 @@ exports.getTrendingQuiz = async (req, res) => {
 
 
 
-// get dashboard stats 
-// exports.getDashBoardData = async (req,  res)=>{
-//     try {
-//         const totalQuizzes = await Quiz.countDocuments();
-//         const totalQuestions = await Quiz.aggregate([
-//             { $unwind: '$questions' },
-//             { $count: 'totalQuestions' }
-//         ]);
-//         const totalImpressions = await Quiz.aggregate([
-//             { $group: { _id: null, totalImpressions: { $sum: '$impressions' } } }
-//         ]);
-    
-//         res.json({
-//             totalQuizzes,
-//             totalQuestions: totalQuestions[0]?.totalQuestions || 0,
-//             totalImpressions: totalImpressions[0]?.totalImpressions || 0
-//         });
-//     } catch (err) {
-//         res.status(500).json({ error: err.message });
-//     }
-
-// }
-
-const mongoose = require('mongoose');
-// exports.getDashBoardData = async (req, res) => {
-//     try {
-//         const { userId } = req; 
-//         const userObjectId = new mongoose.Types.ObjectId(userId);
-//         console.log(userObjectId);
-//         // Count the total number of quizzes created by the user
-//         const totalQuizzes = await Quiz.countDocuments({ user: userId });
-
-//         // Count the total number of questions in quizzes created by the user
-//         const totalQuestions = await Quiz.aggregate([
-//             { $match: { user: userId } },
-//             { $unwind: '$questions' },
-//             { $count: 'totalQuestions' }
-//         ]);
-
-//         // Sum the total impressions of quizzes created by the user
-//         const totalImpressions = await Quiz.aggregate([
-            
-//             { $group: { _id: null, totalImpressions: { $sum: '$impressions' } } }
-//         ]);
-
-//         res.json({
-//             totalQuizzes,
-//             totalQuestions: totalQuestions[0]?.totalQuestions || 0,
-//             totalImpressions: totalImpressions[0]?.totalImpressions || 0
-//         });
-//     } catch (err) {
-//         res.status(500).json({ error: err.message });
-//     }
-// };
 
 
 exports.getDashBoardData = async (req, res) => {
@@ -283,8 +230,9 @@ exports.getDashBoardData = async (req, res) => {
             totalQuestions: totalQuestionsCount,
             totalImpressions: totalImpressionsCount
         });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+    } catch (error) {
+        // res.status(500).json({ error: err.message });
+        res.status(500).send({ error: 'Failed to get dashboards data ' });
     }
 };
 
@@ -305,7 +253,7 @@ exports.getShareQuestion = async (req, res) => {
 
         res.json(questions);
     } catch (error) {
-        res.status(500).send({ error: 'Failed to fetch questions' });
+        res.status(500).send({ error : 'Failed to fetch questions' });
     }
 }
 
