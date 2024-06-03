@@ -200,3 +200,7 @@
 .NoBookMark img {
   width: 50%;
 }
+
+.customToast{
+  font-size: 16px;
+}

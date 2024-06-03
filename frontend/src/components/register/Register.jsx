@@ -137,6 +137,7 @@ const Register = () => {
 
     return (
         <div className={styles.container}>
+              <ToastContainer toastClassName={styles.customToast}/>
             <div className={styles.card}>
                 <h1>QUIZZIE</h1>
                 <div className={styles.tabs}>
@@ -207,7 +208,7 @@ const Register = () => {
                     </button>
                 </form>
             </div>
-            <ToastContainer/>
+          
         </div>
     );
 };

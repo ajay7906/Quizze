@@ -5,13 +5,13 @@ const questionSchema = mongoose.Schema({
   question: { type: String, required: true },
   optionType:{type:String, required:true},
   options: [{ 
-    // type: String, required: true
+    
     imageURL:{ type:String},
     rightans:{type: Boolean},
     text:{type: String}
    }],
    optionsTextAndImg: [{ 
-    // type: String, required: true
+    
     imageURL:{ type:String},
     rightans:{type: Boolean},
     text:{type: String}

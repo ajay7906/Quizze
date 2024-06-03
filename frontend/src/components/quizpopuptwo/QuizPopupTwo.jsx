@@ -404,7 +404,7 @@ const QuizPopupTwo = ({ onSubmit, onClose, quizType, quizQuestions, handleUpdate
                     }
                 </div>
             </div>
-            <ToastContainer />
+            <ToastContainer toastClassName={styles.customToast}/>
         </div>
     );
 };

@@ -3,7 +3,7 @@ import axios from 'axios';
 
 
 const API_URL = 'https://quizze-se3g.onrender.com/api/v1/quiz/create';
-//const API_URL = 'https://quizze-se3g.onrender.com/api/v1/quiz/analytics';
+
 
 export const createQuiz = async (quizData) => {
   try {
@@ -11,12 +11,12 @@ export const createQuiz = async (quizData) => {
 
 
     axios.defaults.headers.common["Authorization"] = token;
-    const response = await axios.post(API_URL, quizData, {
+    const response = await axios.post('https://quizze-se3g.onrender.com/api/v1/quiz/create', quizData, {
       headers: {
         'Content-Type': 'application/json',
       },
     });
-    console.log(response.data);
+   
     return response.data;
   } catch (error) {
     console.error('Error creating quiz:', error);
@@ -38,7 +38,7 @@ export const updateQuiz = async (quizId, updatedQuizData) => {
         'Content-Type': 'application/json',
       },
     });
-    console.log(response.data);
+  
     return response.data;
   } catch (error) {
     console.error('Error updating quiz:', error);
@@ -50,7 +50,7 @@ export const updateQuiz = async (quizId, updatedQuizData) => {
 export const getShareQuestions = async (quizId, page, limit = 1) => {
   try {
     const response = await axios.get(`https://quizze-se3g.onrender.com/api/v1/quiz/shareQuestion/${quizId}?page=${page}&limit=1`);
-    console.log(response.data);
+    
     return response.data;
 
   } catch (error) {
@@ -64,7 +64,7 @@ export const getShareQuestions = async (quizId, page, limit = 1) => {
 export const getDetailsQuestions = async (quizId) => {
   try {
     const response = await axios.get(`https://quizze-se3g.onrender.com/api/v1/quiz/getquestion/${quizId}`);
-    console.log(response.data);
+    
     return response.data;
 
   } catch (error) {
@@ -108,7 +108,7 @@ export const quizDetails = async () => {
     const response = await axios.get(`https://quizze-se3g.onrender.com/api/v1/quiz/dashboard`);
 
     
-    console.log(response.data);
+    // console.log(response.data);
     return response.data;
   } catch (error) {
     console.error('Error updating question:', error);
@@ -124,7 +124,7 @@ export const fetchTrendingQuizzes = async () => {
 
     axios.defaults.headers.common["Authorization"] = token;
     const response = await axios.get(`https://quizze-se3g.onrender.com/api/v1/quiz/trending`);
-    console.log(response.data);
+    // console.log(response.data);
     return response.data;
   } catch (error) {
     console.error('Error updating question:', error);
@@ -142,9 +142,8 @@ export const fetchDashboardStats = async () => {
 
     axios.defaults.headers.common["Authorization"] = token;
     const response = await axios.get(`https://quizze-se3g.onrender.com/api/v1/quiz/dashboardstats`);
-   // https://quizze-se3g.onrender.com/api/v1/quiz/analytics
-   //http://localhost:3000/api/v1/quiz
-    console.log(response.data);
+   
+  
     return response.data;
   } catch (error) {
     console.error('Error updating question:', error);

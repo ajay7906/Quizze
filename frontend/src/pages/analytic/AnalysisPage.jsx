@@ -143,7 +143,7 @@ const AnalysisPage = () => {
 
   return (
     <>
-    <ToastContainer/>
+    <ToastContainer toastClassName={styles.customToast}/>
       {isLoading ? (
         <div className={styles.loaderContainer}>
           <RotatingLines width="100" visible={true} />
