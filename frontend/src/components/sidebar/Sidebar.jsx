@@ -63,7 +63,7 @@ const Sidebar = () => {
       const result = await createQuiz(quizData);
       
     
-      setSendUrlLink(`http://localhost:5173/sharequiz/${result?._id}`)
+      setSendUrlLink(`https://quizze-nine.vercel.app/sharequiz/${result?._id}`)
       setShowFinalLink(true)
       addQuiz(result);
       

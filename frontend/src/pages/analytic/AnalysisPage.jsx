@@ -112,7 +112,7 @@ const AnalysisPage = () => {
       // update quiz function
       const result = await updateQuiz(quizToEdit._id, updatedQuiz);
       setQuizData(quizData.map(quiz => (quiz._id === quizToEdit._id ? updatedQuiz : quiz)));
-      setSendUrlLink(`http://localhost:5173/sharequiz/${result._id}`);
+      setSendUrlLink(`https://quizze-nine.vercel.app/sharequiz/${result._id}`);
       
       setShowSecondPopup(false);
       setShowFinalLink(true);
