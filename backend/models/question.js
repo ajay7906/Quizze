@@ -16,7 +16,7 @@ const questionSchema = mongoose.Schema({
     rightans:{type: Boolean},
     text:{type: String}
    }],
-  correctOption: { type: String,  },
+  // correctOption: { type: String,  },
   attempts: { type: Number, default: 0 },
   timer: { type: Number,  },
   correctAttempts: { type: Number, default: 0 },

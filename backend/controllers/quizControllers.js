@@ -289,58 +289,6 @@ exports.getDashBoardData = async (req, res) => {
 };
 
 
-
-
-
-
-// exports.submitQuiz = async (req, res) => {
-//     try {
-//         const { answers } = req.body;
-//         const quiz = await Quiz.findById(req.params.id).populate('questions');
-
-//         let score = 0;
-//         quiz.questions.forEach((question, index) => {
-//             question.attempts += 1;
-//             if (question.correctOption === answers[index]) {
-//                 question.correctAttempts += 1;
-//                 score += 1;
-//             } else {
-//                 question.wrongAttempts += 1;
-//             }
-//             question.save();
-//         });
-
-//         res.json({ score });
-//     } catch (error) {
-//         errorHandler(res, error);
-//     }
-// };
-
-// exports.getAnalytics = async (req, res) => {
-//     try {
-//         const { quizId } = req;
-//         const quizzes = await Quiz.find({ user: quizId }).populate('questions');
-
-//         const analytics = quizzes.map(quiz => ({
-//             title: quiz.title,
-//             impressions: quiz.impressions,
-//             questions: quiz.questions.map(question => ({
-//                 text: question.text,
-//                 attempts: question.attempts,
-//                 correctAttempts: question.correctAttempts,
-//                 wrongAttempts: question.wrongAttempts
-//             }))
-//         }));
-
-//         res.json(analytics);
-//     } catch (error) {
-//         errorHandler(res, error);
-//     }
-// };
-
-
-
-
 //Endpoint to fetch questions by Quiz ID with pagination
 exports.getShareQuestion = async (req, res) => {
     const { quizId, } = req.params;

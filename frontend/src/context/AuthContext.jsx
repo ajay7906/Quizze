@@ -1,49 +1,3 @@
-// // src/context/AuthContext.jsx
-// import React, { createContext, useState, useEffect } from 'react';
-
-// const AuthContext = createContext();
-
-// export const AuthProvider = ({ children }) => {
-//   const [isLoggedIn, setIsLoggedIn] = useState(false);
-//   const [quizData, setQuizData] = useState([]);
-
-//   const addQuiz = (newQuiz) => {
-//     setQuizData((prevQuizData) => [...prevQuizData, newQuiz]);
-//   };
-
-
-//   useEffect(() => {
-//     // Check for token in local storage
-//     const token = localStorage.getItem('jwttokenuser');
-//     if (token) {
-//       setIsLoggedIn(true);
-//     }
-//   }, []);
-
-//   const login = () => {
-//     setIsLoggedIn(true);
-//     // localStorage.setItem('jwttokenuser', 'your-token'); // Replace with actual token
-//   };
-
-//   const logout = () => {
-//     setIsLoggedIn(false);
-//     localStorage.removeItem('jwttokenuser');
-//   };
-
-//   return (
-//     <AuthContext.Provider value={{ isLoggedIn, login, logout, quizData, addQuiz  }}>
-//       {children}
-//     </AuthContext.Provider>
-//   );
-// };
-
-// export default AuthContext;
-
-
-
-
-
-
 
 import React, { createContext, useState, useEffect } from 'react';
 
@@ -60,7 +14,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const checkTokenExpiration = () => {
       const expirationTime = localStorage.getItem('tokenExpiration');
-     // console.log(expirationTime, Date.now() > expirationTime);
+   
       if (expirationTime && Date.now() > expirationTime) {
         localStorage.removeItem('jwttokenuser');
         localStorage.removeItem('tokenExpiration');
@@ -74,7 +28,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     checkTokenExpiration();
-    const interval = setInterval(checkTokenExpiration, 60000); // Check every minute
+    const interval = setInterval(checkTokenExpiration, 60000);
 
     return () => clearInterval(interval);
   }, []);

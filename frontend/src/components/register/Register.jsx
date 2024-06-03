@@ -3,7 +3,7 @@
 import React, { useContext, useState } from 'react';
 import styles from './Registers.module.css';
 import { registerUser, loginUser } from '../../api/auth';
-import { toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import AuthContext from '../../context/AuthContext';
 import { ColorRing } from 'react-loader-spinner';
@@ -129,7 +129,7 @@ const Register = () => {
                 setRegisterErrors({ [response.field]: response });
                 setBackendError(response)
                 console.log(response);
-                toast.error(response.message || 'Registration failed');
+                toast.error(response);
             }
         }
         setIsLoading(false);
@@ -207,6 +207,7 @@ const Register = () => {
                     </button>
                 </form>
             </div>
+            <ToastContainer/>
         </div>
     );
 };

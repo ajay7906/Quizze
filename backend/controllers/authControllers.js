@@ -19,30 +19,6 @@ const registerUser = async (req, res) => {
         }
 
 
-        //  // Check if email contains '@'
-        //  if (!email.includes('@')) {
-        //     return res.status(400).json({
-        //         success: false,
-        //         message: "Invalid email format"
-        //     });
-        // }
-
-        // Check if name contains only letters and spaces
-        // const namePattern = /^[a-zA-Z\s]*$/;
-        // if (!namePattern.test(name)) {
-        //     return res.status(400).json({
-        //         success: false,
-        //         message: "Name should only contain letters and spaces"
-        //     });
-        // }
-
-        // Check if password meets strength requirements
-        // if (password.length < 6) {
-        //     return res.status(400).json({
-        //         success: false,
-        //         message: "Password should be at least 6 characters long"
-        //     });
-        // }
 
         if (password !== confirmPassword) {
             return res.status(400).json({success: false, errorMessage: 'Passwords do not match' });
@@ -96,7 +72,7 @@ const loginUser = async (req, res) => {
         if (!userDetails) {
             return res
                 .status(401)
-                .json({ success: false, errorMessage: "Invalid Email" });
+                .json({ success: false, errorMessage: " Please enter valid Email" });
         }
 
         const passwordMatch = await bcrypt.compare(

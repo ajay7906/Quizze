@@ -14,10 +14,10 @@ export async function registerUser({ name,email, password , confirmPassword}) {
       });
   
     
-     console.log(response);
-      return response.data; // return any response data if needed
+     
+      return response?.data; // return any response data if needed
     } catch (error) {
-      console.log(error.response.data);
+      
       return error?.response?.data?.errorMessage;
     }
   }
@@ -47,7 +47,7 @@ export async function loginUser({ email, password }) {
   
       return response.data; // return any response data if needed
     } catch (error) {
-      console.log(error.response.data.errorMessage);
+      
       return error.response.data.errorMessage;
     }
   }

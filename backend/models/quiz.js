@@ -11,8 +11,8 @@ const quizSchema = new mongoose.Schema({
   { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   impressions:
    { type: Number, default: 0 },
-  isTrending: 
-  { type: Boolean, default: false },
+  //  isTrending: 
+  //  { type: Boolean, default: false },
 }, { timestamps: true });
 
 // quizSchema.methods.incrementImpressions = function () {
