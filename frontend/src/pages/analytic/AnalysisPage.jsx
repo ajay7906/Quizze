@@ -138,6 +138,7 @@ const AnalysisPage = () => {
 
   return (
     <>
+    <ToastContainer/>
       {isLoading ? (
         <div className={styles.loaderContainer}>
           <RotatingLines width="100" visible={true} />
@@ -182,7 +183,7 @@ const AnalysisPage = () => {
               <img src={NoData} alt="" />
             </div>
           )}
-        <ToastContainer/>
+        
         </div>
       )}
       {isDeleteModal && (
