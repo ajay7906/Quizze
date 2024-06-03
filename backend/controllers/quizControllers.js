@@ -283,12 +283,13 @@ exports.questiRightWrongCheck = async (req, res) => {
     const { quiId } = req.params;
    
     const { updatedData } = req.body;  // `isCorrect` can be true, false, or null
-
+   // console.log(updatedData);
     try {
         let update;
 
         if (updatedData === true) {
             update = { $inc: { correctAttempts: 1 } };
+            
         } else {
             // This covers both isCorrect === false and isCorrect === null
             update = { $inc: { wrongAttempts: 1 } };
