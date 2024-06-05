@@ -208,6 +208,13 @@
     overflow: hidden;
     }
 
+    @media screen and (max-width: 1046px){
+        .options{
+            gap: 4rem 10rem;
+        }
+
+    }    
+
 @media screen and (max-width: 1000px) {
     .cardContent {
         padding: 3% 3% 3% 3%;
