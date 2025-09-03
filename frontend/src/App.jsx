@@ -1,23 +1,3 @@
-// import { useState } from 'react'
-// import { ToastContainer } from 'react-toastify';
-// import './App.css'
-// import Register from './components/register/Register'
-// import 'react-toastify/dist/ReactToastify.css';
-// function App() {
-
-
-//   return (
-//     <>
-//      <ToastContainer/>
-//      <Register/>
-//     </>
-//   )
-// }
-
-// export default App
-
-
-
 // src/App.jsx
 import React, { useState, useEffect, useContext } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
@@ -32,21 +12,19 @@ import ShareQuiz from './pages/sharequiz/ShareQuiz';
 import Layout from './components/layout/Layout';
 import QuestionPage from './pages/questionpage/QuestionPage';
 import SuccessPage from './pages/successpage/SuccessPage';
+import PracticePage from './pages/practice/PracticePage';
+import PracticeSession from './pages/practice/PracticeSession';
 import AuthContext from './context/AuthContext';
-
 
 const App = () => {
   
   const { isLoggedIn } = useContext(AuthContext);
  
- 
   return (
 
     <Router>
-      {/* <ToastContainer /> */}
+      <ToastContainer />
       <div className="appcontainer">
-        {/*        
-        <Sidebar /> */}
         <Routes>
 
           <Route path="/" element={isLoggedIn ? <Layout> <Home /> </Layout> : <Navigate to="/register" />} />
@@ -56,18 +34,24 @@ const App = () => {
           />
           <Route
             path="/analytics"
-            element={<Layout><AnalysisPage /></Layout>} // Add AnalysisPage route
+            element={<Layout><AnalysisPage /></Layout>}
           />
           <Route
             path="/sharequiz/:quizId"
-            element={<ShareQuiz
-            
-            />} // Add sharequiz route
+            element={<ShareQuiz />}
           />
           <Route path='/questiondetails/:quizId' element={<Layout><QuestionPage /></Layout>} />
           <Route path='/successpage' element={<SuccessPage />} />
-
-
+          
+          {/* New Practice Routes */}
+          <Route
+            path="/practice"
+            element={isLoggedIn ? <Layout><PracticePage /></Layout> : <Navigate to="/register" />}
+          />
+          <Route
+            path="/practice-session"
+            element={isLoggedIn ? <PracticeSession /> : <Navigate to="/register" />}
+          />
 
         </Routes>
       </div>

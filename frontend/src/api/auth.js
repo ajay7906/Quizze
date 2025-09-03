@@ -3,10 +3,13 @@ import axios from 'axios'
 //register the user
 
 
+const BASE_URL = 'http://localhost:3000';
+// http://localhost:3000
+
 export async function registerUser({ name,email, password , confirmPassword}) {
     try {
         console.log(name, email, password);
-      const response = await axios.post('https://quizze-se3g.onrender.com/api/v1/user/register', {
+      const response = await axios.post(`${BASE_URL}/api/v1/user/register`, {
         name,
         email,
         password,
@@ -27,7 +30,7 @@ export async function registerUser({ name,email, password , confirmPassword}) {
   
 export async function loginUser({ email, password }) {
     try {
-      const response = await axios.post('https://quizze-se3g.onrender.com/api/v1/user/login', {
+      const response = await axios.post(`${BASE_URL}/api/v1/user/login`, {
         email,
         password
       });
