@@ -9,19 +9,35 @@ exports.createQuiz = async (req, res) => {
     const { userId } = req;
 
     try {
-        const { title, type, questions } = req.body;
+        const { 
+            title, 
+            type, 
+            questions, 
+            description, 
+            subject, 
+            topic, 
+            difficulty, 
+            timeLimit, 
+            passingScore, 
+            isPublic 
+        } = req.body;
 
         // Validate the input
         if (!title || !type || !questions || !Array.isArray(questions)) {
             return res.status(400).json({ message: 'Invalid input data' });
         }
 
-     
-
         // Create the Quiz document
         const newQuiz = new Quiz({
             title,
             type,
+            description: description || '',
+            subject: subject || '',
+            topic: topic || '',
+            difficulty: difficulty || 'Intermediate',
+            timeLimit: timeLimit || 30,
+            passingScore: passingScore || 70,
+            isPublic: isPublic || false,
             questions: [],
             user: userId
         });
@@ -34,11 +50,14 @@ exports.createQuiz = async (req, res) => {
                 const newQuestion = new Question({
                     quiz: savedQuiz._id,
                     question: question.question,
+                    questionType: question.questionType || 'Multiple Choice',
+                    optionType: question.optionType || 'text',
                     options: question.options,
-                    correctOption: question.correctOption,
-                    timer: question.timer,
-                    optionType: question.optionType,
-                    optionsTextAndImg: question.optionsTextAndImg
+                    subject: subject || '',
+                    topic: topic || '',
+                    difficulty: difficulty || 'Intermediate',
+                    explanation: question.explanation || '',
+                    timer: question.timer
                 });
                 return await newQuestion.save();
             })
@@ -53,10 +72,17 @@ exports.createQuiz = async (req, res) => {
             .populate('user', 'name email')
             .populate('questions');
 
-        res.status(201).json(populatedQuiz);
+        res.status(201).json({
+            success: true,
+            data: populatedQuiz
+        });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Server error' });
+        res.status(500).json({ 
+            success: false,
+            message: 'Server error',
+            error: error.message 
+        });
     }
 };
 

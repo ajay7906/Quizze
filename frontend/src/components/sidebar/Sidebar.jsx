@@ -149,70 +149,13 @@
 
 
 
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import QuizPopupOne from '../quizpopupone/QuizPopupOne';
-import QuizPopupTwo from '../quizpopuptwo/QuizPopupTwo';
-import Modal from '../modal/Modal';
-import { createQuiz } from '../../api/quizApi';
-import ShareModal from '../sharemodal/ShareModal';
 import AuthContext from '../../context/AuthContext';
 
 const Sidebar = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [showFirstPopup, setShowFirstPopup] = useState(false);
-  const [showSecondPopup, setShowSecondPopup] = useState(false);
-  const [showFinalLink, setShowFinalLink] = useState(false)
-  const [quizName, setQuizName] = useState('');
-  const [quizType, setQuizType] = useState('');
-  const [quizQuestions, setQuizQuestions] = useState([]);
-  const [sendUrlLink, setSendUrlLink]  = useState()
-  const { logout, addQuiz } = useContext(AuthContext);
+  const { logout } = useContext(AuthContext);
   const navigate = useNavigate();
-
-  const openModal = () => {
-    setIsModalOpen(true);
-    setShowFirstPopup(true);
-    setShowSecondPopup(false);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setShowFirstPopup(false);
-    setShowSecondPopup(false);
-    setQuizName('');
-    setQuizType(' ');
-    setQuizQuestions([]);
-  };
-  
-  const closeShareLinkModal = () => {
-    setShowFinalLink(false)
-    closeModal()
-  }
-
-  const handleContinue = (name, type) => {
-    setShowFirstPopup(false);
-    setShowSecondPopup(true);
-    setQuizName(name);
-    setQuizType(type);
-  };
-
-  const handleCreateQuiz = async (questions) => {
-    const quizData = {
-      title: quizName,
-      type: quizType,
-      questions,
-    };
-
-    try {
-      const result = await createQuiz(quizData);
-      setSendUrlLink(`https://quizze-nine.vercel.app/sharequiz/${result?._id}`)
-      setShowFinalLink(true)
-      addQuiz(result);
-    } catch (error) {
-      console.error('Error creating quiz:', error);
-    }
-  };
 
   const handleLogout = () => {
     logout()
@@ -280,15 +223,20 @@ const Sidebar = () => {
               </NavLink>
             </li>
             <li>
-              <button 
-                onClick={openModal}
-                className="flex items-center w-full p-3 rounded-xl bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-medium text-lg hover:from-purple-600 hover:to-indigo-700 transition-all duration-200 shadow-md hover:shadow-lg"
+              <NavLink 
+                to="/create-quiz" 
+                className={({ isActive }) => 
+                  `flex items-center p-3 rounded-xl transition-all duration-200 font-medium text-lg
+                  ${isActive 
+                    ? 'bg-gradient-to-r from-purple-100 to-indigo-100 text-purple-700 shadow-md border border-purple-200' 
+                    : 'text-gray-600 hover:bg-gray-100 hover:text-gray-800'}`
+                }
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                 </svg>
                 Create Quiz
-              </button>
+              </NavLink>
             </li>
           </ul>
         </nav>
@@ -306,33 +254,7 @@ const Sidebar = () => {
           </button>
         </div>
 
-        {/* Modal for creating quiz */}
-        <Modal isOpen={isModalOpen} onClose={closeModal}>
-          {showFirstPopup && (
-            <QuizPopupOne 
-              onCancel={closeModal}
-              onContinue={(name, type) => handleContinue(name, type)}
-            />
-          )}
-
-          {showSecondPopup && (
-            <QuizPopupTwo 
-              onSubmit={handleCreateQuiz} 
-              quizType={quizType} 
-              onClose={closeModal} 
-            />
-          )}
-        </Modal>
       </aside>
-
-      {/* Share Modal */}
-      {showFinalLink && (
-        <ShareModal 
-          closeShareLinkModal={closeShareLinkModal} 
-          onClose={closeModal}
-          sendUrlLink={sendUrlLink}
-        />
-      )}
     </>
   );
 };
