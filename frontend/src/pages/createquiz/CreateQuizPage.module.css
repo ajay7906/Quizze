@@ -320,7 +320,8 @@
 }
 
 .cancelBtn,
-.saveBtn {
+.saveBtn,
+.pdfBtn {
   padding: 1rem 2rem;
   border-radius: 8px;
   font-weight: 600;
@@ -356,6 +357,19 @@
 .saveBtn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.pdfBtn {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pdfBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
 }
 
 /* Modal Styles */

@@ -4,6 +4,9 @@ const connectDB = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
 const quizRoutes = require('./routes/quizRoutes');
 const examRoutes = require('./routes/examRoutes');
+const teacherRoutes = require('./routes/teacherRoutes');
+const studentRoutes = require('./routes/studentRoutes');
+const pdfRoutes = require('./routes/pdfRoutes');
 const cors = require('cors');
 
 dotenv.config()
@@ -18,6 +21,9 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use('/api/v1/user', authRoutes);
 app.use('/api/v1/quiz', quizRoutes);
 app.use('/api/v1/exam', examRoutes);
+app.use('/api/v1/teacher', teacherRoutes);
+app.use('/api/v1/student', studentRoutes);
+app.use('/api/v1/pdf', pdfRoutes);
 
 const PORT = process.env.PORT || 3000;
 

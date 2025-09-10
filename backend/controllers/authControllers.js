@@ -1,53 +1,171 @@
-const User = require('../models/user');
+// const User = require('../models/user');
+// const jwt = require('jsonwebtoken');
+// const bcrypt = require('bcrypt');
+// const { errorHandler } = require('../utils/errorHandler');
+
+// // register controller function
+// const registerUser = async (req, res) => {
+//     try {
+//         const { name, password, email, confirmPassword, role, teacherId } = req.body;
+
+//         if (!name || !password || !email || !confirmPassword) {
+//             return res.status(400).json({
+//                 errorMessage: "complete all filled",
+//                 success: false
+//             });
+//         }
+
+//         if (password !== confirmPassword) {
+//             return res.status(400).json({success: false, errorMessage: 'Passwords do not match' });
+//         }
+
+//         const isExistingUser = await User.findOne({ email: email });
+//         if (isExistingUser) {
+//             return res
+//                 .status(409)
+//                 .json({ success: false, errorMessage: "User already exists" });
+//         }
+
+//         const hashedPassword = await bcrypt.hash(password, 10);
+
+//         const userData = new User({
+//             name,
+//             email,
+//             password: hashedPassword,
+//             role: role === 'teacher' ? 'teacher' : 'student',
+//             teacher: role === 'student' ? teacherId || null : null
+//         });
+
+//         await userData.save();
+//         res.json({
+//             success: true,
+//             message: "User registered successfully",
+//             name: userData.name,
+//         });
+//     } catch (error) {
+//         console.log(error);
+//         res.status(500).json({ success: false, errorMessage: "Something went wrong!" });
+//     }
+// };
+
+// //login controllers functions
+// const loginUser = async (req, res) => {
+//     try {
+//         const { email, password } = req.body;
+
+//         if (!email || !password) {
+//             return res.status(400).json({
+//                 success: false,
+//                 errorMessage: " Invalid credentials",
+//             });
+//         }
+      
+//         const userDetails = await User.findOne({ email });
+
+//         if (!userDetails) {
+//             return res
+//                 .status(401)
+//                 .json({ success: false, errorMessage: " Please enter valid Email" });
+//         }
+
+//         const passwordMatch = await bcrypt.compare(
+//             password,
+//             userDetails.password
+//         );
+
+//         if (!passwordMatch) {
+//             return res
+//                 .status(401)
+//                 .json({ success: false, errorMessage: "Please enter valid password" });
+//         }
+
+//         const token = jwt.sign(
+//             { userId: userDetails._id, email: userDetails.email, role: userDetails.role },
+//             process.env.SECRET_CODE,
+//             { expiresIn: "20d" }
+//         );
+
+//         res.json({
+//             success: true,
+//             message: "Login Successfully",
+//             token: token,
+//             email: userDetails.email,
+//             role: userDetails.role,
+//             userId: userDetails._id
+//         });
+//     } catch (error) {
+//         console.log(error);
+//         res.status(500).json({ success: false, errorMessage: "Something went wrong!" });
+//     }
+// };
+
+// module.exports = { registerUser, loginUser };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const Teacher = require('../models/teachers');
+const Student = require('../models/students');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const { errorHandler } = require('../utils/errorHandler');
+// const { errorHandler } = require('../utils/errorHandler');
 
-
-// register controller function
+// Register controller - Only for teachers
 const registerUser = async (req, res) => {
     try {
         const { name, password, email, confirmPassword } = req.body;
 
-      
-
-        if (!name || !password ||!email, !confirmPassword) {
+        if (!name || !password || !email || !confirmPassword) {
             return res.status(400).json({
-                errorMessage: "complete all filled",
+                errorMessage: "Complete all fields",
                 success: false
             });
         }
 
-
-
         if (password !== confirmPassword) {
             return res.status(400).json({success: false, errorMessage: 'Passwords do not match' });
-          }
-        // console.log(req);
-        const isExistingUser = await User.findOne({ email: email });
-        if (isExistingUser) {
-            return res
-                .status(409)
-                .json({ success: false, errorMessage: "User already exists" });
         }
 
+        const isExistingTeacher = await Teacher.findOne({ email: email });
+        if (isExistingTeacher) {
+            return res
+                .status(409)
+                .json({ success: false, errorMessage: "Teacher already exists" });
+        }
 
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        const userData = new User({
+        const teacherData = new Teacher({
             name,
             email,
-            password: hashedPassword,
-
+            password
         });
-        
 
-        await userData.save();
+        await teacherData.save();
         res.json({
             success: true,
-            message: "User registered successfully",
-          //  token: token,
-            name: userData.name,
+            message: "Teacher registered successfully",
+            name: teacherData.name,
         });
     } catch (error) {
         console.log(error);
@@ -55,7 +173,7 @@ const registerUser = async (req, res) => {
     }
 };
 
-//login controllers functions
+// Login controller for both teachers and students
 const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -63,40 +181,53 @@ const loginUser = async (req, res) => {
         if (!email || !password) {
             return res.status(400).json({
                 success: false,
-                errorMessage: " Invalid credentials",
+                errorMessage: "Invalid credentials",
             });
         }
       
-        const userDetails = await User.findOne({ email });
+        // Check if it's a teacher
+        let userDetails = await Teacher.findOne({ email });
+        let role = 'teacher';
+        
+        // If not a teacher, check if it's a student
+        if (!userDetails) {
+            userDetails = await Student.findOne({ email });
+            role = 'student';
+        }
 
         if (!userDetails) {
             return res
                 .status(401)
-                .json({ success: false, errorMessage: " Please enter valid Email" });
+                .json({ success: false, errorMessage: "Invalid email or password" });
         }
 
-        const passwordMatch = await bcrypt.compare(
-            password,
-            userDetails.password
-        );
+        const passwordMatch = await bcrypt.compare(password, userDetails.password);
 
         if (!passwordMatch) {
             return res
                 .status(401)
-                .json({ success: false, errorMessage: "Please enter valid password" });
+                .json({ success: false, errorMessage: "Invalid email or password" });
         }
 
         const token = jwt.sign(
-            { userId: userDetails._id, email: userDetails.email },
+            { 
+                userId: userDetails._id, 
+                email: userDetails.email, 
+                role: role,
+                // For students, include teacher ID
+                ...(role === 'student' && { teacherId: userDetails.teacher })
+            },
             process.env.SECRET_CODE,
             { expiresIn: "20d" }
         );
 
         res.json({
             success: true,
-            message: "Login Successfully",
+            message: "Login Successful",
             token: token,
             email: userDetails.email,
+            role: role,
+            userId: userDetails._id
         });
     } catch (error) {
         console.log(error);
@@ -104,4 +235,53 @@ const loginUser = async (req, res) => {
     }
 };
 
-module.exports = { registerUser, loginUser };
+// Add student controller (for teachers)
+const addStudent = async (req, res) => {
+    try {
+        const { name, email, password } = req.body;
+        const teacherId = req.user.userId; // From JWT token
+
+        if (!name || !email || !password) {
+            return res.status(400).json({
+                errorMessage: "Complete all fields",
+                success: false
+            });
+        }
+
+        // Check if student already exists
+        const isExistingStudent = await Student.findOne({ email });
+        if (isExistingStudent) {
+            return res
+                .status(409)
+                .json({ success: false, errorMessage: "Student already exists" });
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const studentData = new Student({
+            name,
+            email,
+            password: hashedPassword,
+            teacher: teacherId
+        });
+
+        await studentData.save();
+        
+        // Add student to teacher's students array
+        await Teacher.findByIdAndUpdate(
+            teacherId,
+            { $push: { students: studentData._id } }
+        );
+
+        res.json({
+            success: true,
+            message: "Student added successfully",
+            studentId: studentData._id,
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ success: false, errorMessage: "Something went wrong!" });
+    }
+};
+
+module.exports = { registerUser, loginUser, addStudent };

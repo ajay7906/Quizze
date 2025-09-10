@@ -15,27 +15,32 @@ import SuccessPage from './pages/successpage/SuccessPage';
 import PracticePage from './pages/practice/PracticePage';
 import PracticeSession from './pages/practice/PracticeSession';
 import CreateQuizPage from './pages/createquiz/CreateQuizPage';
+import StudentDashboard from './pages/student/StudentDashboard';
+import StudentAnalytics from './pages/student/StudentAnalytics';
+import AssignmentManagement from './pages/teacher/AssignmentManagement';
 import AuthContext from './context/AuthContext';
+import AddStudent from './pages/addStudent/AddStudent';
 
 const App = () => {
   
-  const { isLoggedIn } = useContext(AuthContext);
+  const { isLoggedIn, role } = useContext(AuthContext);
  
   return (
 
     <Router>
       <ToastContainer />
-      <div className="appcontainer">
+      <div >
         <Routes>
 
-          <Route path="/" element={isLoggedIn ? <Layout> <Home /> </Layout> : <Navigate to="/register" />} />
+          {/* Teacher default dashboard */}
+          <Route path="/" element={isLoggedIn ? (role === 'student' ? <Navigate to="/student" /> : <Layout> <Home /> </Layout>) : <Navigate to="/register" />} />
           <Route
             path="/register"
             element={isLoggedIn ? <Navigate to="/" /> : <Register />}
           />
           <Route
             path="/analytics"
-            element={<Layout><AnalysisPage /></Layout>}
+            element={role === 'student' ? <Navigate to="/student/analytics" /> : <Layout><AnalysisPage /></Layout>}
           />
           <Route
             path="/sharequiz/:quizId"
@@ -44,21 +49,43 @@ const App = () => {
           <Route path='/questiondetails/:quizId' element={<Layout><QuestionPage /></Layout>} />
           <Route path='/successpage' element={<SuccessPage />} />
           
-                           {/* New Practice Routes */}
-                 <Route
-                   path="/practice"
-                   element={isLoggedIn ? <Layout><PracticePage /></Layout> : <Navigate to="/register" />}
-                 />
-                 <Route
-                   path="/practice-session"
-                   element={isLoggedIn ? <PracticeSession /> : <Navigate to="/register" />}
-                 />
+          {/* Practice Routes */}
+          <Route
+            path="/practice"
+            element={isLoggedIn ? <Layout><PracticePage /></Layout> : <Navigate to="/register" />}
+          />
+          <Route
+            path="/practice-session"
+            element={isLoggedIn ? <PracticeSession /> : <Navigate to="/register" />}
+          />
 
-                 {/* Create Quiz Route */}
-                 <Route
-                   path="/create-quiz"
-                   element={isLoggedIn ? <Layout><CreateQuizPage /></Layout> : <Navigate to="/register" />}
-                 />
+          {/* Create Quiz Route (Teacher) */}
+          <Route
+            path="/create-quiz"
+            element={isLoggedIn && role !== 'student' ? <Layout><CreateQuizPage /></Layout> : <Navigate to="/register" />}
+          />
+
+          {/* add student by the teacchers */}
+          <Route
+            path="/add-students"
+            element={isLoggedIn && role !== 'student' ? <Layout><AddStudent/></Layout> : <Navigate to="/register" />}
+          />
+
+          {/* Assignment Management Route (Teacher) */}
+          <Route
+            path="/assignments"
+            element={isLoggedIn && role !== 'student' ? <Layout><AssignmentManagement /></Layout> : <Navigate to="/register" />}
+          />
+
+          {/* Student routes */}
+          <Route
+            path="/student"
+            element={isLoggedIn ? <Layout><StudentDashboard /></Layout> : <Navigate to="/register" />}
+          />
+          <Route
+            path="/student/analytics"
+            element={isLoggedIn ? <Layout><StudentAnalytics /></Layout> : <Navigate to="/register" />}
+          />
 
         </Routes>
       </div>

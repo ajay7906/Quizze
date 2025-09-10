@@ -34,6 +34,7 @@ const CreateQuizPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showQuestionForm, setShowQuestionForm] = useState(false);
   const [editingQuestionIndex, setEditingQuestionIndex] = useState(-1);
+  const [createdQuizId, setCreatedQuizId] = useState(null);
 
   const navigate = useNavigate();
 
@@ -194,7 +195,7 @@ const CreateQuizPage = () => {
 
     setIsLoading(true);
     try {
-      const response = await fetch('http://localhost:3000/api/v1/quiz', {
+      const response = await fetch('http://localhost:3000/api/v1/quiz/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -210,7 +211,8 @@ const CreateQuizPage = () => {
       const data = await response.json();
       if (data.success) {
         toast.success('Quiz created successfully!');
-        navigate('/');
+        setCreatedQuizId(data.data._id);
+        // Don't navigate immediately, allow PDF generation
       } else {
         toast.error(data.message || 'Failed to create quiz');
       }
@@ -219,6 +221,40 @@ const CreateQuizPage = () => {
       toast.error('Failed to create quiz');
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleGeneratePDF = async () => {
+    if (!createdQuizId) {
+      toast.error('Please create the quiz first');
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:3000/api/v1/pdf/quiz/${createdQuizId}/pdf`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('jwttokenuser')}`
+        }
+      });
+
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${quizData.title.replace(/[^a-z0-9]/gi, '_')}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+        toast.success('PDF generated successfully!');
+      } else {
+        toast.error('Failed to generate PDF');
+      }
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      toast.error('Failed to generate PDF');
     }
   };
 
@@ -424,6 +460,15 @@ const CreateQuizPage = () => {
           >
             Cancel
           </button>
+          {createdQuizId && (
+            <button
+              type="button"
+              onClick={handleGeneratePDF}
+              className={styles.pdfBtn}
+            >
+              📄 Generate PDF
+            </button>
+          )}
           <button
             type="button"
             onClick={saveQuiz}
