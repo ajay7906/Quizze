@@ -2,6 +2,7 @@
 const Student = require('../models/students');
 const Teacher = require('../models/teachers');
 const { generateRandomPassword } = require('../utils/helpers');
+const emailQueue = require('../utils/emailQueue');
 
 // Add a new student
 exports.addStudent = async (req, res) => {
@@ -45,6 +46,12 @@ exports.addStudent = async (req, res) => {
     
     // In a real application, you would send an email to the student with their credentials
     console.log(`Student created with password: ${password}`);
+    emailQueue.addToQueue({
+      to: email,
+      studentName: `${firstName} ${lastName}`,
+      email,
+      password
+    })
     
     res.status(201).json({
       success: true,

@@ -5,6 +5,93 @@ const Question = require('../models/question');
 const mongoose = require('mongoose');
 
 // create new quiz controllers functions
+// exports.createQuiz = async (req, res) => {
+//     const { userId } = req;
+
+//     try {
+//         const { 
+//             title, 
+//             type, 
+//             questions, 
+//             description, 
+//             subject, 
+//             topic, 
+//             difficulty, 
+//             timeLimit, 
+//             passingScore, 
+//             isPublic 
+//         } = req.body;
+
+//         // Validate the input
+//         if (!title || !type || !questions || !Array.isArray(questions)) {
+//             return res.status(400).json({ message: 'Invalid input data' });
+//         }
+
+//         // Create the Quiz document
+//         const newQuiz = new Quiz({
+//             title,
+//             type,
+//             description: description || '',
+//             subject: subject || '',
+//             topic: topic || '',
+//             difficulty: difficulty || 'Intermediate',
+//             timeLimit: timeLimit || 30,
+//             passingScore: passingScore || 70,
+//             isPublic: isPublic || false,
+//             questions: [],
+//             user: userId
+//         });
+
+//         const savedQuiz = await newQuiz.save();
+
+//         // Create Question documents
+//         const questionDocs = await Promise.all(
+//             questions.map(async (question) => {
+//                 const newQuestion = new Question({
+//                     quiz: savedQuiz._id,
+//                     question: question.question,
+//                     questionType: question.questionType || 'Multiple Choice',
+//                     optionType: question.optionType || 'text',
+//                     options: question.options,
+//                     subject: subject || '',
+//                     topic: topic || '',
+//                     difficulty: difficulty || 'Intermediate',
+//                     explanation: question.explanation || '',
+//                     timer: question.timer
+//                 });
+//                 return await newQuestion.save();
+//             })
+//         );
+
+//         // Update the Quiz document with the question IDs
+//         newQuiz.questions = questionDocs.map(q => q._id);
+//         await newQuiz.save();
+
+//         // Populate the user and questions fields in the response
+//         const populatedQuiz = await Quiz.findById(newQuiz._id)
+//             .populate('user', 'name email')
+//             .populate('questions');
+
+//         res.status(201).json({
+//             success: true,
+//             data: populatedQuiz
+//         });
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ 
+//             success: false,
+//             message: 'Server error',
+//             error: error.message 
+//         });
+//     }
+// };
+
+
+    
+
+// const Quiz = require('../models/Quiz');
+// const Question = require('../models/Question');
+
 exports.createQuiz = async (req, res) => {
     const { userId } = req;
 
@@ -52,7 +139,9 @@ exports.createQuiz = async (req, res) => {
                     question: question.question,
                     questionType: question.questionType || 'Multiple Choice',
                     optionType: question.optionType || 'text',
-                    options: question.options,
+                    options: question.options || [],
+                    answer: question.answer || '', // For descriptive questions
+                    marks: question.marks || 1,
                     subject: subject || '',
                     topic: topic || '',
                     difficulty: difficulty || 'Intermediate',
@@ -85,6 +174,20 @@ exports.createQuiz = async (req, res) => {
         });
     }
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

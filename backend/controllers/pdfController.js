@@ -7,13 +7,47 @@ const verifyToken = require('../middleware/verifyToken');
 const requireRole = require('../middleware/requireRole');
 
 // Generate PDF for a quiz
+// const generateQuizPDF = async (req, res) => {
+//   try {
+//     const { quizId } = req.params;
+//     const teacherId = req.userId;
+
+//     // Find quiz and verify ownership
+//     const quiz = await Quiz.findOne({ _id: quizId, user: teacherId });
+//     if (!quiz) {
+//       return res.status(404).json({ success: false, message: 'Quiz not found' });
+//     }
+
+//     // Get all questions for this quiz
+//     const questions = await Question.find({ quiz: quizId });
+//     if (questions.length === 0) {
+//       return res.status(400).json({ success: false, message: 'No questions found for this quiz' });
+//     }
+
+//     // Generate PDF
+//     const pdfBuffer = await pdfService.generateQuizPDF(quiz, questions);
+
+//     // Set response headers for PDF download
+//     res.setHeader('Content-Type', 'application/pdf');
+//     res.setHeader('Content-Disposition', `attachment; filename="${quiz.title.replace(/[^a-z0-9]/gi, '_')}.pdf"`);
+//     res.setHeader('Content-Length', pdfBuffer.length);
+
+//     res.send(pdfBuffer);
+//   } catch (error) {
+//     console.error('PDF generation error:', error);
+//     res.status(500).json({ success: false, message: 'Failed to generate PDF' });
+//   }
+// };
+
+
 const generateQuizPDF = async (req, res) => {
   try {
     const { quizId } = req.params;
     const teacherId = req.userId;
 
     // Find quiz and verify ownership
-    const quiz = await Quiz.findOne({ _id: quizId, user: teacherId });
+    const quiz = await Quiz.findOne({ _id: quizId, user: teacherId })
+      .populate('user', 'name email');
     if (!quiz) {
       return res.status(404).json({ success: false, message: 'Quiz not found' });
     }
@@ -38,6 +72,10 @@ const generateQuizPDF = async (req, res) => {
     res.status(500).json({ success: false, message: 'Failed to generate PDF' });
   }
 };
+
+
+
+
 
 // Assign quiz to students
 const assignQuizToStudents = async (req, res) => {
