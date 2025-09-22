@@ -80,6 +80,14 @@ exports.addStudent = async (req, res) => {
 exports.getStudents = async (req, res) => {
   try {
     const teacher = await Teacher.findById(req.userId).populate('students');
+
+    if(!teacher){
+      res.status(401).json({
+        success: false,
+        message:`Data not found`
+      })
+    }
+    console.log('teachers', teacher);
     
     res.status(200).json({
       success: true,

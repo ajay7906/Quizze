@@ -198,8 +198,10 @@ const loginUser = async (req, res) => {
         if (!userDetails) {
             return res
                 .status(401)
-                .json({ success: false, errorMessage: "Invalid email or password" });
+                .json({ success: false, errorMessage: "User does not exist" });
         }
+
+        console.log(userDetails);
 
         const passwordMatch = await bcrypt.compare(password, userDetails.password);
 

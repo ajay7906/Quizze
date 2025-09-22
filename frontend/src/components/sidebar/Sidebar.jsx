@@ -118,7 +118,12 @@ const Sidebar = () => {
                   {role === 'student' ? 'My Analytics' : 'Analytics'}
                 </NavLink>
               </li>
-              <li>
+
+
+              {
+                role === 'student' && (
+                  <>
+                  <li>
                 <NavLink 
                   to="/practice" 
                   className={({ isActive }) => 
@@ -135,6 +140,13 @@ const Sidebar = () => {
                   Practice with AI
                 </NavLink>
               </li>
+
+
+                  </>
+                )
+              }
+
+
               {role !== 'student' && (
                 <>
                   <li>

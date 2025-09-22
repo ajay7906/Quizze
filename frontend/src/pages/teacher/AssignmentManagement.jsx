@@ -32,7 +32,7 @@ const AssignmentManagement = () => {
 
   const fetchStudents = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/v1/teacher/students', {
+      const response = await fetch('http://localhost:3000/api/v1/student/all', {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await response.json();
