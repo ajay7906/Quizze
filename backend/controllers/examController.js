@@ -24,6 +24,9 @@ const getSubjects = async (req, res) => {
   }
 };
 
+
+
+
 // Start a practice session with AI-generated questions
 const startPracticeSession = async (req, res) => {
   try {
@@ -102,6 +105,20 @@ const startPracticeSession = async (req, res) => {
     });
   }
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Submit practice answers and get results
 const submitPracticeAnswers = async (req, res) => {

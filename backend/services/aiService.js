@@ -4,11 +4,12 @@ class AIService {
   constructor() {
     // Use the Gemini API key and base URL
     this.apiKey = 'AIzaSyAbUaw6aKygcv913MVpXZ01zK-Vnd58Tvo';
-    this.baseURL = 'https://generativelanguage.googleapis.com/v1beta';
+    // this.baseURL = 'https://generativelanguage.googleapis.com/v1beta';
+     this.baseURL = 'https://generativelanguage.googleapis.com/v1'; // CHANGED: v1
   }
 
   // Generate questions based on subject, topic, and difficulty
-  async generateQuestions(subject, topic, difficulty, count = 5) {
+  async generateQuestions(subject, topic, difficulty, count) {
     try {
       const prompt = `Generate ${count} ${difficulty} level questions for ${subject} - ${topic}. 
       Each question should have:
@@ -31,7 +32,7 @@ class AIService {
       }`;
 
       const response = await axios.post(
-        `${this.baseURL}/models/gemini-pro:generateContent?key=${this.apiKey}`,
+        `${this.baseURL}/models/gemini-2.5-flash:generateContent?key=${this.apiKey}`,
         {
           contents: [
             {
@@ -252,7 +253,7 @@ class AIService {
       Format as a clear, encouraging paragraph.`;
 
       const response = await axios.post(
-        `${this.baseURL}/models/gemini-pro:generateContent?key=${this.apiKey}`,
+        `${this.baseURL}/models/gemini-2.5-flash:generateContent?key=${this.apiKey}`,
         {
           contents: [
             {

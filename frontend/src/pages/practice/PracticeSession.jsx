@@ -65,8 +65,8 @@ const PracticeSession = () => {
       const response = await fetch('http://localhost:3000/api/v1/exam/practice/submit', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Content-Type': 'application/json',  
+          'Authorization': `Bearer ${localStorage.getItem('jwttokenuser')}`
         },
         body: JSON.stringify({
           quizId: quizData.quizId,
