@@ -25,7 +25,10 @@ const quizSchema = new mongoose.Schema({
   // Analytics
   totalAttempts: { type: Number, default: 0 },
   averageScore: { type: Number, default: 0 },
-  completionRate: { type: Number, default: 0 }
+  completionRate: { type: Number, default: 0 },
+  status:{type:String,default:'pending'},
+  // check the quiz is pending, completed, in progress
+
 }, { timestamps: true });
 
 const Quiz = mongoose.model('Quiz', quizSchema);

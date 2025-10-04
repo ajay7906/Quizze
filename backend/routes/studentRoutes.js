@@ -74,7 +74,7 @@ router.get('/teacher', requireRole('student'), async (req, res) => {
 router.get('/assignments', requireRole('student'), async (req, res) => {
   try {
     const assignments = await Assignment.find({ student: req.userId })
-      .populate('quiz', 'title subject topic difficulty type timeLimit passingScore description')
+      .populate('quiz', 'title subject topic difficulty type timeLimit passingScore description status')
       .populate('teacher', 'name email')
       .sort({ assignedAt: -1 });
 

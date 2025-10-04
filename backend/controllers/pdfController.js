@@ -156,7 +156,7 @@ const getStudentAssignments = async (req, res) => {
     const studentId = req.userId;
     const assignments = await Assignment.find({ student: studentId })
       .populate('teacher', 'name email')
-      .populate('quiz', 'title subject topic difficulty timeLimit passingScore')
+      .populate('quiz', 'title subject topic difficulty timeLimit passingScore status')
       .sort({ assignedAt: -1 });
 
     res.json({ success: true, data: assignments });

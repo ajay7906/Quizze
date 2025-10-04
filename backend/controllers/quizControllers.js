@@ -474,3 +474,14 @@ exports.deleteQuiz = async (req, res) => {
     }
 
 }
+
+exports.updateQuizStatus = async (req, res) => {
+    const { quizId } = req.params;
+    const { status } = req.body;
+    try {
+        const updatedQuiz = await Quiz.findByIdAndUpdate(quizId, { status }, { new: true });
+        res.status(200).send({ status: true, message: 'Quiz status updated successfully', data: updatedQuiz });
+    } catch (error) {
+        res.status(500).send({ status: false, message: 'Failed to update quiz status' });
+    }
+}

@@ -6,7 +6,8 @@ const { createQuiz,
      getQuestionDetails,
      updateQuiz,
      getTrendingQuiz,
-     getDashBoardData} = require('../controllers/quizControllers');
+     getDashBoardData,
+     updateQuizStatus} = require('../controllers/quizControllers');
 const verifyToken = require('../middleware/verifyToken');
 const router = express.Router();
 
@@ -22,6 +23,8 @@ router.delete('/delete/:quizId', deleteQuiz)
 router.get('/trending', verifyToken, getTrendingQuiz);
 router.get('/dashboardstats', verifyToken, getDashBoardData);
 router.get('/dashboard', verifyToken, getQuizDetails);
+
+router.patch('/updatequizstatus/:quizId', verifyToken, updateQuizStatus);
 
 
 module.exports = router;

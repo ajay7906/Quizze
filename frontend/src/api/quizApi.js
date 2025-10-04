@@ -169,3 +169,14 @@ export const deleteQuiz = async (quizId) => {
 };
 
 
+
+export const updateQuizStatus = async(quizId, status) => {
+  try{
+    const response = await axios.patch(`http://localhost:3000/api/v1/quiz/updatequizstatus/${quizId}`, {status});
+    return response.data;
+  } catch (error) {
+    console.error('Error updating quiz status:', error);
+    throw error;
+  }
+}
+
