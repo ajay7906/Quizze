@@ -52,7 +52,8 @@ const StudentDashboard = () => {
   };
 
   const getDifficultyColor = (difficulty) => {
-    switch (difficulty.toLowerCase()) {
+    console.log("difficulty",difficulty);
+    switch (difficulty?.toLowerCase()) {
       case 'hard':
         return 'bg-red-100 text-red-800';
       case 'medium':

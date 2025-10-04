@@ -2,7 +2,8 @@
 import axios from 'axios';
 
 
-const API_URL = 'https://quizze-se3g.onrender.com/api/v1/quiz/create';
+// const API_URL = 'https://quizze-se3g.onrender.com/api/v1/quiz/create';
+const API_URL = 'http://localhost:3000/api/v1/quiz/create';
 
 
 export const createQuiz = async (quizData) => {
@@ -49,7 +50,8 @@ export const updateQuiz = async (quizId, updatedQuizData) => {
 
 export const getShareQuestions = async (quizId, page, limit = 1) => {
   try {
-    const response = await axios.get(`https://quizze-se3g.onrender.com/api/v1/quiz/shareQuestion/${quizId}?page=${page}&limit=1`);
+    const response = await axios.get(`http://localhost:3000/api/v1/quiz/shareQuestion/${quizId}?page=${page}&limit=1`);
+    console.log("shareQuestion",response.data);
     
     return response.data;
 
