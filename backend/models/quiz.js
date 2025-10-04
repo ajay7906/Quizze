@@ -13,7 +13,7 @@ const quizSchema = new mongoose.Schema({
   },
   grade: { type: String },
   questions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Question' }],
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'Teacher', required: true },
   impressions: { type: Number, default: 0 },
   // Exam platform specific fields
   isPublic: { type: Boolean, default: false },

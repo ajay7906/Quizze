@@ -12,6 +12,7 @@ const StudentDashboard = () => {
       headers: { Authorization: `Bearer ${token}` }
     });
     const data = await resp.json();
+    console.log("teacher",data);
     if (data.success) setTeacher(data.data);
   };
 
@@ -20,6 +21,7 @@ const StudentDashboard = () => {
       headers: { Authorization: `Bearer ${token}` }
     });
     const data = await resp.json();
+    console.log("quizzes",data);
     if (data.success) setQuizzes(data.data);
   };
 
@@ -28,6 +30,7 @@ const StudentDashboard = () => {
       headers: { Authorization: `Bearer ${token}` }
     });
     const data = await resp.json();
+    console.log("assignments",data);
     if (data.success) setAssignments(data.data);
   };
 

@@ -1,17 +1,3 @@
-// // models/Student.js
-// const mongoose = require('mongoose');
-
-// const studentSchema = new mongoose.Schema({
-//   firstName: { type: String, required: true },
-//   lastName: {type: String, requires: true},
-//   email: { type: String, required: true, unique: true },
-//   password: { type: String, required: true },
-//   teacher: { type: mongoose.Schema.Types.ObjectId, ref: 'Teacher', required: true }
-// }, { timestamps: true });
-
-// module.exports = mongoose.model('Student', studentSchema);
-
-
 
 
 

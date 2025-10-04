@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 
 const assignmentSchema = new mongoose.Schema({
-  teacher: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  student: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  teacher: { type: mongoose.Schema.Types.ObjectId, ref: 'teacher', required: true },
+  student: { type: mongoose.Schema.Types.ObjectId, ref: 'Student', required: true },
   quiz: { type: mongoose.Schema.Types.ObjectId, ref: 'Quiz', required: true },
   assignedAt: { type: Date, default: Date.now },
   dueDate: { type: Date },

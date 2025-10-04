@@ -1,15 +1,19 @@
-// const express = require('express');
-// const router = express.Router();
-// const verifyToken = require('../middleware/verifyToken');
-// const requireRole = require('../middleware/requireRole');
-// const User = require('../models/user');
-// const Quiz = require('../models/quiz');
 
-// router.use(verifyToken, requireRole('student'));
-// const studentControllers = require('../controllers/studentControllers');
 
-// // Get teacher assigned to this student
-// router.get('/teacher', async (req, res) => {
+const express = require('express');
+const router = express.Router();
+const verifyToken = require('../middleware/verifyToken');
+const requireRole = require('../middleware/requireRole');
+const User = require('../models/user');
+const Quiz = require('../models/quiz');
+const studentControllers = require('../controllers/studentControllers');
+const Student = require('../models/students');
+
+// Apply verifyToken to all routes
+router.use(verifyToken);
+
+// Routes that require student role
+// router.get('/teacher', requireRole('student'), async (req, res) => {
 //   try {
 //     const me = await User.findById(req.userId).select('teacher');
 //     if (!me || !me.teacher) return res.json({ success: true, data: null });
@@ -20,50 +24,37 @@
 //   }
 // });
 
-// // List quizzes created by my teacher
-// router.get('/quizzes', async (req, res) => {
-//   try {
-//     const me = await User.findById(req.userId).select('teacher');
-//     const quizzes = await Quiz.find({ user: me.teacher }).select('title subject topic difficulty createdAt');
-//     res.json({ success: true, data: quizzes });
-//   } catch (e) {
-//     res.status(500).json({ success: false, message: e.message });
-//   }
-// });
 
-// router.get('/all', studentControllers.getStudents);
-// router.get('/add', studentControllers.addStudent);
-
-
-
-// module.exports = router;
-
-
-
-
-
-const express = require('express');
-const router = express.Router();
-const verifyToken = require('../middleware/verifyToken');
-const requireRole = require('../middleware/requireRole');
-const User = require('../models/user');
-const Quiz = require('../models/quiz');
-const studentControllers = require('../controllers/studentControllers');
-
-// Apply verifyToken to all routes
-router.use(verifyToken);
-
-// Routes that require student role
+// Fixed route - make sure this is in your student routes
 router.get('/teacher', requireRole('student'), async (req, res) => {
   try {
-    const me = await User.findById(req.userId).select('teacher');
-    if (!me || !me.teacher) return res.json({ success: true, data: null });
-    const t = await User.findById(me.teacher).select('name email');
-    res.json({ success: true, data: t });
+    // Since you're using requireRole('student'), find the student directly
+    const student = await Student.findById(req.userId).populate('teacher', 'name email');
+    
+    if (!student) {
+      return res.status(404).json({ success: false, message: 'Student not found' });
+    }
+    
+    if (!student.teacher) {
+      return res.json({ success: true, data: null });
+    }
+    
+    res.json({ 
+      success: true, 
+      data: {
+        _id: student.teacher._id,
+        name: student.teacher.name,
+        email: student.teacher.email
+      }
+    });
   } catch (e) {
     res.status(500).json({ success: false, message: e.message });
   }
 });
+
+
+
+
 
 // List quizzes created by my teacher (student only)
 router.get('/quizzes', requireRole('student'), async (req, res) => {

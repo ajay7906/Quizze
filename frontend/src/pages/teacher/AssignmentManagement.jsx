@@ -133,7 +133,8 @@ const AssignmentManagement = () => {
               </span>
             </div>
             <div className={styles.assignmentDetails}>
-              <p><strong>Student:</strong> {assignment.student.name}</p>
+              <p><strong>Student:</strong> {assignment.student?.firstName} {assignment.student?.lastName}</p>
+              <p><strong>Email:</strong> {assignment.student?.email}</p>
               <p><strong>Subject:</strong> {assignment.quiz.subject}</p>
               <p><strong>Topic:</strong> {assignment.quiz.topic}</p>
               <p><strong>Difficulty:</strong> {assignment.quiz.difficulty}</p>
