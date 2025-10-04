@@ -17,7 +17,7 @@ const StudentDashboard = () => {
   };
 
   const fetchQuizzes = async () => {
-    const resp = await fetch('http://localhost:3000/api/v1/student/quizzes', {
+    const resp = await fetch('http://localhost:3000/api/v1/student/assignments', {
       headers: { Authorization: `Bearer ${token}` }
     });
     const data = await resp.json();

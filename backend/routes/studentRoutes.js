@@ -8,6 +8,7 @@ const User = require('../models/user');
 const Quiz = require('../models/quiz');
 const studentControllers = require('../controllers/studentControllers');
 const Student = require('../models/students');
+const Assignment = require('../models/assignment');
 
 // Apply verifyToken to all routes
 router.use(verifyToken);
@@ -57,17 +58,41 @@ router.get('/teacher', requireRole('student'), async (req, res) => {
 
 
 // List quizzes created by my teacher (student only)
-router.get('/quizzes', requireRole('student'), async (req, res) => {
+// router.get('/quizzes', requireRole('student'), async (req, res) => {
+//   try {
+//     const me = await User.findById(req.userId).select('teacher');
+//     const quizzes = await Quiz.find({ user: me.teacher }).select('title subject topic difficulty createdAt');
+//     res.json({ success: true, data: quizzes });
+//   } catch (e) {
+//     res.status(500).json({ success: false, message: e.message });
+//   }
+// });
+
+// Routes that require teacher/admin role (for managing students)
+
+
+router.get('/assignments', requireRole('student'), async (req, res) => {
   try {
-    const me = await User.findById(req.userId).select('teacher');
-    const quizzes = await Quiz.find({ user: me.teacher }).select('title subject topic difficulty createdAt');
-    res.json({ success: true, data: quizzes });
+    const assignments = await Assignment.find({ student: req.userId })
+      .populate('quiz', 'title subject topic difficulty type timeLimit passingScore description')
+      .populate('teacher', 'name email')
+      .sort({ assignedAt: -1 });
+
+    res.json({ 
+      success: true, 
+      data: assignments 
+    });
   } catch (e) {
     res.status(500).json({ success: false, message: e.message });
   }
 });
 
-// Routes that require teacher/admin role (for managing students)
+
+
+
+
+
+
 router.get('/all', requireRole(['teacher', 'admin']), studentControllers.getStudents);
 router.post('/add', requireRole(['teacher', 'admin']), studentControllers.addStudent);
 router.get('getstudent/:id', requireRole(['teacher', 'admin']), studentControllers.getStudent);
