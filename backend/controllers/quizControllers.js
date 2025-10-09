@@ -327,15 +327,66 @@ exports.getTrendingQuiz = async (req, res) => {
 
 
 
+// exports.getDashBoardData = async (req, res) => {
+//     try {
+//         const { userId } = req;
+
+//         // Ensure userId is an ObjectId if stored as ObjectId in the database
+//         const userObjectId = new mongoose.Types.ObjectId(userId);
+
+//         // Count the total number of quizzes created by the user
+//         const totalQuizzes = await Quiz.countDocuments({ user: userObjectId });
+
+//         // Count the total number of questions in quizzes created by the user
+//         const totalQuestions = await Quiz.aggregate([
+//             { $match: { user: userObjectId } },
+//             { $project: { numOfQuestions: { $size: '$questions' } } },
+//             { $group: { _id: null, totalQuestions: { $sum: '$numOfQuestions' } } }
+//         ]);
+
+//         // Sum the total impressions of quizzes created by the user
+//         const totalImpressions = await Quiz.aggregate([
+//             { $match: { user: userObjectId } },
+//             { $group: { _id: null, totalImpressions: { $sum: '$impressions' } } }
+//         ]);
+
+//         // Check if aggregation results are empty and handle appropriately
+//         const totalQuestionsCount = totalQuestions.length > 0 ? totalQuestions[0].totalQuestions : 0;
+//         const totalImpressionsCount = totalImpressions.length > 0 ? totalImpressions[0].totalImpressions : 0;
+
+//         res.json({
+//             totalQuizzes,
+//             totalQuestions: totalQuestionsCount,
+//             totalImpressions: totalImpressionsCount
+//         });
+//     } catch (error) {
+//         // res.status(500).json({ error: err.message });
+//         res.status(500).send({ error: 'Failed to get dashboards data ' });
+//     }
+// };
+
+
+//Endpoint to fetch questions by Quiz ID with pagination
+
 exports.getDashBoardData = async (req, res) => {
     try {
         const { userId } = req;
-
-        // Ensure userId is an ObjectId if stored as ObjectId in the database
         const userObjectId = new mongoose.Types.ObjectId(userId);
+
+        // Get current date and previous month date
+        const currentDate = new Date();
+        const lastMonthDate = new Date();
+        lastMonthDate.setMonth(lastMonthDate.getMonth() - 1);
+        console.log('last months',lastMonthDate, currentDate )
 
         // Count the total number of quizzes created by the user
         const totalQuizzes = await Quiz.countDocuments({ user: userObjectId });
+
+        // Count total quizzes from last month
+        const lastMonthQuizzes = await Quiz.countDocuments({
+            user: userObjectId,
+            createdAt: { $lt: currentDate, $gte: lastMonthDate }
+        });
 
         // Count the total number of questions in quizzes created by the user
         const totalQuestions = await Quiz.aggregate([
@@ -344,29 +395,81 @@ exports.getDashBoardData = async (req, res) => {
             { $group: { _id: null, totalQuestions: { $sum: '$numOfQuestions' } } }
         ]);
 
+        // Count total questions from last month
+        const lastMonthQuestions = await Quiz.aggregate([
+            { 
+                $match: { 
+                    user: userObjectId,
+                    createdAt: { $lt: currentDate, $gte: lastMonthDate }
+                } 
+            },
+            { $project: { numOfQuestions: { $size: '$questions' } } },
+            { $group: { _id: null, totalQuestions: { $sum: '$numOfQuestions' } } }
+        ]);
+        console.log('last Month of question', lastMonthQuestions)
+
         // Sum the total impressions of quizzes created by the user
         const totalImpressions = await Quiz.aggregate([
             { $match: { user: userObjectId } },
             { $group: { _id: null, totalImpressions: { $sum: '$impressions' } } }
         ]);
 
+        // Sum total impressions from last month
+        const lastMonthImpressions = await Quiz.aggregate([
+            { 
+                $match: { 
+                    user: userObjectId,
+                    createdAt: { $lt: currentDate, $gte: lastMonthDate }
+                } 
+            },
+            { $group: { _id: null, totalImpressions: { $sum: '$impressions' } } }
+        ]);
+
         // Check if aggregation results are empty and handle appropriately
         const totalQuestionsCount = totalQuestions.length > 0 ? totalQuestions[0].totalQuestions : 0;
         const totalImpressionsCount = totalImpressions.length > 0 ? totalImpressions[0].totalImpressions : 0;
+        
+        const lastMonthQuestionsCount = lastMonthQuestions.length > 0 ? lastMonthQuestions[0].totalQuestions : 0;
+        const lastMonthImpressionsCount = lastMonthImpressions.length > 0 ? lastMonthImpressions[0].totalImpressions : 0;
+
+        // Calculate percentage changes
+        const calculatePercentageChange = (current, previous) => {
+            if (previous === 0) {
+                return current > 0 ? 100 : 0; // Handle division by zero
+            }
+            return ((current - previous) / previous) * 100;
+        };
+
+        const quizzesPercentageChange = calculatePercentageChange(totalQuizzes, lastMonthQuizzes);
+        const questionsPercentageChange = calculatePercentageChange(totalQuestionsCount, lastMonthQuestionsCount);
+        const impressionsPercentageChange = calculatePercentageChange(totalImpressionsCount, lastMonthImpressionsCount);
 
         res.json({
             totalQuizzes,
             totalQuestions: totalQuestionsCount,
-            totalImpressions: totalImpressionsCount
+            totalImpressions: totalImpressionsCount,
+            trends: {
+                quizzes: {
+                    percentage: quizzesPercentageChange,
+                    trend: quizzesPercentageChange >= 0 ? 'increase' : 'decrease'
+                },
+                questions: {
+                    percentage: Math.abs(questionsPercentageChange),
+                    trend: questionsPercentageChange >= 0 ? 'increase' : 'decrease'
+                },
+                impressions: {
+                    percentage: Math.abs(impressionsPercentageChange),
+                    trend: impressionsPercentageChange >= 0 ? 'increase' : 'decrease'
+                }
+            }
         });
     } catch (error) {
-        // res.status(500).json({ error: err.message });
-        res.status(500).send({ error: 'Failed to get dashboards data ' });
+        console.error('Dashboard data error:', error);
+        res.status(500).send({ error: 'Failed to get dashboards data' });
     }
 };
 
 
-//Endpoint to fetch questions by Quiz ID with pagination
 exports.getShareQuestion = async (req, res) => {
     const { quizId, } = req.params;
     const { page = 1, limit = 1 } = req.query;
