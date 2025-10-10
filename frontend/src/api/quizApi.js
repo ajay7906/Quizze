@@ -3,7 +3,7 @@ import axios from 'axios';
 
 
 // const API_URL = 'https://quizze-se3g.onrender.com/api/v1/quiz/create';
-const API_URL = 'http://localhost:3000/api/v1/quiz/create';
+const API_URL = 'http://localhost:3000';
 
 
 export const createQuiz = async (quizData) => {
@@ -144,7 +144,7 @@ export const fetchDashboardStats = async () => {
 
 
     axios.defaults.headers.common["Authorization"] = token;
-    const response = await axios.get(`https://quizze-se3g.onrender.com/api/v1/quiz/dashboardstats`);
+    const response = await axios.get(`${API_URL}/api/v1/quiz/dashboardstats`);
    
   
     return response.data;

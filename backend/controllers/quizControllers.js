@@ -373,19 +373,36 @@ exports.getDashBoardData = async (req, res) => {
         const { userId } = req;
         const userObjectId = new mongoose.Types.ObjectId(userId);
 
-        // Get current date and previous month date
+        // Get proper month ranges
         const currentDate = new Date();
-        const lastMonthDate = new Date();
-        lastMonthDate.setMonth(lastMonthDate.getMonth() - 1);
-        console.log('last months',lastMonthDate, currentDate )
+        const currentMonthStart = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+        const lastMonthStart = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
+        const lastMonthEnd = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0); // Last day of previous month
+
+        console.log('Date ranges:', {
+            lastMonth: { start: lastMonthStart, end: lastMonthEnd },
+            currentMonth: { start: currentMonthStart, end: currentDate }
+        });
 
         // Count the total number of quizzes created by the user
         const totalQuizzes = await Quiz.countDocuments({ user: userObjectId });
 
-        // Count total quizzes from last month
+        // Count total quizzes from last month (properly defined)
         const lastMonthQuizzes = await Quiz.countDocuments({
             user: userObjectId,
-            createdAt: { $lt: currentDate, $gte: lastMonthDate }
+            createdAt: { $gte: lastMonthStart, $lte: lastMonthEnd }
+        });
+
+        // Count current month quizzes
+        const currentMonthQuizzes = await Quiz.countDocuments({
+            user: userObjectId,
+            createdAt: { $gte: currentMonthStart, $lte: currentDate }
+        });
+
+        console.log('Quiz counts:', {
+            total: totalQuizzes,
+            lastMonth: lastMonthQuizzes,
+            currentMonth: currentMonthQuizzes
         });
 
         // Count the total number of questions in quizzes created by the user
@@ -395,18 +412,29 @@ exports.getDashBoardData = async (req, res) => {
             { $group: { _id: null, totalQuestions: { $sum: '$numOfQuestions' } } }
         ]);
 
-        // Count total questions from last month
+        // Count last month questions
         const lastMonthQuestions = await Quiz.aggregate([
             { 
                 $match: { 
                     user: userObjectId,
-                    createdAt: { $lt: currentDate, $gte: lastMonthDate }
+                    createdAt: { $gte: lastMonthStart, $lte: lastMonthEnd }
                 } 
             },
             { $project: { numOfQuestions: { $size: '$questions' } } },
             { $group: { _id: null, totalQuestions: { $sum: '$numOfQuestions' } } }
         ]);
-        console.log('last Month of question', lastMonthQuestions)
+
+        // Count current month questions
+        const currentMonthQuestions = await Quiz.aggregate([
+            { 
+                $match: { 
+                    user: userObjectId,
+                    createdAt: { $gte: currentMonthStart, $lte: currentDate }
+                } 
+            },
+            { $project: { numOfQuestions: { $size: '$questions' } } },
+            { $group: { _id: null, totalQuestions: { $sum: '$numOfQuestions' } } }
+        ]);
 
         // Sum the total impressions of quizzes created by the user
         const totalImpressions = await Quiz.aggregate([
@@ -414,35 +442,49 @@ exports.getDashBoardData = async (req, res) => {
             { $group: { _id: null, totalImpressions: { $sum: '$impressions' } } }
         ]);
 
-        // Sum total impressions from last month
+        // Sum last month impressions
         const lastMonthImpressions = await Quiz.aggregate([
             { 
                 $match: { 
                     user: userObjectId,
-                    createdAt: { $lt: currentDate, $gte: lastMonthDate }
+                    createdAt: { $gte: lastMonthStart, $lte: lastMonthEnd }
                 } 
             },
             { $group: { _id: null, totalImpressions: { $sum: '$impressions' } } }
         ]);
 
-        // Check if aggregation results are empty and handle appropriately
+        // Sum current month impressions - THIS WAS MISSING
+        const currentMonthImpressions = await Quiz.aggregate([
+            { 
+                $match: { 
+                    user: userObjectId,
+                    createdAt: { $gte: currentMonthStart, $lte: currentDate }
+                } 
+            },
+            { $group: { _id: null, totalImpressions: { $sum: '$impressions' } } }
+        ]);
+
+        // Handle aggregation results
         const totalQuestionsCount = totalQuestions.length > 0 ? totalQuestions[0].totalQuestions : 0;
         const totalImpressionsCount = totalImpressions.length > 0 ? totalImpressions[0].totalImpressions : 0;
         
         const lastMonthQuestionsCount = lastMonthQuestions.length > 0 ? lastMonthQuestions[0].totalQuestions : 0;
         const lastMonthImpressionsCount = lastMonthImpressions.length > 0 ? lastMonthImpressions[0].totalImpressions : 0;
 
-        // Calculate percentage changes
+        const currentMonthQuestionsCount = currentMonthQuestions.length > 0 ? currentMonthQuestions[0].totalQuestions : 0;
+        const currentMonthImpressionsCount = currentMonthImpressions.length > 0 ? currentMonthImpressions[0].totalImpressions : 0;
+
+        // Calculate percentage changes using current month vs last month
         const calculatePercentageChange = (current, previous) => {
             if (previous === 0) {
-                return current > 0 ? 100 : 0; // Handle division by zero
+                return current > 0 ? 100 : 0;
             }
             return ((current - previous) / previous) * 100;
         };
 
-        const quizzesPercentageChange = calculatePercentageChange(totalQuizzes, lastMonthQuizzes);
-        const questionsPercentageChange = calculatePercentageChange(totalQuestionsCount, lastMonthQuestionsCount);
-        const impressionsPercentageChange = calculatePercentageChange(totalImpressionsCount, lastMonthImpressionsCount);
+        const quizzesPercentageChange = calculatePercentageChange(currentMonthQuizzes, lastMonthQuizzes);
+        const questionsPercentageChange = calculatePercentageChange(currentMonthQuestionsCount, lastMonthQuestionsCount);
+        const impressionsPercentageChange = calculatePercentageChange(currentMonthImpressionsCount, lastMonthImpressionsCount);
 
         res.json({
             totalQuizzes,
@@ -450,16 +492,22 @@ exports.getDashBoardData = async (req, res) => {
             totalImpressions: totalImpressionsCount,
             trends: {
                 quizzes: {
-                    percentage: quizzesPercentageChange,
-                    trend: quizzesPercentageChange >= 0 ? 'increase' : 'decrease'
+                    percentage: Math.abs(quizzesPercentageChange),
+                    trend: quizzesPercentageChange >= 0 ? 'increase' : 'decrease',
+                    currentMonth: currentMonthQuizzes,
+                    lastMonth: lastMonthQuizzes
                 },
                 questions: {
                     percentage: Math.abs(questionsPercentageChange),
-                    trend: questionsPercentageChange >= 0 ? 'increase' : 'decrease'
+                    trend: questionsPercentageChange >= 0 ? 'increase' : 'decrease',
+                    currentMonth: currentMonthQuestionsCount,
+                    lastMonth: lastMonthQuestionsCount
                 },
                 impressions: {
                     percentage: Math.abs(impressionsPercentageChange),
-                    trend: impressionsPercentageChange >= 0 ? 'increase' : 'decrease'
+                    trend: impressionsPercentageChange >= 0 ? 'increase' : 'decrease',
+                    currentMonth: currentMonthImpressionsCount,
+                    lastMonth: lastMonthImpressionsCount
                 }
             }
         });
