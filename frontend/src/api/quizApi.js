@@ -65,7 +65,7 @@ export const getShareQuestions = async (quizId, page, limit = 1) => {
 
 export const getDetailsQuestions = async (quizId) => {
   try {
-    const response = await axios.get(`https://quizze-se3g.onrender.com/api/v1/quiz/getquestion/${quizId}`);
+    const response = await axios.get(`${API_URL}/api/v1/quiz/getquestion/${quizId}`);
     
     return response.data;
 
@@ -126,7 +126,7 @@ export const fetchTrendingQuizzes = async () => {
 
 
     axios.defaults.headers.common["Authorization"] = token;
-    const response = await axios.get(`https://quizze-se3g.onrender.com/api/v1/quiz/trending`);
+    const response = await axios.get(`${API_URL}/api/v1/quiz/trending`);
     // console.log(response.data);
     return response.data;
   } catch (error) {

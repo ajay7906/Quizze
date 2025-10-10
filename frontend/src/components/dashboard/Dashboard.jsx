@@ -1,5 +1,414 @@
 
 
+// import React, { useEffect, useState } from 'react';
+// import { fetchDashboardStats, fetchTrendingQuizzes } from '../../api/quizApi';
+// import { formatNumber } from '../../utils/formatNumber';
+// import { RotatingLines } from 'react-loader-spinner';
+// import NoDataImg from '../../assets/NoNmae.png';
+// import EmpressionImg from '../../assets/eye.png';
+// import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
+
+// const Dashboard = () => {
+//   const [stats, setStats] = useState(null);
+//   const [trendingQuizzes, setTrendingQuizzes] = useState([]);
+//   const [isLoading, setIsLoading] = useState(true);
+//   const [activeTab, setActiveTab] = useState('overview');
+//   const [timeRange, setTimeRange] = useState('week'); // week, month, year
+
+//   const fetchData = async () => {
+//     try {
+//       const statsData = await fetchDashboardStats();
+//       console.log('fetch dashboard stats', statsData);
+//       setStats(statsData);
+//       const trendingData = await fetchTrendingQuizzes();
+//       setTrendingQuizzes(trendingData);
+//     } catch (error) {
+//       console.error('Error fetching data:', error);
+//     } finally {
+//       setIsLoading(false);
+//     }
+//   };
+
+//   useEffect(() => {
+//     fetchData();
+//   }, []);
+
+//   // Mock data for charts (replace with actual API data)
+//   const performanceData = [
+//     { name: 'Mon', quizzes: 4, questions: 20, impressions: 45 },
+//     { name: 'Tue', quizzes: 2, questions: 15, impressions: 32 },
+//     { name: 'Wed', quizzes: 6, questions: 25, impressions: 68 },
+//     { name: 'Thu', quizzes: 3, questions: 18, impressions: 42 },
+//     { name: 'Fri', quizzes: 5, questions: 22, impressions: 58 },
+//     { name: 'Sat', quizzes: 1, questions: 10, impressions: 25 },
+//     { name: 'Sun', quizzes: 2, questions: 12, impressions: 30 },
+//   ];
+
+//   const quizTypeData = [
+//     { name: 'Multiple Choice', value: 65 },
+//     { name: 'True/False', value: 20 },
+//     { name: 'Poll Type', value: 15 },
+//   ];
+
+//   const COLORS = ['#0088FE', '#00C49F', '#FFBB28'];
+
+//   const formatDate = (dateString) => {
+//     const options = { year: 'numeric', month: 'short', day: 'numeric' };
+//     return new Date(dateString).toLocaleDateString(undefined, options);
+//   };
+
+//   // Calculate additional stats
+//   const averageImpressions = stats ? Math.round(stats.totalImpressions / stats.totalQuizzes) : 0;
+//   const engagementRate = stats ? ((stats.totalImpressions / (stats.totalQuizzes * 100)) * 100).toFixed(1) : 0;
+
+//   return (
+//     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-indigo-50 p-4 md:p-8">
+//       {isLoading ? (
+//         <div className="flex items-center justify-center min-h-screen">
+//           <div className="text-center">
+//             <RotatingLines width="100" strokeColor="#3B82F6" />
+//             <p className="mt-4 text-gray-600">Loading your dashboard...</p>
+//           </div>
+//         </div>
+//       ) : (
+//         <div className="max-w-7xl mx-auto space-y-8">
+//           {/* Header Section */}
+//           <div className="pt-8 pb-4">
+//             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+//               <div>
+//                 <h1 className="text-3xl md:text-4xl font-bold text-gray-800">Teacher Dashboard</h1>
+//                 <p className="text-gray-600 mt-2">Monitor your quiz performance and student engagement</p>
+//               </div>
+//               <div className="flex items-center space-x-4 mt-4 md:mt-0">
+//                 <select 
+//                   value={timeRange}
+//                   onChange={(e) => setTimeRange(e.target.value)}
+//                   className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+//                 >
+//                   <option value="week">Last 7 Days</option>
+//                   <option value="month">Last 30 Days</option>
+//                   <option value="year">Last Year</option>
+//                 </select>
+//                 <button className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+//                   Generate Report
+//                 </button>
+//               </div>
+//             </div>
+
+//             {/* Enhanced Tabs */}
+//             <div className="flex space-x-1 bg-white p-1 rounded-xl shadow-sm border border-gray-200 w-fit">
+//               {['overview', 'analytics', 'performance', 'reports'].map((tab) => (
+//                 <button
+//                   key={tab}
+//                   className={`px-6 py-3 font-medium text-sm rounded-lg transition-all capitalize ${
+//                     activeTab === tab
+//                       ? 'bg-indigo-600 text-white shadow-md'
+//                       : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
+//                   }`}
+//                   onClick={() => setActiveTab(tab)}
+//                 >
+//                   {tab}
+//                 </button>
+//               ))}
+//             </div>
+//           </div>
+
+//           {/* Key Metrics Grid */}
+//           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+//             {/* Total Quizzes */}
+//             <div className="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-orange-500 hover:shadow-xl transition-all duration-300 group">
+//               <div className="flex items-center justify-between">
+//                 <div>
+//                   <p className="text-gray-500 text-sm font-medium">Total Quizzes</p>
+//                   <h3 className="text-3xl font-bold text-gray-800 mt-2">
+//                     {stats ? formatNumber(stats.totalQuizzes) : '0'}
+//                   </h3>
+//                   <div className="flex items-center mt-2">
+//                     <span className="text-green-500 text-sm font-medium">+12%</span>
+//                     <span className="text-gray-500 text-sm ml-2">from last month</span>
+//                   </div>
+//                 </div>
+//                 <div className="bg-orange-100 p-3 rounded-xl group-hover:scale-110 transition-transform">
+//                   <svg className="h-8 w-8 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+//                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+//                   </svg>
+//                 </div>
+//               </div>
+//             </div>
+
+//             {/* Total Questions */}
+//             <div className="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-green-500 hover:shadow-xl transition-all duration-300 group">
+//               <div className="flex items-center justify-between">
+//                 <div>
+//                   <p className="text-gray-500 text-sm font-medium">Total Questions</p>
+//                   <h3 className="text-3xl font-bold text-gray-800 mt-2">
+//                     {stats ? formatNumber(stats.totalQuestions) : '0'}
+//                   </h3>
+//                   <div className="flex items-center mt-2">
+//                     <span className="text-green-500 text-sm font-medium">+8%</span>
+//                     <span className="text-gray-500 text-sm ml-2">from last month</span>
+//                   </div>
+//                 </div>
+//                 <div className="bg-green-100 p-3 rounded-xl group-hover:scale-110 transition-transform">
+//                   <svg className="h-8 w-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+//                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+//                   </svg>
+//                 </div>
+//               </div>
+//             </div>
+
+//             {/* Total Impressions */}
+//             <div className="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-blue-500 hover:shadow-xl transition-all duration-300 group">
+//               <div className="flex items-center justify-between">
+//                 <div>
+//                   <p className="text-gray-500 text-sm font-medium">Total Impressions</p>
+//                   <h3 className="text-3xl font-bold text-gray-800 mt-2">
+//                     {stats ? formatNumber(stats.totalImpressions) : '0'}
+//                   </h3>
+//                   <div className="flex items-center mt-2">
+//                     <span className="text-green-500 text-sm font-medium">+23%</span>
+//                     <span className="text-gray-500 text-sm ml-2">from last month</span>
+//                   </div>
+//                 </div>
+//                 <div className="bg-blue-100 p-3 rounded-xl group-hover:scale-110 transition-transform">
+//                   <svg className="h-8 w-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+//                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+//                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+//                   </svg>
+//                 </div>
+//               </div>
+//             </div>
+
+//             {/* Engagement Rate */}
+//             <div className="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-purple-500 hover:shadow-xl transition-all duration-300 group">
+//               <div className="flex items-center justify-between">
+//                 <div>
+//                   <p className="text-gray-500 text-sm font-medium">Engagement Rate</p>
+//                   <h3 className="text-3xl font-bold text-gray-800 mt-2">
+//                     {engagementRate}%
+//                   </h3>
+//                   <div className="flex items-center mt-2">
+//                     <span className="text-green-500 text-sm font-medium">+5%</span>
+//                     <span className="text-gray-500 text-sm ml-2">from last month</span>
+//                   </div>
+//                 </div>
+//                 <div className="bg-purple-100 p-3 rounded-xl group-hover:scale-110 transition-transform">
+//                   <svg className="h-8 w-8 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+//                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+//                   </svg>
+//                 </div>
+//               </div>
+//             </div>
+//           </div>
+
+//           {/* Charts Section */}
+//           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+//             {/* Performance Chart */}
+//             <div className="bg-white rounded-2xl shadow-lg p-6">
+//               <div className="flex justify-between items-center mb-6">
+//                 <h3 className="text-xl font-bold text-gray-800">Weekly Performance</h3>
+//                 <select className="text-sm border border-gray-300 rounded-lg px-3 py-1">
+//                   <option>Last 7 days</option>
+//                   <option>Last 30 days</option>
+//                 </select>
+//               </div>
+//               <div className="h-80">
+//                 <ResponsiveContainer width="100%" height="100%">
+//                   <BarChart data={performanceData}>
+//                     <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+//                     <XAxis dataKey="name" />
+//                     <YAxis />
+//                     <Tooltip />
+//                     <Legend />
+//                     <Bar dataKey="quizzes" name="Quizzes" fill="#F59E0B" radius={[4, 4, 0, 0]} />
+//                     <Bar dataKey="questions" name="Questions" fill="#10B981" radius={[4, 4, 0, 0]} />
+//                     <Bar dataKey="impressions" name="Impressions" fill="#3B82F6" radius={[4, 4, 0, 0]} />
+//                   </BarChart>
+//                 </ResponsiveContainer>
+//               </div>
+//             </div>
+
+//             {/* Quiz Type Distribution */}
+//             <div className="bg-white rounded-2xl shadow-lg p-6">
+//               <h3 className="text-xl font-bold text-gray-800 mb-6">Quiz Type Distribution</h3>
+//               <div className="h-80">
+//                 <ResponsiveContainer width="100%" height="100%">
+//                   <PieChart>
+//                     <Pie
+//                       data={quizTypeData}
+//                       cx="50%"
+//                       cy="50%"
+//                       labelLine={false}
+//                       label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+//                       outerRadius={80}
+//                       fill="#8884d8"
+//                       dataKey="value"
+//                     >
+//                       {quizTypeData.map((entry, index) => (
+//                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+//                       ))}
+//                     </Pie>
+//                     <Tooltip formatter={(value) => [`${value}%`, 'Percentage']} />
+//                   </PieChart>
+//                 </ResponsiveContainer>
+//               </div>
+//             </div>
+//           </div>
+
+//           {/* Trending Quizzes & Quick Actions */}
+//           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+//             {/* Trending Quizzes */}
+//             <div className="lg:col-span-2 bg-white rounded-2xl shadow-lg p-6">
+//               <div className="flex justify-between items-center mb-6">
+//                 <div>
+//                   <h3 className="text-xl font-bold text-gray-800">Trending Quizzes</h3>
+//                   <p className="text-gray-500 text-sm">Most popular quizzes by impressions</p>
+//                 </div>
+//                 <span className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white px-3 py-1 rounded-full text-sm">
+//                   {trendingQuizzes.length} trending
+//                 </span>
+//               </div>
+
+//               {trendingQuizzes.length > 0 ? (
+//                 <div className="space-y-4">
+//                   {trendingQuizzes.map((quiz, index) => (
+//                     <div key={index} className="flex items-center justify-between p-4 border border-gray-200 rounded-xl hover:border-purple-300 hover:shadow-md transition-all group">
+//                       <div className="flex items-center space-x-4">
+//                         <div className="bg-indigo-100 text-indigo-600 rounded-lg w-10 h-10 flex items-center justify-center font-bold">
+//                           {index + 1}
+//                         </div>
+//                         <div>
+//                           <h4 className="font-semibold text-gray-800 group-hover:text-indigo-600 transition-colors">
+//                             {quiz.title}
+//                           </h4>
+//                           <p className="text-gray-500 text-sm flex items-center">
+//                             <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+//                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+//                             </svg>
+//                             {formatDate(quiz.createdAt)}
+//                           </p>
+//                         </div>
+//                       </div>
+//                       <div className="flex items-center space-x-4">
+//                         <div className="text-right">
+//                           <div className="flex items-center bg-blue-50 px-3 py-1 rounded-full">
+//                             <span className="text-blue-600 font-bold text-sm mr-2">
+//                               {quiz.impressions >= 1000 
+//                                 ? (quiz.impressions / 1000).toFixed(1) + 'K' 
+//                                 : quiz.impressions}
+//                             </span>
+//                             <img src={EmpressionImg} alt="Impressions" className="h-4 w-4" />
+//                           </div>
+//                           <span className="text-xs text-gray-500 mt-1">impressions</span>
+//                         </div>
+//                         <button className="text-indigo-600 hover:text-indigo-800 transition-colors">
+//                           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+//                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+//                           </svg>
+//                         </button>
+//                       </div>
+//                     </div>
+//                   ))}
+//                 </div>
+//               ) : (
+//                 <div className="text-center py-12">
+//                   <img src={NoDataImg} alt="No quizzes available" className="h-32 mx-auto mb-4 opacity-70" />
+//                   <h4 className="text-lg font-medium text-gray-700 mb-2">No Trending Quizzes</h4>
+//                   <p className="text-gray-500 mb-6">Create engaging quizzes to see them here</p>
+//                   <button className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white px-6 py-2 rounded-lg shadow-md hover:shadow-lg transition-all">
+//                     Create New Quiz
+//                   </button>
+//                 </div>
+//               )}
+//             </div>
+
+//             {/* Quick Actions & Recent Activity */}
+//             <div className="space-y-6">
+//               {/* Quick Actions */}
+//               <div className="bg-white rounded-2xl shadow-lg p-6">
+//                 <h3 className="text-xl font-bold text-gray-800 mb-4">Quick Actions</h3>
+//                 <div className="space-y-3">
+//                   <button className="w-full flex items-center p-4 border border-gray-200 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 transition-all group">
+//                     <div className="bg-indigo-100 p-2 rounded-lg mr-3 group-hover:bg-indigo-200">
+//                       <svg className="h-6 w-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+//                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+//                       </svg>
+//                     </div>
+//                     <span className="font-medium text-gray-700 group-hover:text-indigo-600">Create New Quiz</span>
+//                   </button>
+                  
+//                   <button className="w-full flex items-center p-4 border border-gray-200 rounded-xl hover:border-green-500 hover:bg-green-50 transition-all group">
+//                     <div className="bg-green-100 p-2 rounded-lg mr-3 group-hover:bg-green-200">
+//                       <svg className="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+//                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+//                       </svg>
+//                     </div>
+//                     <span className="font-medium text-gray-700 group-hover:text-green-600">View Analytics</span>
+//                   </button>
+                  
+//                   <button className="w-full flex items-center p-4 border border-gray-200 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-all group">
+//                     <div className="bg-blue-100 p-2 rounded-lg mr-3 group-hover:bg-blue-200">
+//                       <svg className="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+//                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+//                       </svg>
+//                     </div>
+//                     <span className="font-medium text-gray-700 group-hover:text-blue-600">Share Progress</span>
+//                   </button>
+//                 </div>
+//               </div>
+
+//               {/* Recent Activity */}
+//               <div className="bg-white rounded-2xl shadow-lg p-6">
+//                 <h3 className="text-xl font-bold text-gray-800 mb-4">Recent Activity</h3>
+//                 <div className="space-y-4">
+//                   <div className="flex items-center space-x-3">
+//                     <div className="bg-green-100 p-2 rounded-full">
+//                       <svg className="h-4 w-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+//                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+//                       </svg>
+//                     </div>
+//                     <div>
+//                       <p className="text-sm font-medium text-gray-800">New quiz created</p>
+//                       <p className="text-xs text-gray-500">2 hours ago</p>
+//                     </div>
+//                   </div>
+//                   <div className="flex items-center space-x-3">
+//                     <div className="bg-blue-100 p-2 rounded-full">
+//                       <svg className="h-4 w-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+//                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+//                       </svg>
+//                     </div>
+//                     <div>
+//                       <p className="text-sm font-medium text-gray-800">Quiz shared with class</p>
+//                       <p className="text-xs text-gray-500">5 hours ago</p>
+//                     </div>
+//                   </div>
+//                   <div className="flex items-center space-x-3">
+//                     <div className="bg-purple-100 p-2 rounded-full">
+//                       <svg className="h-4 w-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+//                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+//                       </svg>
+//                     </div>
+//                     <div>
+//                       <p className="text-sm font-medium text-gray-800">Performance report generated</p>
+//                       <p className="text-xs text-gray-500">1 day ago</p>
+//                     </div>
+//                   </div>
+//                 </div>
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default Dashboard;
+
+
+
+
 import React, { useEffect, useState } from 'react';
 import { fetchDashboardStats, fetchTrendingQuizzes } from '../../api/quizApi';
 import { formatNumber } from '../../utils/formatNumber';
@@ -33,22 +442,31 @@ const Dashboard = () => {
     fetchData();
   }, []);
 
-  // Mock data for charts (replace with actual API data)
-  const performanceData = [
-    { name: 'Mon', quizzes: 4, questions: 20, impressions: 45 },
-    { name: 'Tue', quizzes: 2, questions: 15, impressions: 32 },
-    { name: 'Wed', quizzes: 6, questions: 25, impressions: 68 },
-    { name: 'Thu', quizzes: 3, questions: 18, impressions: 42 },
-    { name: 'Fri', quizzes: 5, questions: 22, impressions: 58 },
-    { name: 'Sat', quizzes: 1, questions: 10, impressions: 25 },
-    { name: 'Sun', quizzes: 2, questions: 12, impressions: 30 },
-  ];
+  // Dynamic data for charts based on backend stats
+  const getPerformanceData = () => {
+    if (!stats) return [];
+    
+    // You can replace this with actual time-series data from your backend
+    // For now, using mock data but you can modify based on your actual data structure
+    return [
+      { name: 'Mon', quizzes: 4, questions: 20, impressions: 45 },
+      { name: 'Tue', quizzes: 2, questions: 15, impressions: 32 },
+      { name: 'Wed', quizzes: 6, questions: 25, impressions: 68 },
+      { name: 'Thu', quizzes: 3, questions: 18, impressions: 42 },
+      { name: 'Fri', quizzes: 5, questions: 22, impressions: 58 },
+      { name: 'Sat', quizzes: 1, questions: 10, impressions: 25 },
+      { name: 'Sun', quizzes: 2, questions: 12, impressions: 30 },
+    ];
+  };
 
-  const quizTypeData = [
-    { name: 'Multiple Choice', value: 65 },
-    { name: 'True/False', value: 20 },
-    { name: 'Poll Type', value: 15 },
-  ];
+  const getQuizTypeData = () => {
+    // Replace with actual quiz type distribution from your backend
+    return [
+      { name: 'Multiple Choice', value: 65 },
+      { name: 'True/False', value: 20 },
+      { name: 'Poll Type', value: 15 },
+    ];
+  };
 
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28'];
 
@@ -57,9 +475,40 @@ const Dashboard = () => {
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
-  // Calculate additional stats
-  const averageImpressions = stats ? Math.round(stats.totalImpressions / stats.totalQuizzes) : 0;
+  // Calculate additional stats dynamically
+  const averageImpressions = stats ? Math.round(stats.totalImpressions / (stats.totalQuizzes || 1)) : 0;
   const engagementRate = stats ? ((stats.totalImpressions / (stats.totalQuizzes * 100)) * 100).toFixed(1) : 0;
+
+  // Get trend data from backend
+  const getTrendData = (type) => {
+    if (!stats || !stats.trends) return { percentage: 0, trend: 'neutral' };
+    return stats.trends[type] || { percentage: 0, trend: 'neutral' };
+  };
+
+  const getTrendIcon = (trend) => {
+    if (trend === 'increase') {
+      return (
+        <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
+        </svg>
+      );
+    } else if (trend === 'decrease') {
+      return (
+        <svg className="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+        </svg>
+      );
+    }
+    return (
+      <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14" />
+      </svg>
+    );
+  };
+
+  const getTrendColor = (trend) => {
+    return trend === 'increase' ? 'text-green-500' : trend === 'decrease' ? 'text-red-500' : 'text-gray-500';
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-indigo-50 p-4 md:p-8">
@@ -124,7 +573,10 @@ const Dashboard = () => {
                     {stats ? formatNumber(stats.totalQuizzes) : '0'}
                   </h3>
                   <div className="flex items-center mt-2">
-                    <span className="text-green-500 text-sm font-medium">+12%</span>
+                    {getTrendIcon(getTrendData('quizzes').trend)}
+                    <span className={`text-sm font-medium ml-1 ${getTrendColor(getTrendData('quizzes').trend)}`}>
+                      {getTrendData('quizzes').percentage.toFixed(1)}%
+                    </span>
                     <span className="text-gray-500 text-sm ml-2">from last month</span>
                   </div>
                 </div>
@@ -145,7 +597,10 @@ const Dashboard = () => {
                     {stats ? formatNumber(stats.totalQuestions) : '0'}
                   </h3>
                   <div className="flex items-center mt-2">
-                    <span className="text-green-500 text-sm font-medium">+8%</span>
+                    {getTrendIcon(getTrendData('questions').trend)}
+                    <span className={`text-sm font-medium ml-1 ${getTrendColor(getTrendData('questions').trend)}`}>
+                      {getTrendData('questions').percentage.toFixed(1)}%
+                    </span>
                     <span className="text-gray-500 text-sm ml-2">from last month</span>
                   </div>
                 </div>
@@ -166,7 +621,10 @@ const Dashboard = () => {
                     {stats ? formatNumber(stats.totalImpressions) : '0'}
                   </h3>
                   <div className="flex items-center mt-2">
-                    <span className="text-green-500 text-sm font-medium">+23%</span>
+                    {getTrendIcon(getTrendData('impressions').trend)}
+                    <span className={`text-sm font-medium ml-1 ${getTrendColor(getTrendData('impressions').trend)}`}>
+                      {getTrendData('impressions').percentage.toFixed(1)}%
+                    </span>
                     <span className="text-gray-500 text-sm ml-2">from last month</span>
                   </div>
                 </div>
@@ -188,6 +646,7 @@ const Dashboard = () => {
                     {engagementRate}%
                   </h3>
                   <div className="flex items-center mt-2">
+                    {/* You can add trend data for engagement rate if available from backend */}
                     <span className="text-green-500 text-sm font-medium">+5%</span>
                     <span className="text-gray-500 text-sm ml-2">from last month</span>
                   </div>
@@ -214,7 +673,7 @@ const Dashboard = () => {
               </div>
               <div className="h-80">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={performanceData}>
+                  <BarChart data={getPerformanceData()}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                     <XAxis dataKey="name" />
                     <YAxis />
@@ -235,7 +694,7 @@ const Dashboard = () => {
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
-                      data={quizTypeData}
+                      data={getQuizTypeData()}
                       cx="50%"
                       cy="50%"
                       labelLine={false}
@@ -244,7 +703,7 @@ const Dashboard = () => {
                       fill="#8884d8"
                       dataKey="value"
                     >
-                      {quizTypeData.map((entry, index) => (
+                      {getQuizTypeData().map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
                     </Pie>
@@ -272,20 +731,20 @@ const Dashboard = () => {
               {trendingQuizzes.length > 0 ? (
                 <div className="space-y-4">
                   {trendingQuizzes.map((quiz, index) => (
-                    <div key={index} className="flex items-center justify-between p-4 border border-gray-200 rounded-xl hover:border-purple-300 hover:shadow-md transition-all group">
+                    <div key={quiz._id || index} className="flex items-center justify-between p-4 border border-gray-200 rounded-xl hover:border-purple-300 hover:shadow-md transition-all group">
                       <div className="flex items-center space-x-4">
                         <div className="bg-indigo-100 text-indigo-600 rounded-lg w-10 h-10 flex items-center justify-center font-bold">
                           {index + 1}
                         </div>
                         <div>
                           <h4 className="font-semibold text-gray-800 group-hover:text-indigo-600 transition-colors">
-                            {quiz.title}
+                            {quiz.title || 'Untitled Quiz'}
                           </h4>
                           <p className="text-gray-500 text-sm flex items-center">
                             <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                             </svg>
-                            {formatDate(quiz.createdAt)}
+                            {quiz.createdAt ? formatDate(quiz.createdAt) : 'Unknown date'}
                           </p>
                         </div>
                       </div>
@@ -295,7 +754,7 @@ const Dashboard = () => {
                             <span className="text-blue-600 font-bold text-sm mr-2">
                               {quiz.impressions >= 1000 
                                 ? (quiz.impressions / 1000).toFixed(1) + 'K' 
-                                : quiz.impressions}
+                                : quiz.impressions || 0}
                             </span>
                             <img src={EmpressionImg} alt="Impressions" className="h-4 w-4" />
                           </div>
