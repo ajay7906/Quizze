@@ -1,21 +1,16 @@
 
+
+
 // import Sidebar from "../sidebar/Sidebar"
-
-
-
 
 // function Layout({children}) {
 //   return (
-//   <div className="appcontainer">
-//       <>
-//        {/* <Sidebar/>
-//         {children} */}
-//          <Sidebar/>
-//       <main className="flex-1 lg:ml-0 overflow-auto pt-16 lg:pt-0">
+//     <div className="appcontainer flex h-screen overflow-hidden">
+//       <Sidebar/>
+//       <main className="flex-1 overflow-y-auto">
 //         {children}
 //       </main>
-//     </>
-//   </div>
+//     </div>
 //   )
 // }
 
@@ -23,16 +18,13 @@
 
 
 
-
-
-
-import Sidebar from "../sidebar/Sidebar"
+import Navbar from "../sidebar/Sidebar"
 
 function Layout({children}) {
   return (
-    <div className="appcontainer flex h-screen overflow-hidden">
-      <Sidebar/>
-      <main className="flex-1 overflow-y-auto">
+    <div className="appcontainer flex flex-col h-screen overflow-hidden">
+      <Navbar/>
+      <main className="flex-1 overflow-y-auto mt-16">
         {children}
       </main>
     </div>
