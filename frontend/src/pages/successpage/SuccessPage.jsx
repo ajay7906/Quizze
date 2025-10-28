@@ -1,58 +1,50 @@
 
 
 
-// import React from 'react';
-// import { useLocation } from 'react-router-dom';
-// import styles from './SuccessPage.module.css';
-// import TrophyImage from '../../assets/sucess.png'; // Adjust the path according to your project structure
-
-// const SuccessPage = () => {
-//     const location = useLocation();
-//     const { score, totalQuestions, typeChecker } = location.state || {};
-//     console.log(typeChecker, score, totalQuestions);
-
-//     return (
-//         <div className={styles.containerLayout}>
-//             <div className={styles.container}>
-//                 {typeChecker === 'Poll Type' ? (
-//                     <p className={styles.pollTypeMessage}>Thank you for participating in the Poll</p>
-//                 ) : (
-//                     <>
-//                         <h1>Congrats Quiz is completed</h1>
-//                         <img src={TrophyImage} alt="Trophy" className={styles.trophy} />
-//                         <div className={styles.scoreContainer}>
-//                             <span>Your Score is</span>
-//                             <span className={styles.score}>
-//                                 {score}/{totalQuestions}
-//                             </span>
-//                         </div>
-//                     </>
-//                 )}
-//             </div>
-//         </div>
-//     );
-// };
-
-// export default SuccessPage;
 
 
 
-
-
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion'; // If you don't have framer-motion, I'll provide an alternative
-import Confetti from 'react-confetti'; // Optional: for celebration effect
+import { motion } from 'framer-motion';
+import Confetti from 'react-confetti';
 import TrophyImage from '../../assets/sucess.png';
+
+// Import your API functions
+import { likeQuiz, shareQuiz } from '../../api/quizApi'; // You'll need to create these
 
 const SuccessPage = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const { score, totalQuestions, typeChecker } = location.state || {};
+    const { score, totalQuestions, typeChecker, quizId, quizTitle } = location.state || {};
     
+    // States for like functionality
+    const [isLiked, setIsLiked] = useState(false);
+    const [likeCount, setLikeCount] = useState(0);
+    const [isLikeLoading, setIsLikeLoading] = useState(false);
+    
+    // States for share functionality
+    const [showShareModal, setShowShareModal] = useState(false);
+    const [isCopied, setIsCopied] = useState(false);
+    const [shareUrl, setShareUrl] = useState('');
+
     // Calculate percentage and performance message
     const percentage = totalQuestions ? Math.round((score / totalQuestions) * 100) : 0;
     
+    // Generate share URL
+    useEffect(() => {
+        if (quizId) {
+            const currentUrl = window.location.origin;
+            setShareUrl(`${currentUrl}/quiz/${quizId}`);
+        }
+    }, [quizId]);
+
+    // Fetch initial like status and count (you might want to add this to your API)
+    useEffect(() => {
+        // You can fetch initial like status here
+        // Example: fetchQuizLikes(quizId).then(data => {...})
+    }, [quizId]);
+
     const getPerformanceMessage = () => {
         if (percentage === 100) return "Perfect! Outstanding performance! 🎉";
         if (percentage >= 80) return "Excellent! You did great! 👏";
@@ -68,6 +60,75 @@ const SuccessPage = () => {
         return "text-orange-600";
     };
 
+    // Like functionality
+    const handleLike = async () => {
+        if (isLikeLoading || !quizId) return;
+        
+        setIsLikeLoading(true);
+        try {
+            const response = await likeQuiz(quizId, !isLiked);
+            if (response.success) {
+                setIsLiked(!isLiked);
+                setLikeCount(prev => isLiked ? prev - 1 : prev + 1);
+            }
+        } catch (error) {
+            console.error('Error liking quiz:', error);
+        } finally {
+            setIsLikeLoading(false);
+        }
+    };
+
+    // Share functionality
+    const handleShare = async (platform = 'copy') => {
+        const shareText = `I scored ${percentage}% on "${quizTitle || 'this quiz'}!" Can you beat my score? 🚀`;
+        
+        switch (platform) {
+            case 'copy':
+                try {
+                    await navigator.clipboard.writeText(`${shareText} ${shareUrl}`);
+                    setIsCopied(true);
+                    setTimeout(() => setIsCopied(false), 2000);
+                } catch (err) {
+                    // Fallback for older browsers
+                    const textArea = document.createElement('textarea');
+                    textArea.value = `${shareText} ${shareUrl}`;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    setIsCopied(true);
+                    setTimeout(() => setIsCopied(false), 2000);
+                }
+                break;
+
+            case 'twitter':
+                window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`, '_blank');
+                break;
+
+            case 'whatsapp':
+                window.open(`https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`, '_blank');
+                break;
+
+            case 'facebook':
+                window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}`, '_blank');
+                break;
+
+            case 'linkedin':
+                window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`, '_blank');
+                break;
+
+            default:
+                break;
+        }
+        
+        // Track share event if you have analytics
+        try {
+            await shareQuiz(quizId, platform);
+        } catch (error) {
+            console.error('Error tracking share:', error);
+        }
+    };
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-purple-100 flex items-center justify-center p-4">
             {/* Confetti effect for quiz completion */}
@@ -78,6 +139,84 @@ const SuccessPage = () => {
                     recycle={false}
                     numberOfPieces={200}
                 />
+            )}
+            
+            {/* Share Modal */}
+            {showShareModal && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="bg-white rounded-2xl p-6 max-w-md w-full"
+                    >
+                        <div className="flex justify-between items-center mb-4">
+                            <h3 className="text-xl font-bold text-gray-800">Share this quiz</h3>
+                            <button
+                                onClick={() => setShowShareModal(false)}
+                                className="text-gray-500 hover:text-gray-700"
+                            >
+                                ✕
+                            </button>
+                        </div>
+                        
+                        <div className="space-y-4">
+                            {/* Copy Link */}
+                            <div className="flex gap-2">
+                                <input
+                                    type="text"
+                                    value={shareUrl}
+                                    readOnly
+                                    className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm"
+                                />
+                                <button
+                                    onClick={() => handleShare('copy')}
+                                    className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
+                                        isCopied 
+                                            ? 'bg-green-500 text-white' 
+                                            : 'bg-blue-500 text-white hover:bg-blue-600'
+                                    }`}
+                                >
+                                    {isCopied ? 'Copied!' : 'Copy'}
+                                </button>
+                            </div>
+                            
+                            {/* Social Share Buttons */}
+                            <div className="grid grid-cols-4 gap-3">
+                                <button
+                                    onClick={() => handleShare('twitter')}
+                                    className="flex flex-col items-center p-3 bg-blue-400 text-white rounded-lg hover:bg-blue-500 transition-colors"
+                                >
+                                    <span className="text-lg">🐦</span>
+                                    <span className="text-xs mt-1">Twitter</span>
+                                </button>
+                                
+                                <button
+                                    onClick={() => handleShare('whatsapp')}
+                                    className="flex flex-col items-center p-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
+                                >
+                                    <span className="text-lg">💬</span>
+                                    <span className="text-xs mt-1">WhatsApp</span>
+                                </button>
+                                
+                                <button
+                                    onClick={() => handleShare('facebook')}
+                                    className="flex flex-col items-center p-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                                >
+                                    <span className="text-lg">👤</span>
+                                    <span className="text-xs mt-1">Facebook</span>
+                                </button>
+                                
+                                <button
+                                    onClick={() => handleShare('linkedin')}
+                                    className="flex flex-col items-center p-3 bg-blue-700 text-white rounded-lg hover:bg-blue-800 transition-colors"
+                                >
+                                    <span className="text-lg">💼</span>
+                                    <span className="text-xs mt-1">LinkedIn</span>
+                                </button>
+                            </div>
+                        </div>
+                    </motion.div>
+                </div>
             )}
             
             <div className="max-w-2xl w-full">
@@ -111,6 +250,25 @@ const SuccessPage = () => {
                             <p className="text-lg text-gray-500">
                                 We appreciate your participation in this poll
                             </p>
+                            
+                            {/* Like Button for Poll */}
+                            <div className="mt-6 flex justify-center items-center gap-4">
+                                <button
+                                    onClick={handleLike}
+                                    disabled={isLikeLoading}
+                                    className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 ${
+                                        isLiked 
+                                            ? 'bg-red-500 text-white shadow-lg' 
+                                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                    } ${isLikeLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                >
+                                    <span className="text-lg">{isLiked ? '❤️' : '🤍'}</span>
+                                    <span>Like</span>
+                                    {likeCount > 0 && (
+                                        <span className="text-sm">({likeCount})</span>
+                                    )}
+                                </button>
+                            </div>
                             
                             <motion.div
                                 initial={{ opacity: 0 }}
@@ -191,6 +349,29 @@ const SuccessPage = () => {
                                 />
                             </div>
                             
+                            {/* Like Button */}
+                            <div className="mb-6 flex justify-center">
+                                <button
+                                    onClick={handleLike}
+                                    disabled={isLikeLoading}
+                                    className={`flex items-center gap-3 px-6 py-3 rounded-full transition-all duration-300 transform hover:scale-105 ${
+                                        isLiked 
+                                            ? 'bg-red-500 text-white shadow-lg' 
+                                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                    } ${isLikeLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                >
+                                    <span className="text-xl">{isLiked ? '❤️' : '🤍'}</span>
+                                    <span className="font-semibold">
+                                        {isLiked ? 'Liked' : 'Like this quiz'}
+                                    </span>
+                                    {likeCount > 0 && (
+                                        <span className="bg-white bg-opacity-20 px-2 py-1 rounded-full text-sm">
+                                            {likeCount}
+                                        </span>
+                                    )}
+                                </button>
+                            </div>
+                            
                             {/* Action Buttons */}
                             <motion.div
                                 initial={{ opacity: 0 }}
@@ -221,8 +402,11 @@ const SuccessPage = () => {
                             >
                                 <p className="text-gray-600 mb-4">Challenge your friends!</p>
                                 <div className="flex justify-center space-x-4">
-                                    <button className="p-2 bg-blue-100 rounded-full hover:bg-blue-200 transition-colors">
-                                        <span className="text-blue-600 font-semibold">Share</span>
+                                    <button 
+                                        onClick={() => setShowShareModal(true)}
+                                        className="px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-full font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                                    >
+                                        Share Score
                                     </button>
                                 </div>
                             </motion.div>

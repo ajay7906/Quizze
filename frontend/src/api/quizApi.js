@@ -180,3 +180,56 @@ export const updateQuizStatus = async(quizId, status) => {
   }
 }
 
+
+
+export const likeQuiz = async (quizId, like) => {
+  try {
+      const response = await fetch(`/api/v1/quiz/like/${quizId}`, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ like }),
+      });
+      return await response.json();
+  } catch (error) {
+      throw new Error('Failed to like quiz');
+  }
+};
+
+// Track share events
+export const shareQuiz = async (quizId, platform) => {
+  try {
+      const response = await fetch(`/api/v1/quiz/share/${quizId}`, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ platform }),
+      });
+      return await response.json();
+  } catch (error) {
+      throw new Error('Failed to track share');
+  }
+};
+
+// Get quiz likes count (optional)
+export const getQuizLikes = async (quizId) => {
+  try {
+      const response = await fetch(`/api/v1/quiz/likes/${quizId}`);
+      return await response.json();
+  } catch (error) {
+      throw new Error('Failed to get likes');
+  }
+};
+
+
+export const updateAssignmentStatus = async(assignmentId, status) => {
+  try{
+    const response = await axios.patch(`http://localhost:3000/api/v1/quiz/updateAssignmentStatus/${assignmentId}`, {status});
+    return response.data;
+  } catch (error) {
+    console.error('Error updating assignment status:', error);
+    throw error;
+  }
+}

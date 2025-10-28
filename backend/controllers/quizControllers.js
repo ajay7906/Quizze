@@ -3,6 +3,7 @@ const Question = require('../models/question');
 
 
 const mongoose = require('mongoose');
+const Assignment = require('../models/assignment');
 
 // create new quiz controllers functions
 // exports.createQuiz = async (req, res) => {
@@ -326,48 +327,6 @@ exports.getTrendingQuiz = async (req, res) => {
 
 
 
-
-// exports.getDashBoardData = async (req, res) => {
-//     try {
-//         const { userId } = req;
-
-//         // Ensure userId is an ObjectId if stored as ObjectId in the database
-//         const userObjectId = new mongoose.Types.ObjectId(userId);
-
-//         // Count the total number of quizzes created by the user
-//         const totalQuizzes = await Quiz.countDocuments({ user: userObjectId });
-
-//         // Count the total number of questions in quizzes created by the user
-//         const totalQuestions = await Quiz.aggregate([
-//             { $match: { user: userObjectId } },
-//             { $project: { numOfQuestions: { $size: '$questions' } } },
-//             { $group: { _id: null, totalQuestions: { $sum: '$numOfQuestions' } } }
-//         ]);
-
-//         // Sum the total impressions of quizzes created by the user
-//         const totalImpressions = await Quiz.aggregate([
-//             { $match: { user: userObjectId } },
-//             { $group: { _id: null, totalImpressions: { $sum: '$impressions' } } }
-//         ]);
-
-//         // Check if aggregation results are empty and handle appropriately
-//         const totalQuestionsCount = totalQuestions.length > 0 ? totalQuestions[0].totalQuestions : 0;
-//         const totalImpressionsCount = totalImpressions.length > 0 ? totalImpressions[0].totalImpressions : 0;
-
-//         res.json({
-//             totalQuizzes,
-//             totalQuestions: totalQuestionsCount,
-//             totalImpressions: totalImpressionsCount
-//         });
-//     } catch (error) {
-//         // res.status(500).json({ error: err.message });
-//         res.status(500).send({ error: 'Failed to get dashboards data ' });
-//     }
-// };
-
-
-//Endpoint to fetch questions by Quiz ID with pagination
-
 exports.getDashBoardData = async (req, res) => {
     try {
         const { userId } = req;
@@ -635,4 +594,24 @@ exports.updateQuizStatus = async (req, res) => {
     } catch (error) {
         res.status(500).send({ status: false, message: 'Failed to update quiz status' });
     }
+}
+
+
+exports.updateAssignmentStatus = async (req, res) => {
+    const { assignmentId } = req.params;
+    const { status } = req.body;
+    
+    try{
+        const updateAssignment = await Assignment.findByIdAndUpdate(assignmentId, {status}, {new:true});
+        if(!updateAssignment){
+            return res.status(404).json({success:false,message:'Assignment not found'});
+        }
+        res.status(200).json({success:true,message:'Assignment status updated successfully',data:updateAssignment});
+        
+
+    }catch(error){
+        res.status(500).json({success:false,message:'Server error',error:error.message});
+    }
+
+
 }

@@ -22,6 +22,29 @@ const quizSchema = new mongoose.Schema({
   passingScore: { type: Number, default: 70 },
   tags: [{ type: String }],
   description: { type: String },
+  likes: {
+    type: Number,
+    default: 0
+  },
+  likedBy: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Student'
+  }],
+  shares: {
+    type: Number,
+    default: 0
+  },
+  shareHistory: [{
+    platform: String,
+    sharedAt: {
+      type: Date,
+      default: Date.now
+    },
+    sharedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Student'
+    }
+  }],
   // Analytics
   totalAttempts: { type: Number, default: 0 },
   averageScore: { type: Number, default: 0 },
@@ -30,6 +53,10 @@ const quizSchema = new mongoose.Schema({
   // check the quiz is pending, completed, in progress
 
 }, { timestamps: true });
+
+// Index for better performance on likes and user queries
+quizSchema.index({ likes: -1 });
+quizSchema.index({ 'likedBy': 1 });
 
 const Quiz = mongoose.model('Quiz', quizSchema);
 module.exports = Quiz;
